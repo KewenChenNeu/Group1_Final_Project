@@ -28,4 +28,27 @@ public class EmployeeDirectory {
         employeeList.add(employee);
         return employee;
     }
+
+    
+    public Employee createEmployee(String name, String email, String phone) {
+        Employee employee = new Employee();
+        employee.setName(name);
+        employee.setEmail(email);
+        employee.setPhone(phone);
+        employeeList.add(employee);
+        return employee;
+    }
+    
+    public void removeEmployee(Employee employee) {
+        employeeList.remove(employee);
+    }
+    
+    public Employee findEmployeeById(int id) {
+        for (Employee employee : employeeList) {
+            if (employee.getId() == id) {
+                return employee;
+            }
+        }
+        return null;
+    }
 }

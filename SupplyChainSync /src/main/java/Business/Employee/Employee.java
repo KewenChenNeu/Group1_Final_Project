@@ -11,6 +11,8 @@ package Business.Employee;
 public class Employee {
     
     private String name;
+    private String email;
+    private String phone;
     private int id;
     private static int count = 1;
 
@@ -30,6 +32,22 @@ public class Employee {
     
     public String getName() {
         return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override
