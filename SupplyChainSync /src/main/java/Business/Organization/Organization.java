@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author raunak
+ * @author chris
  */
 public abstract class Organization {
 
@@ -21,15 +21,41 @@ public abstract class Organization {
     private EmployeeDirectory employeeDirectory;
     private UserAccountDirectory userAccountDirectory;
     private int organizationID;
-    private static int counter=0;
+    private static int counter = 0;
     
-    public enum Type{
-        Admin("Admin Organization"), Doctor("Doctor Organization"), Lab("Lab Organization");
+    public enum Type {
+        // Raw Material Supplier Organizations
+        RMProcurement("RM Procurement Organization"),
+        RMInventory("RM Inventory Organization"),
+        
+        // Manufacturer Organizations
+        ProductionManagement("Production Management Organization"),
+        Inventory("Inventory Organization"),
+        
+        // Product Distributor Organizations
+        WholesaleSales("Wholesale Sales Organization"),
+        WholesaleInventory("Wholesale Inventory Organization"),
+        
+        // Shipping Organizations
+        ShippingOperation("Shipping Operation Organization"),
+        ShippingManagement("Shipping Management Organization"),
+        
+        // Retail Organizations
+        StoreManagement("Store Management Organization"),
+        RetailInventory("Retail Inventory Organization");
+        
         private String value;
+        
         private Type(String value) {
             this.value = value;
         }
+        
         public String getValue() {
+            return value;
+        }
+        
+        @Override
+        public String toString() {
             return value;
         }
     }
@@ -76,7 +102,5 @@ public abstract class Organization {
     @Override
     public String toString() {
         return name;
-    }
-    
-    
+    }   
 }

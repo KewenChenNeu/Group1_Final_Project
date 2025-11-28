@@ -7,35 +7,49 @@ package Business.Enterprise;
 
 import Business.Organization.Organization;
 import Business.Organization.OrganizationDirectory;
+import Business.Role.Role;
+import java.util.ArrayList;
 
 /**
  *
- * @author MyPC1
+ * @author Chris
  */
 public abstract class Enterprise extends Organization{
     
     private EnterpriseType enterpriseType;
     private OrganizationDirectory organizationDirectory;
 
-    public OrganizationDirectory getOrganizationDirectory() {
-        return organizationDirectory;
-    }
-    
-    public enum EnterpriseType{
-        Hospital("Hospital");
+    public enum EnterpriseType {
+        RawMaterialSupplier("Raw Material Supplier"),
+        Manufacturer("Manufacturer"),
+        ProductDistributor("Product Distributor"),
+        Shipping("Shipping"),
+        Retail("Retail");
         
         private String value;
         
-        private EnterpriseType(String value){
-            this.value=value;
+        private EnterpriseType(String value) {
+            this.value = value;
         }
+        
         public String getValue() {
             return value;
         }
+        
         @Override
-        public String toString(){
+        public String toString() {
             return value;
         }
+    }
+
+    public Enterprise(String name, EnterpriseType type) {
+        super(name);
+        this.enterpriseType = type;
+        organizationDirectory = new OrganizationDirectory();
+    }
+
+    public OrganizationDirectory getOrganizationDirectory() {
+        return organizationDirectory;
     }
 
     public EnterpriseType getEnterpriseType() {
@@ -46,9 +60,9 @@ public abstract class Enterprise extends Organization{
         this.enterpriseType = enterpriseType;
     }
     
-    public Enterprise(String name,EnterpriseType type){
-        super(name);
-        this.enterpriseType=type;
-        organizationDirectory=new OrganizationDirectory();
-    }
+    // Abstract method to initialize default organizations for this enterprise
+    public abstract void initializeOrganizations();
+    
+    @Override
+    public abstract ArrayList<Role> getSupportedRole();
 }

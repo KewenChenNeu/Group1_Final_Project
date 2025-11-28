@@ -9,30 +9,43 @@ import java.util.ArrayList;
 
 /**
  *
- * @author raunak
+ * @author chris
  */
 public class OrganizationDirectory {
     
     private ArrayList<Organization> organizationList;
 
     public OrganizationDirectory() {
-        organizationList = new ArrayList();
+        organizationList = new ArrayList<>();
     }
 
     public ArrayList<Organization> getOrganizationList() {
         return organizationList;
     }
     
-    public Organization createOrganization(Type type){
-        Organization organization = null;
-        if (type.getValue().equals(Type.Doctor.getValue())){
-            organization = new DoctorOrganization();
-            organizationList.add(organization);
+    public void addOrganization(Organization organization) {
+        organizationList.add(organization);
+    }
+    
+    public void removeOrganization(Organization organization) {
+        organizationList.remove(organization);
+    }
+    
+    public Organization findOrganizationById(int id) {
+        for (Organization org : organizationList) {
+            if (org.getOrganizationID() == id) {
+                return org;
+            }
         }
-        else if (type.getValue().equals(Type.Lab.getValue())){
-            organization = new LabOrganization();
-            organizationList.add(organization);
+        return null;
+    }
+    
+    public Organization findOrganizationByName(String name) {
+        for (Organization org : organizationList) {
+            if (org.getName().equals(name)) {
+                return org;
+            }
         }
-        return organization;
+        return null;
     }
 }

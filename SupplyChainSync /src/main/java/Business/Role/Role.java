@@ -12,17 +12,39 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author raunak
+ * @author chris
  */
 public abstract class Role {
     
-    public enum RoleType{
-        Admin("Admin"),
-        Doctor("Doctor"),
-        LabAssistant("Lab Assistant");
+    public enum RoleType {
+        // System Admin
+        SystemAdmin("System Admin"),
+        
+        // Raw Material Supplier Enterprise Roles
+        RMProcurement("RM Procurement"),
+        RMInventoryManager("RM Inventory Manager"),
+        
+        // Manufacturer Enterprise Roles
+        ProductionManager("Production Manager"),
+        InventoryManager("Inventory Manager"),
+        
+        // Product Distributor Enterprise Roles
+        WholesaleSales("Wholesale Sales"),
+        WholesaleInventory("Wholesale Inventory"),
+        WholesaleAnalytics("Wholesale Analytics"),
+        
+        // Shipping Enterprise Roles
+        ShippingManager("Shipping Manager"),
+        DeliveryStaff("Delivery Staff"),
+        
+        // Retail Enterprise Roles
+        StoreManager("Store Manager"),
+        OrderClerk("Order Clerk"),
+        RetailAnalytics("Retail Analytics");
         
         private String value;
-        private RoleType(String value){
+        
+        private RoleType(String value) {
             this.value = value;
         }
 
@@ -44,7 +66,7 @@ public abstract class Role {
 
     @Override
     public String toString() {
-        return this.getClass().getName();
+        return this.getClass().getSimpleName().replace("Role", "");
     }
     
     

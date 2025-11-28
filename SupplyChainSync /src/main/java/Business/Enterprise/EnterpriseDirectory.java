@@ -5,16 +5,19 @@
  */
 package Business.Enterprise;
 
-import Business.Organization.OrganizationDirectory;
 import java.util.ArrayList;
 
 /**
  *
- * @author MyPC1
+ * @author Chris
  */
 public class EnterpriseDirectory {
+    
     private ArrayList<Enterprise> enterpriseList;
-   
+
+    public EnterpriseDirectory() {
+        enterpriseList = new ArrayList<>();
+    }
 
     public ArrayList<Enterprise> getEnterpriseList() {
         return enterpriseList;
@@ -24,17 +27,29 @@ public class EnterpriseDirectory {
         this.enterpriseList = enterpriseList;
     }
     
-    public EnterpriseDirectory(){
-        enterpriseList=new ArrayList<Enterprise>();
+    public void addEnterprise(Enterprise enterprise) {
+        enterpriseList.add(enterprise);
     }
     
-    //Create enterprise
-    public Enterprise createAndAddEnterprise(String name,Enterprise.EnterpriseType type){
-        Enterprise enterprise=null;
-        if(type==Enterprise.EnterpriseType.Hospital){
-            enterprise=new HospitalEnterprise(name);
-            enterpriseList.add(enterprise);
+    public void removeEnterprise(Enterprise enterprise) {
+        enterpriseList.remove(enterprise);
+    }
+    
+    public Enterprise findEnterpriseByName(String name) {
+        for (Enterprise enterprise : enterpriseList) {
+            if (enterprise.getName().equals(name)) {
+                return enterprise;
+            }
         }
-        return enterprise;
+        return null;
+    }
+    
+    public Enterprise findEnterpriseByType(Enterprise.EnterpriseType type) {
+        for (Enterprise enterprise : enterpriseList) {
+            if (enterprise.getEnterpriseType() == type) {
+                return enterprise;
+            }
+        }
+        return null;
     }
 }
