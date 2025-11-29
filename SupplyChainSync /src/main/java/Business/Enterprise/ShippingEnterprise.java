@@ -4,11 +4,11 @@
  */
 package Business.Enterprise;
 
-import Business.Organization.ShippingManagementOrganization;
-import Business.Organization.ShippingOperationOrganization;
+import Business.Organization.Shipping.ShippingManagementOrganization;
+import Business.Organization.Shipping.ShippingOperationOrganization;
 import Business.Role.Role;
-import Business.Role.ShippingManagerRole;
-import Business.Role.DeliveryStaffRole;
+import Business.Role.Shipping.ShippingManagerRole;
+import Business.Role.Shipping.DeliveryStaffRole;
 import java.util.ArrayList;
 
 /**

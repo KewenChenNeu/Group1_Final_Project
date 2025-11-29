@@ -4,11 +4,11 @@
  */
 package Business.Enterprise;
 
-import Business.Organization.ProductionManagementOrganization;
-import Business.Organization.InventoryOrganization;
+import Business.Organization.Manufacturer.ProductionManagementOrganization;
+import Business.Organization.Manufacturer.InventoryOrganization;
 import Business.Role.Role;
-import Business.Role.ProductionManagerRole;
-import Business.Role.InventoryManagerRole;
+import Business.Role.Manufacturer.ProductionManagerRole;
+import Business.Role.Manufacturer.InventoryManagerRole;
 import java.util.ArrayList;
 
 /**

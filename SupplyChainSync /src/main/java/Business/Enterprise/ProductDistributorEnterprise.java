@@ -4,12 +4,12 @@
  */
 package Business.Enterprise;
 
-import Business.Organization.WholesaleSalesOrganization;
-import Business.Organization.WholesaleInventoryOrganization;
+import Business.Organization.Distributor.WholesaleSalesOrganization;
+import Business.Organization.Distributor.WholesaleInventoryOrganization;
 import Business.Role.Role;
-import Business.Role.WholesaleSalesRole;
-import Business.Role.WholesaleInventoryRole;
-import Business.Role.WholesaleAnalyticsRole;
+import Business.Role.Distributor.WholesaleSalesRole;
+import Business.Role.Distributor.WholesaleInventoryRole;
+import Business.Role.Distributor.WholesaleAnalyticsRole;
 import java.util.ArrayList;
 
 /**

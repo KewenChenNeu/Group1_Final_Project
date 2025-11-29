@@ -1,5 +1,17 @@
 package Business;
 
+import Business.Role.Retail.OrderClerkRole;
+import Business.Role.Retail.StoreManagerRole;
+import Business.Role.Retail.RetailAnalyticsRole;
+import Business.Role.Manufacturer.InventoryManagerRole;
+import Business.Role.Manufacturer.ProductionManagerRole;
+import Business.Role.Shipping.ShippingManagerRole;
+import Business.Role.Shipping.DeliveryStaffRole;
+import Business.Role.RawMaterialSupplier.RMProcurementRole;
+import Business.Role.RawMaterialSupplier.RMInventoryManagerRole;
+import Business.Role.Distributor.WholesaleAnalyticsRole;
+import Business.Role.Distributor.WholesaleInventoryRole;
+import Business.Role.Distributor.WholesaleSalesRole;
 import Business.Employee.Employee;
 import Business.Enterprise.*;
 import Business.Network.Network;
@@ -173,11 +185,11 @@ public class ConfigureASystem {
         Employee storeMgr = storeOrg.getEmployeeDirectory().createEmployee("Nancy Robinson");
         storeOrg.getUserAccountDirectory().createUserAccount("retail_mgr1", "password", storeMgr, new StoreManagerRole());
         
-        Employee orderClerk = storeOrg.getEmployeeDirectory().createEmployee("Steven Walker");
-        storeOrg.getUserAccountDirectory().createUserAccount("retail_clerk1", "password", orderClerk, new OrderClerkRole());
+        Employee orderClerk = inventoryOrg.getEmployeeDirectory().createEmployee("Steven Walker");
+        inventoryOrg.getUserAccountDirectory().createUserAccount("retail_clerk1", "password", orderClerk, new OrderClerkRole());
         
-        Employee orderClerk2 = storeOrg.getEmployeeDirectory().createEmployee("Michelle Hall");
-        storeOrg.getUserAccountDirectory().createUserAccount("retail_clerk2", "password", orderClerk2, new OrderClerkRole());
+        Employee orderClerk2 = inventoryOrg.getEmployeeDirectory().createEmployee("Michelle Hall");
+        inventoryOrg.getUserAccountDirectory().createUserAccount("retail_clerk2", "password", orderClerk2, new OrderClerkRole());
         
         // Create employees for Retail Inventory Organization
         Employee retailAnalyst = inventoryOrg.getEmployeeDirectory().createEmployee("George Allen");

@@ -4,12 +4,12 @@
  */
 package Business.Enterprise;
 
-import Business.Organization.StoreManagementOrganization;
-import Business.Organization.RetailInventoryOrganization;
+import Business.Organization.Retail.StoreManagementOrganization;
+import Business.Organization.Retail.RetailInventoryOrganization;
 import Business.Role.Role;
-import Business.Role.StoreManagerRole;
-import Business.Role.OrderClerkRole;
-import Business.Role.RetailAnalyticsRole;
+import Business.Role.Retail.StoreManagerRole;
+import Business.Role.Retail.OrderClerkRole;
+import Business.Role.Retail.RetailAnalyticsRole;
 import java.util.ArrayList;
 
 /**

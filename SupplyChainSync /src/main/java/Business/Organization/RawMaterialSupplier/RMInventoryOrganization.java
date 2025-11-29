@@ -2,26 +2,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Business.Organization;
+package Business.Organization.RawMaterialSupplier;
 
+import Business.Organization.Organization;
 import Business.Role.Role;
-import Business.Role.InventoryManagerRole;
+import Business.Role.RawMaterialSupplier.RMInventoryManagerRole;
 import java.util.ArrayList;
 
 /**
  *
  * @author chris
  */
-public class InventoryOrganization extends Organization {
+public class RMInventoryOrganization extends Organization {
 
-    public InventoryOrganization() {
-        super(Type.Inventory.getValue());
+    public RMInventoryOrganization() {
+        super(Type.RMInventory.getValue());
     }
 
     @Override
     public ArrayList<Role> getSupportedRole() {
         ArrayList<Role> roles = new ArrayList<>();
-        roles.add(new InventoryManagerRole());
+        roles.add(new RMInventoryManagerRole());
         return roles;
     }
 }

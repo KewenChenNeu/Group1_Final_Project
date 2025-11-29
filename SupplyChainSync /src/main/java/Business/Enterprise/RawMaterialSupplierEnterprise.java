@@ -4,11 +4,11 @@
  */
 package Business.Enterprise;
 
-import Business.Organization.RMProcurementOrganization;
-import Business.Organization.RMInventoryOrganization;
+import Business.Organization.RawMaterialSupplier.RMProcurementOrganization;
+import Business.Organization.RawMaterialSupplier.RMInventoryOrganization;
 import Business.Role.Role;
-import Business.Role.RMProcurementRole;
-import Business.Role.RMInventoryManagerRole;
+import Business.Role.RawMaterialSupplier.RMProcurementRole;
+import Business.Role.RawMaterialSupplier.RMInventoryManagerRole;
 import java.util.ArrayList;
 
 /**
