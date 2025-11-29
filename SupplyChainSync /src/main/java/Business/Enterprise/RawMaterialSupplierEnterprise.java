@@ -4,10 +4,40 @@
  */
 package Business.Enterprise;
 
+import Business.Organization.RMProcurementOrganization;
+import Business.Organization.RMInventoryOrganization;
+import Business.Role.Role;
+import Business.Role.RMProcurementRole;
+import Business.Role.RMInventoryManagerRole;
+import java.util.ArrayList;
+
 /**
  *
  * @author zhaojinkun
  */
-public class RawMaterialSupplierEnterprise {
-    
+public class RawMaterialSupplierEnterprise extends Enterprise {
+
+    public RawMaterialSupplierEnterprise(String name) {
+        super(name, EnterpriseType.RawMaterialSupplier);
+        initializeOrganizations();
+    }
+
+    @Override
+    public void initializeOrganizations() {
+        // Create and add RM Procurement Organization
+        RMProcurementOrganization rmProcurementOrg = new RMProcurementOrganization();
+        getOrganizationDirectory().addOrganization(rmProcurementOrg);
+        
+        // Create and add RM Inventory Organization
+        RMInventoryOrganization rmInventoryOrg = new RMInventoryOrganization();
+        getOrganizationDirectory().addOrganization(rmInventoryOrg);
+    }
+
+    @Override
+    public ArrayList<Role> getSupportedRole() {
+        ArrayList<Role> roles = new ArrayList<>();
+        roles.add(new RMProcurementRole());
+        roles.add(new RMInventoryManagerRole());
+        return roles;
+    }
 }

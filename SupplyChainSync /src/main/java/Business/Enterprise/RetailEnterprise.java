@@ -4,10 +4,42 @@
  */
 package Business.Enterprise;
 
+import Business.Organization.StoreManagementOrganization;
+import Business.Organization.RetailInventoryOrganization;
+import Business.Role.Role;
+import Business.Role.StoreManagerRole;
+import Business.Role.OrderClerkRole;
+import Business.Role.RetailAnalyticsRole;
+import java.util.ArrayList;
+
 /**
  *
  * @author zhaojinkun
  */
-public class RetailEnterprise {
-    
+public class RetailEnterprise extends Enterprise {
+
+    public RetailEnterprise(String name) {
+        super(name, EnterpriseType.Retail);
+        initializeOrganizations();
+    }
+
+    @Override
+    public void initializeOrganizations() {
+        // Create and add Store Management Organization
+        StoreManagementOrganization storeOrg = new StoreManagementOrganization();
+        getOrganizationDirectory().addOrganization(storeOrg);
+        
+        // Create and add Retail Inventory Organization
+        RetailInventoryOrganization inventoryOrg = new RetailInventoryOrganization();
+        getOrganizationDirectory().addOrganization(inventoryOrg);
+    }
+
+    @Override
+    public ArrayList<Role> getSupportedRole() {
+        ArrayList<Role> roles = new ArrayList<>();
+        roles.add(new StoreManagerRole());
+        roles.add(new OrderClerkRole());
+        roles.add(new RetailAnalyticsRole());
+        return roles;
+    }
 }

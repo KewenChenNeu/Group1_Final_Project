@@ -4,10 +4,40 @@
  */
 package Business.Enterprise;
 
+import Business.Organization.ProductionManagementOrganization;
+import Business.Organization.InventoryOrganization;
+import Business.Role.Role;
+import Business.Role.ProductionManagerRole;
+import Business.Role.InventoryManagerRole;
+import java.util.ArrayList;
+
 /**
  *
  * @author zhaojinkun
  */
-public class ManufacturerEnterprise {
-    
+public class ManufacturerEnterprise extends Enterprise {
+
+    public ManufacturerEnterprise(String name) {
+        super(name, EnterpriseType.Manufacturer);
+        initializeOrganizations();
+    }
+
+    @Override
+    public void initializeOrganizations() {
+        // Create and add Production Management Organization
+        ProductionManagementOrganization productionOrg = new ProductionManagementOrganization();
+        getOrganizationDirectory().addOrganization(productionOrg);
+        
+        // Create and add Inventory Organization
+        InventoryOrganization inventoryOrg = new InventoryOrganization();
+        getOrganizationDirectory().addOrganization(inventoryOrg);
+    }
+
+    @Override
+    public ArrayList<Role> getSupportedRole() {
+        ArrayList<Role> roles = new ArrayList<>();
+        roles.add(new ProductionManagerRole());
+        roles.add(new InventoryManagerRole());
+        return roles;
+    }
 }
