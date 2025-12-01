@@ -26,19 +26,226 @@ public class DeliveryConfirmationPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitle = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        btnBack = new javax.swing.JButton();
+        lblConfirmationTitle = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblConfirmation = new javax.swing.JTable();
+        lblSummeryTitle = new javax.swing.JLabel();
+        lblShippingID = new javax.swing.JLabel();
+        lblRetailer = new javax.swing.JLabel();
+        lblProduct = new javax.swing.JLabel();
+        lblQuantity = new javax.swing.JLabel();
+        lblDeliveredDate = new javax.swing.JLabel();
+        lblDeliveryStaff = new javax.swing.JLabel();
+        fieldShipmentID = new javax.swing.JTextField();
+        fieldRetailer = new javax.swing.JTextField();
+        fieldProduct = new javax.swing.JTextField();
+        fieldDeliveryDate = new javax.swing.JTextField();
+        fieldQuantity = new javax.swing.JTextField();
+        fieldDeliveryStaff = new javax.swing.JTextField();
+        lblNote = new javax.swing.JLabel();
+        fieldNote = new javax.swing.JTextField();
+        btnConfirm = new javax.swing.JButton();
+        lblConfirmedDeliveries = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblConfirmedDelivery = new javax.swing.JTable();
+
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        lblTitle.setText("✅ Delivery Confirmation  ");
+
+        btnBack.setText("<< Back");
+
+        lblConfirmationTitle.setText("Pending Delivery Confirmations");
+
+        tblConfirmation.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Confirm ID", "Shipment ID", "Retailer", "Product", "Delivered Date", "Status"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblConfirmation);
+        if (tblConfirmation.getColumnModel().getColumnCount() > 0) {
+            tblConfirmation.getColumnModel().getColumn(1).setHeaderValue("Shipment ID");
+            tblConfirmation.getColumnModel().getColumn(5).setHeaderValue("Status");
+        }
+
+        lblSummeryTitle.setText("Confirmation Details");
+
+        lblShippingID.setText("Shipment ID:");
+
+        lblRetailer.setText("Retailer:");
+
+        lblProduct.setText("Product:");
+
+        lblQuantity.setText("Quantity:");
+
+        lblDeliveredDate.setText("Delivered Date:");
+
+        lblDeliveryStaff.setText("Delivery Staff:");
+
+        lblNote.setText("Notes:");
+
+        btnConfirm.setText("✅ Confirm Delivery");
+
+        lblConfirmedDeliveries.setText("Confirmed Deliveries History");
+
+        tblConfirmedDelivery.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Confirm ID", "Retailer", "Product", "Confirmed Date", "Confirmed By"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tblConfirmedDelivery);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(229, 229, 229)
+                                .addComponent(btnConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lblConfirmedDeliveries)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lblShippingID)
+                                            .addComponent(lblSummeryTitle)
+                                            .addComponent(lblProduct)
+                                            .addComponent(lblDeliveredDate)
+                                            .addComponent(lblNote))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(fieldProduct)
+                                                    .addComponent(fieldShipmentID)
+                                                    .addComponent(fieldDeliveryDate, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE))
+                                                .addGap(54, 54, 54)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                    .addComponent(lblDeliveryStaff)
+                                                    .addComponent(lblRetailer)
+                                                    .addComponent(lblQuantity))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(fieldRetailer, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                                                    .addComponent(fieldQuantity)
+                                                    .addComponent(fieldDeliveryStaff)))
+                                            .addComponent(fieldNote)))
+                                    .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnBack)
+                                    .addComponent(lblConfirmationTitle))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnBack)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblConfirmationTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblSummeryTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblShippingID)
+                    .addComponent(lblRetailer)
+                    .addComponent(fieldShipmentID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fieldRetailer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblProduct)
+                    .addComponent(lblQuantity)
+                    .addComponent(fieldProduct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fieldQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDeliveredDate)
+                    .addComponent(lblDeliveryStaff)
+                    .addComponent(fieldDeliveryDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fieldDeliveryStaff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNote)
+                    .addComponent(fieldNote, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnConfirm)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblConfirmedDeliveries)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(22, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnConfirm;
+    private javax.swing.JTextField fieldDeliveryDate;
+    private javax.swing.JTextField fieldDeliveryStaff;
+    private javax.swing.JTextField fieldNote;
+    private javax.swing.JTextField fieldProduct;
+    private javax.swing.JTextField fieldQuantity;
+    private javax.swing.JTextField fieldRetailer;
+    private javax.swing.JTextField fieldShipmentID;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblConfirmationTitle;
+    private javax.swing.JLabel lblConfirmedDeliveries;
+    private javax.swing.JLabel lblDeliveredDate;
+    private javax.swing.JLabel lblDeliveryStaff;
+    private javax.swing.JLabel lblNote;
+    private javax.swing.JLabel lblProduct;
+    private javax.swing.JLabel lblQuantity;
+    private javax.swing.JLabel lblRetailer;
+    private javax.swing.JLabel lblShippingID;
+    private javax.swing.JLabel lblSummeryTitle;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblConfirmation;
+    private javax.swing.JTable tblConfirmedDelivery;
     // End of variables declaration//GEN-END:variables
 }
