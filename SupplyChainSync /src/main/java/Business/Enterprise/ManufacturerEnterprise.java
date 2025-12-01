@@ -6,6 +6,7 @@ package Business.Enterprise;
 
 import Business.Organization.Manufacturer.ProductionManagementOrganization;
 import Business.Organization.Manufacturer.InventoryOrganization;
+import Business.Production.ProductionManager;
 import Business.Role.Role;
 import Business.Role.Manufacturer.ProductionManagerRole;
 import Business.Role.Manufacturer.InventoryManagerRole;
@@ -16,9 +17,12 @@ import java.util.ArrayList;
  * @author zhaojinkun
  */
 public class ManufacturerEnterprise extends Enterprise {
+    
+    private ProductionManager productionManager;
 
     public ManufacturerEnterprise(String name) {
         super(name, EnterpriseType.Manufacturer);
+        this.productionManager = new ProductionManager();
         initializeOrganizations();
     }
 
@@ -39,5 +43,13 @@ public class ManufacturerEnterprise extends Enterprise {
         roles.add(new ProductionManagerRole());
         roles.add(new InventoryManagerRole());
         return roles;
+    }
+    
+    public ProductionManager getProductionManager() {
+        return productionManager;
+    }
+
+    public void setProductionManager(ProductionManager productionManager) {
+        this.productionManager = productionManager;
     }
 }

@@ -1,22 +1,27 @@
 package Business;
 
-import Business.Role.Retail.OrderClerkRole;
-import Business.Role.Retail.StoreManagerRole;
-import Business.Role.Retail.RetailAnalyticsRole;
-import Business.Role.Manufacturer.InventoryManagerRole;
-import Business.Role.Manufacturer.ProductionManagerRole;
-import Business.Role.Shipping.ShippingManagerRole;
-import Business.Role.Shipping.DeliveryStaffRole;
-import Business.Role.RawMaterialSupplier.RMProcurementRole;
-import Business.Role.RawMaterialSupplier.RMInventoryManagerRole;
+import Business.Employee.Employee;
+import Business.Enterprise.*;
+import Business.Inventory.Inventory;
+import Business.Material.Material;
+import Business.Material.MaterialCatalog;
+import Business.Network.Network;
+import Business.Organization.Organization;
+import Business.Product.Product;
+import Business.Product.ProductCatalog;
+import Business.Role.*;
 import Business.Role.Distributor.WholesaleAnalyticsRole;
 import Business.Role.Distributor.WholesaleInventoryRole;
 import Business.Role.Distributor.WholesaleSalesRole;
-import Business.Employee.Employee;
-import Business.Enterprise.*;
-import Business.Network.Network;
-import Business.Organization.Organization;
-import Business.Role.*;
+import Business.Role.Manufacturer.InventoryManagerRole;
+import Business.Role.Manufacturer.ProductionManagerRole;
+import Business.Role.RawMaterialSupplier.RMInventoryManagerRole;
+import Business.Role.RawMaterialSupplier.RMProcurementRole;
+import Business.Role.Retail.OrderClerkRole;
+import Business.Role.Retail.RetailAnalyticsRole;
+import Business.Role.Retail.StoreManagerRole;
+import Business.Role.Shipping.DeliveryStaffRole;
+import Business.Role.Shipping.ShippingManagerRole;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.*;
 
@@ -71,7 +76,12 @@ public class ConfigureASystem {
         configureRetailEnterprise(retail);
         
         // ============================
-        // 4. Create Sample WorkRequests
+        // 4. Setup Products, Materials, and Inventory
+        // ============================
+        setupCatalogsAndInventory(rmSupplier, manufacturer, distributor, retail);
+        
+        // ============================
+        // 5. Create Sample WorkRequests
         // ============================
         createSampleWorkRequests(rmSupplier, manufacturer, distributor, shipping, retail);
         
@@ -185,11 +195,11 @@ public class ConfigureASystem {
         Employee storeMgr = storeOrg.getEmployeeDirectory().createEmployee("Nancy Robinson");
         storeOrg.getUserAccountDirectory().createUserAccount("retail_mgr1", "password", storeMgr, new StoreManagerRole());
         
-        Employee orderClerk = inventoryOrg.getEmployeeDirectory().createEmployee("Steven Walker");
-        inventoryOrg.getUserAccountDirectory().createUserAccount("retail_clerk1", "password", orderClerk, new OrderClerkRole());
+        Employee orderClerk = storeOrg.getEmployeeDirectory().createEmployee("Steven Walker");
+        storeOrg.getUserAccountDirectory().createUserAccount("retail_clerk1", "password", orderClerk, new OrderClerkRole());
         
-        Employee orderClerk2 = inventoryOrg.getEmployeeDirectory().createEmployee("Michelle Hall");
-        inventoryOrg.getUserAccountDirectory().createUserAccount("retail_clerk2", "password", orderClerk2, new OrderClerkRole());
+        Employee orderClerk2 = storeOrg.getEmployeeDirectory().createEmployee("Michelle Hall");
+        storeOrg.getUserAccountDirectory().createUserAccount("retail_clerk2", "password", orderClerk2, new OrderClerkRole());
         
         // Create employees for Retail Inventory Organization
         Employee retailAnalyst = inventoryOrg.getEmployeeDirectory().createEmployee("George Allen");
@@ -197,6 +207,208 @@ public class ConfigureASystem {
         
         Employee retailAnalyst2 = inventoryOrg.getEmployeeDirectory().createEmployee("Betty Young");
         inventoryOrg.getUserAccountDirectory().createUserAccount("retail_analyst2", "password", retailAnalyst2, new RetailAnalyticsRole());
+    }
+    
+    /**
+     * Setup Products, Materials, and Inventory for all enterprises
+     */
+    private static void setupCatalogsAndInventory(
+            RawMaterialSupplierEnterprise rmSupplier,
+            ManufacturerEnterprise manufacturer,
+            ProductDistributorEnterprise distributor,
+            RetailEnterprise retail) {
+        
+        // ============================
+        // Raw Material Supplier - Materials Catalog & Inventory
+        // ============================
+        MaterialCatalog rmMaterialCatalog = rmSupplier.getMaterialCatalog();
+        Inventory rmInventory = rmSupplier.getInventory();
+        
+        // Create materials that RM Supplier sells
+        Material steelSheets = rmMaterialCatalog.createMaterial("RM-001", "Steel Sheets", 2.50, "kg");
+        steelSheets.setCategory("Metal");
+        steelSheets.setDescription("High-grade steel sheets for manufacturing");
+        
+        Material copperWire = rmMaterialCatalog.createMaterial("RM-002", "Copper Wire", 5.00, "meters");
+        copperWire.setCategory("Metal");
+        copperWire.setDescription("Pure copper wire for electronics");
+        
+        Material aluminumBars = rmMaterialCatalog.createMaterial("RM-003", "Aluminum Bars", 3.00, "kg");
+        aluminumBars.setCategory("Metal");
+        aluminumBars.setDescription("Lightweight aluminum bars");
+        
+        Material plasticPellets = rmMaterialCatalog.createMaterial("RM-004", "Plastic Pellets", 1.50, "kg");
+        plasticPellets.setCategory("Plastic");
+        plasticPellets.setDescription("Industrial grade plastic pellets");
+        
+        Material rubberSheets = rmMaterialCatalog.createMaterial("RM-005", "Rubber Sheets", 4.00, "sheets");
+        rubberSheets.setCategory("Rubber");
+        rubberSheets.setDescription("Natural rubber sheets");
+        
+        Material glassPanel = rmMaterialCatalog.createMaterial("RM-006", "Glass Panels", 8.00, "panels");
+        glassPanel.setCategory("Glass");
+        glassPanel.setDescription("Tempered glass panels");
+        
+        // Add inventory for RM Supplier
+        rmInventory.addMaterial(steelSheets, 10000, 1000, 20000, "Warehouse A-1");
+        rmInventory.addMaterial(copperWire, 5000, 500, 10000, "Warehouse A-2");
+        rmInventory.addMaterial(aluminumBars, 8000, 800, 15000, "Warehouse A-3");
+        rmInventory.addMaterial(plasticPellets, 15000, 2000, 30000, "Warehouse B-1");
+        rmInventory.addMaterial(rubberSheets, 3000, 300, 6000, "Warehouse B-2");
+        rmInventory.addMaterial(glassPanel, 2000, 200, 4000, "Warehouse C-1");
+        
+        // ============================
+        // Manufacturer - Products Catalog & Inventory
+        // ============================
+        ProductCatalog mfgProductCatalog = manufacturer.getProductCatalog();
+        MaterialCatalog mfgMaterialCatalog = manufacturer.getMaterialCatalog();
+        Inventory mfgInventory = manufacturer.getInventory();
+        
+        // Add materials that manufacturer needs (reference from RM Supplier)
+        mfgMaterialCatalog.addMaterial(steelSheets);
+        mfgMaterialCatalog.addMaterial(copperWire);
+        mfgMaterialCatalog.addMaterial(aluminumBars);
+        mfgMaterialCatalog.addMaterial(plasticPellets);
+        
+        // Create products that Manufacturer produces
+        Product electronicSet = mfgProductCatalog.createProduct("EC-001", "Electronic Components Set A", 15.00, "sets");
+        electronicSet.setCategory("Electronics");
+        electronicSet.setDescription("Complete set of electronic components for assembly");
+        
+        Product homeAppliance = mfgProductCatalog.createProduct("HA-001", "Home Appliance Kit A", 50.00, "units");
+        homeAppliance.setCategory("Appliances");
+        homeAppliance.setDescription("Basic home appliance assembly kit");
+        
+        Product homeApplianceB = mfgProductCatalog.createProduct("HA-002", "Home Appliance Kit B", 75.00, "units");
+        homeApplianceB.setCategory("Appliances");
+        homeApplianceB.setDescription("Premium home appliance assembly kit");
+        
+        Product officeSupply = mfgProductCatalog.createProduct("OS-001", "Office Supplies Pack", 12.00, "packs");
+        officeSupply.setCategory("Office");
+        officeSupply.setDescription("Standard office supplies pack");
+        
+        Product industrialTool = mfgProductCatalog.createProduct("IT-001", "Industrial Tool Set", 120.00, "sets");
+        industrialTool.setCategory("Industrial");
+        industrialTool.setDescription("Professional industrial tool set");
+        
+        // Add raw material inventory for Manufacturer
+        mfgInventory.addMaterial(steelSheets, 2000, 500, 5000, "Raw Materials Section A");
+        mfgInventory.addMaterial(copperWire, 1000, 200, 3000, "Raw Materials Section B");
+        mfgInventory.addMaterial(aluminumBars, 1500, 300, 4000, "Raw Materials Section C");
+        mfgInventory.addMaterial(plasticPellets, 3000, 500, 8000, "Raw Materials Section D");
+        
+        // Add finished product inventory for Manufacturer
+        mfgInventory.addProduct(electronicSet, 5000, 500, 10000, "Finished Goods A");
+        mfgInventory.addProduct(homeAppliance, 2000, 200, 5000, "Finished Goods B");
+        mfgInventory.addProduct(homeApplianceB, 1500, 150, 4000, "Finished Goods B");
+        mfgInventory.addProduct(officeSupply, 8000, 1000, 15000, "Finished Goods C");
+        mfgInventory.addProduct(industrialTool, 500, 50, 1000, "Finished Goods D");
+        
+        // ============================
+        // Setup BOM (Bill of Materials) for each product
+        // ============================
+        Business.Production.ProductionManager prodManager = manufacturer.getProductionManager();
+        
+        // BOM for Electronic Components Set A (EC-001)
+        // Requires: 0.5kg steel, 2m copper wire, 0.1kg plastic
+        Business.Production.BillOfMaterials bomElectronic = prodManager.createBOM(electronicSet);
+        bomElectronic.addMaterial(steelSheets, 0.5);      // 0.5 kg per set
+        bomElectronic.addMaterial(copperWire, 2.0);       // 2 meters per set
+        bomElectronic.addMaterial(plasticPellets, 0.1);   // 0.1 kg per set
+        bomElectronic.setLaborHours(0.5);
+        bomElectronic.setProductionCostPerUnit(3.00);     // Labor + overhead
+        
+        // BOM for Home Appliance Kit A (HA-001)
+        // Requires: 2kg steel, 1m copper, 0.5kg plastic, 0.3kg aluminum
+        Business.Production.BillOfMaterials bomApplianceA = prodManager.createBOM(homeAppliance);
+        bomApplianceA.addMaterial(steelSheets, 2.0);      // 2 kg per unit
+        bomApplianceA.addMaterial(copperWire, 1.0);       // 1 meter per unit
+        bomApplianceA.addMaterial(plasticPellets, 0.5);   // 0.5 kg per unit
+        bomApplianceA.addMaterial(aluminumBars, 0.3);     // 0.3 kg per unit
+        bomApplianceA.setLaborHours(1.5);
+        bomApplianceA.setProductionCostPerUnit(10.00);
+        
+        // BOM for Home Appliance Kit B (HA-002) - Premium version
+        // Requires: 3kg steel, 2m copper, 1kg plastic, 0.5kg aluminum
+        Business.Production.BillOfMaterials bomApplianceB = prodManager.createBOM(homeApplianceB);
+        bomApplianceB.addMaterial(steelSheets, 3.0);      // 3 kg per unit
+        bomApplianceB.addMaterial(copperWire, 2.0);       // 2 meters per unit
+        bomApplianceB.addMaterial(plasticPellets, 1.0);   // 1 kg per unit
+        bomApplianceB.addMaterial(aluminumBars, 0.5);     // 0.5 kg per unit
+        bomApplianceB.setLaborHours(2.0);
+        bomApplianceB.setProductionCostPerUnit(15.00);
+        
+        // BOM for Office Supplies Pack (OS-001)
+        // Requires: 0.2kg plastic, 0.1kg aluminum
+        Business.Production.BillOfMaterials bomOffice = prodManager.createBOM(officeSupply);
+        bomOffice.addMaterial(plasticPellets, 0.2);       // 0.2 kg per pack
+        bomOffice.addMaterial(aluminumBars, 0.1);         // 0.1 kg per pack
+        bomOffice.setLaborHours(0.25);
+        bomOffice.setProductionCostPerUnit(2.00);
+        
+        // BOM for Industrial Tool Set (IT-001)
+        // Requires: 5kg steel, 3m copper, 2kg plastic, 1kg aluminum
+        Business.Production.BillOfMaterials bomTool = prodManager.createBOM(industrialTool);
+        bomTool.addMaterial(steelSheets, 5.0);            // 5 kg per set
+        bomTool.addMaterial(copperWire, 3.0);             // 3 meters per set
+        bomTool.addMaterial(plasticPellets, 2.0);         // 2 kg per set
+        bomTool.addMaterial(aluminumBars, 1.0);           // 1 kg per set
+        bomTool.setLaborHours(3.0);
+        bomTool.setProductionCostPerUnit(25.00);
+        
+        // ============================
+        // Distributor - Products Catalog & Inventory
+        // ============================
+        ProductCatalog distProductCatalog = distributor.getProductCatalog();
+        Inventory distInventory = distributor.getInventory();
+        
+        // Distributor sells products from Manufacturer
+        distProductCatalog.addProduct(electronicSet);
+        distProductCatalog.addProduct(homeAppliance);
+        distProductCatalog.addProduct(homeApplianceB);
+        distProductCatalog.addProduct(officeSupply);
+        distProductCatalog.addProduct(industrialTool);
+        
+        // Add inventory for Distributor (wholesale quantities)
+        distInventory.addProduct(electronicSet, 3000, 500, 8000, "Distribution Center A");
+        distInventory.addProduct(homeAppliance, 1000, 200, 3000, "Distribution Center A");
+        distInventory.addProduct(homeApplianceB, 800, 100, 2000, "Distribution Center B");
+        distInventory.addProduct(officeSupply, 5000, 1000, 12000, "Distribution Center C");
+        distInventory.addProduct(industrialTool, 200, 30, 500, "Distribution Center D");
+        
+        // ============================
+        // Retail - Products Catalog & Inventory
+        // ============================
+        ProductCatalog retailProductCatalog = retail.getProductCatalog();
+        Inventory retailInventory = retail.getInventory();
+        
+        // Retail sells products from Distributor (same products, retail pricing)
+        Product retailElectronic = retailProductCatalog.createProduct("EC-001", "Electronic Components Set A", 25.00, "sets");
+        retailElectronic.setCategory("Electronics");
+        retailElectronic.setDescription("Complete set of electronic components");
+        
+        Product retailAppliance = retailProductCatalog.createProduct("HA-001", "Home Appliance Kit A", 89.99, "units");
+        retailAppliance.setCategory("Appliances");
+        retailAppliance.setDescription("Basic home appliance kit");
+        
+        Product retailApplianceB = retailProductCatalog.createProduct("HA-002", "Home Appliance Kit B", 129.99, "units");
+        retailApplianceB.setCategory("Appliances");
+        retailApplianceB.setDescription("Premium home appliance kit");
+        
+        Product retailOffice = retailProductCatalog.createProduct("OS-001", "Office Supplies Pack", 19.99, "packs");
+        retailOffice.setCategory("Office");
+        retailOffice.setDescription("Standard office supplies pack");
+        
+        Product retailTool = retailProductCatalog.createProduct("IT-001", "Industrial Tool Set", 199.99, "sets");
+        retailTool.setCategory("Industrial");
+        retailTool.setDescription("Professional industrial tool set");
+        
+        // Add inventory for Retail (store quantities)
+        retailInventory.addProduct(retailElectronic, 150, 20, 300, "Store Shelf A1");
+        retailInventory.addProduct(retailAppliance, 50, 10, 100, "Store Shelf B1");
+        retailInventory.addProduct(retailApplianceB, 30, 5, 60, "Store Shelf B2");
+        retailInventory.addProduct(retailOffice, 200, 30, 400, "Store Shelf C1");
+        retailInventory.addProduct(retailTool, 15, 3, 30, "Store Shelf D1");
     }
     
     /**
@@ -296,7 +508,7 @@ public class ConfigureASystem {
         // Sample 5: Delivery Confirmation (for testing completed workflow)
         DeliveryConfirmationRequest delConfirm1 = new DeliveryConfirmationRequest();
         delConfirm1.setProductName("Office Supplies Pack");
-        delConfirm1.setProductCode("OS-003");
+        delConfirm1.setProductCode("OS-001");
         delConfirm1.setQuantityDelivered(100);
         delConfirm1.setUnit("packs");
         delConfirm1.setStoreName("MegaMart Downtown");

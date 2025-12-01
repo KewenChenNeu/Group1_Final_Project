@@ -5,8 +5,11 @@
  */
 package Business.Enterprise;
 
+import Business.Inventory.Inventory;
+import Business.Material.MaterialCatalog;
 import Business.Organization.Organization;
 import Business.Organization.OrganizationDirectory;
+import Business.Product.ProductCatalog;
 import Business.Role.Role;
 import java.util.ArrayList;
 
@@ -14,10 +17,13 @@ import java.util.ArrayList;
  *
  * @author Chris
  */
-public abstract class Enterprise extends Organization{
+public abstract class Enterprise extends Organization {
     
     private EnterpriseType enterpriseType;
     private OrganizationDirectory organizationDirectory;
+    private ProductCatalog productCatalog;
+    private MaterialCatalog materialCatalog;
+    private Inventory inventory;
 
     public enum EnterpriseType {
         RawMaterialSupplier("Raw Material Supplier"),
@@ -46,6 +52,9 @@ public abstract class Enterprise extends Organization{
         super(name);
         this.enterpriseType = type;
         organizationDirectory = new OrganizationDirectory();
+        productCatalog = new ProductCatalog();
+        materialCatalog = new MaterialCatalog();
+        inventory = new Inventory();
     }
 
     public OrganizationDirectory getOrganizationDirectory() {
@@ -58,6 +67,30 @@ public abstract class Enterprise extends Organization{
 
     public void setEnterpriseType(EnterpriseType enterpriseType) {
         this.enterpriseType = enterpriseType;
+    }
+    
+    public ProductCatalog getProductCatalog() {
+        return productCatalog;
+    }
+
+    public void setProductCatalog(ProductCatalog productCatalog) {
+        this.productCatalog = productCatalog;
+    }
+
+    public MaterialCatalog getMaterialCatalog() {
+        return materialCatalog;
+    }
+
+    public void setMaterialCatalog(MaterialCatalog materialCatalog) {
+        this.materialCatalog = materialCatalog;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
     
     // Abstract method to initialize default organizations for this enterprise
