@@ -4,27 +4,56 @@
  */
 package Business.WorkQueue;
 
+import Business.Product.Product;
+
 /**
  *
  * @author chris
  */
 public class WholesalePurchaseRequest extends WorkRequest {
     
-    private String productName;
+    // Product reference (preferred)
+    private Product product;
+    
+    // Product details (for display/backup)
     private String productCode;
+    private String productName;
     private int quantity;
     private String unit;
     private double unitPrice;
     private double discount;  // Percentage discount
     private String paymentTerms;
     private String urgencyLevel;  // Normal, Urgent, Critical
-    private String notes;
     
     public WholesalePurchaseRequest() {
         super();
         this.urgencyLevel = "Normal";
         this.discount = 0.0;
     }
+    
+    public WholesalePurchaseRequest(Product product, int quantity) {
+        this();
+        setProduct(product);
+        this.quantity = quantity;
+    }
+
+    // ==================== Product Reference ====================
+    
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+        if (product != null) {
+            this.productCode = product.getProductCode();
+            this.productName = product.getProductName();
+            this.unit = product.getUnit();
+            this.unitPrice = product.getUnitPrice();
+        }
+    }
+
+    // ==================== Product Details ====================
 
     public String getProductName() {
         return productName;
@@ -88,19 +117,28 @@ public class WholesalePurchaseRequest extends WorkRequest {
 
     public void setUrgencyLevel(String urgencyLevel) {
         this.urgencyLevel = urgencyLevel;
+        // Set priority based on urgency
+        if ("Critical".equalsIgnoreCase(urgencyLevel)) {
+            setPriority(1);
+        } else if ("Urgent".equalsIgnoreCase(urgencyLevel)) {
+            setPriority(2);
+        } else {
+            setPriority(3);
+        }
     }
-
-    public String getNotes() {
-        return notes;
+    
+    // ==================== Calculated Fields ====================
+    
+    public double getSubtotal() {
+        return quantity * unitPrice;
     }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
+    
+    public double getDiscountAmount() {
+        return getSubtotal() * discount / 100;
     }
     
     public double getTotalPrice() {
-        double subtotal = quantity * unitPrice;
-        return subtotal - (subtotal * discount / 100);
+        return getSubtotal() - getDiscountAmount();
     }
     
     @Override

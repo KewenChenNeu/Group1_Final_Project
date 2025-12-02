@@ -4,22 +4,60 @@
  */
 package Business.WorkQueue;
 
+import Business.Material.Material;
+
 /**
  *
  * @author chris
  */
 public class RawMaterialRestockRequest extends WorkRequest {
     
+    // Material reference (preferred)
+    private Material material;
+    
+    // Material details (for display/backup)
+    private String materialCode;
     private String materialName;
     private int quantity;
     private String unit;  // kg, pieces, liters, etc.
     private double unitPrice;
     private String urgencyLevel;  // Normal, Urgent, Critical
-    private String notes;
     
     public RawMaterialRestockRequest() {
         super();
         this.urgencyLevel = "Normal";
+    }
+    
+    public RawMaterialRestockRequest(Material material, int quantity) {
+        this();
+        setMaterial(material);
+        this.quantity = quantity;
+    }
+
+    // ==================== Material Reference ====================
+    
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
+        if (material != null) {
+            this.materialCode = material.getMaterialCode();
+            this.materialName = material.getMaterialName();
+            this.unit = material.getUnit();
+            this.unitPrice = material.getUnitPrice();
+        }
+    }
+
+    // ==================== Material Details ====================
+    
+    public String getMaterialCode() {
+        return materialCode;
+    }
+
+    public void setMaterialCode(String materialCode) {
+        this.materialCode = materialCode;
     }
 
     public String getMaterialName() {
@@ -60,15 +98,17 @@ public class RawMaterialRestockRequest extends WorkRequest {
 
     public void setUrgencyLevel(String urgencyLevel) {
         this.urgencyLevel = urgencyLevel;
+        // Set priority based on urgency
+        if ("Critical".equalsIgnoreCase(urgencyLevel)) {
+            setPriority(1);
+        } else if ("Urgent".equalsIgnoreCase(urgencyLevel)) {
+            setPriority(2);
+        } else {
+            setPriority(3);
+        }
     }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
+    
+    // ==================== Calculated Fields ====================
     
     public double getTotalPrice() {
         return quantity * unitPrice;

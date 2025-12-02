@@ -4,27 +4,60 @@
  */
 package Business.WorkQueue;
 
+import Business.Product.Product;
+
 /**
  *
  * @author chris
  */
 public class RetailPurchaseOrderRequest extends WorkRequest {
     
-    private String productName;
+    // Product reference (preferred)
+    private Product product;
+    
+    // Product details (for display/backup)
     private String productCode;
+    private String productName;
     private int quantity;
     private String unit;
     private double unitPrice;
+    
+    // Store information
     private String storeName;
     private String storeAddress;
+    
+    // Order details
     private String urgencyLevel;  // Normal, Urgent, Critical
     private String paymentMethod;
-    private String notes;
     
     public RetailPurchaseOrderRequest() {
         super();
         this.urgencyLevel = "Normal";
     }
+    
+    public RetailPurchaseOrderRequest(Product product, int quantity) {
+        this();
+        setProduct(product);
+        this.quantity = quantity;
+    }
+
+    // ==================== Product Reference ====================
+    
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+        if (product != null) {
+            this.productCode = product.getProductCode();
+            this.productName = product.getProductName();
+            this.unit = product.getUnit();
+            this.unitPrice = product.getUnitPrice();
+        }
+    }
+
+    // ==================== Product Details ====================
 
     public String getProductName() {
         return productName;
@@ -66,6 +99,8 @@ public class RetailPurchaseOrderRequest extends WorkRequest {
         this.unitPrice = unitPrice;
     }
 
+    // ==================== Store Information ====================
+
     public String getStoreName() {
         return storeName;
     }
@@ -82,12 +117,22 @@ public class RetailPurchaseOrderRequest extends WorkRequest {
         this.storeAddress = storeAddress;
     }
 
+    // ==================== Order Details ====================
+
     public String getUrgencyLevel() {
         return urgencyLevel;
     }
 
     public void setUrgencyLevel(String urgencyLevel) {
         this.urgencyLevel = urgencyLevel;
+        // Set priority based on urgency
+        if ("Critical".equalsIgnoreCase(urgencyLevel)) {
+            setPriority(1);
+        } else if ("Urgent".equalsIgnoreCase(urgencyLevel)) {
+            setPriority(2);
+        } else {
+            setPriority(3);
+        }
     }
 
     public String getPaymentMethod() {
@@ -97,14 +142,8 @@ public class RetailPurchaseOrderRequest extends WorkRequest {
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
+    
+    // ==================== Calculated Fields ====================
     
     public double getTotalPrice() {
         return quantity * unitPrice;
