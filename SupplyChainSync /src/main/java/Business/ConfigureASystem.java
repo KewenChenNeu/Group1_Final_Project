@@ -122,6 +122,9 @@ public class ConfigureASystem {
         
         Employee invStaff = inventoryOrg.getEmployeeDirectory().createEmployee("Lisa Anderson");
         inventoryOrg.getUserAccountDirectory().createUserAccount("mfg_inv2", "password", invStaff, new InventoryManagerRole());
+        
+        Employee invtest = inventoryOrg.getEmployeeDirectory().createEmployee("David Anderson");
+        inventoryOrg.getUserAccountDirectory().createUserAccount("mi", "", invtest, new InventoryManagerRole());
     }
     
     /**
