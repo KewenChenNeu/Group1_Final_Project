@@ -8,6 +8,7 @@ import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Manufacturer.InventoryOrganization;
 import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 /**
@@ -19,9 +20,19 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
     /**
      * Creates new form InventoryManagerWorkAreaJPanel
      */
+    JPanel userProcessContainer;
+    UserAccount accoun;
+    InventoryOrganization inventoryOrganization;
+    Enterprise enterprise;
+    EcoSystem system;
+    
     public InventoryManagerWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, InventoryOrganization inventoryOrganization, Enterprise enterprise, EcoSystem system) {
+        this.userProcessContainer = userProcessContainer;
+        this.accoun = account;
+        this.inventoryOrganization = inventoryOrganization;
+        this.enterprise = enterprise;
         initComponents();
-        lblUserName.setText(account.getEmployee().getName());
+        lblUserName.setText(this.accoun.getEmployee().getName());
     }
 
     /**
@@ -127,6 +138,10 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
 
     private void btnRawMaterialsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRawMaterialsActionPerformed
         // TODO add your handling code here:
+        RawMaterialInventoryJPanel rmijp = new RawMaterialInventoryJPanel(userProcessContainer, inventoryOrganization, enterprise, system);
+        userProcessContainer.add ("CustomerWorkAreaJPanel", rmijp);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout ();
+        layout.next (userProcessContainer);
     }//GEN-LAST:event_btnRawMaterialsActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed

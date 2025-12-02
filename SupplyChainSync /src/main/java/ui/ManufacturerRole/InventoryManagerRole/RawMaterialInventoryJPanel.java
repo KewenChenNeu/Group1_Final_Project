@@ -4,6 +4,12 @@
  */
 package ui.ManufacturerRole.InventoryManagerRole;
 
+import Business.EcoSystem;
+import Business.Enterprise.Enterprise;
+import Business.Organization.Manufacturer.InventoryOrganization;
+import Business.UserAccount.UserAccount;
+import javax.swing.JPanel;
+
 /**
  *
  * @author zhaojinkun
@@ -13,7 +19,17 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
     /**
      * Creates new form RawMaterialInventoryJPanel
      */
-    public RawMaterialInventoryJPanel() {
+    
+    JPanel userProcessContainer;
+    UserAccount accoun;
+    InventoryOrganization inventoryOrganization;
+    Enterprise enterprise;
+    EcoSystem system;
+    
+    public RawMaterialInventoryJPanel(JPanel userProcessContainer, InventoryOrganization inventoryOrganization, Enterprise enterprise, EcoSystem system) {
+        this.userProcessContainer = userProcessContainer;
+        this.inventoryOrganization = inventoryOrganization;
+        this.enterprise = enterprise;
         initComponents();
     }
 
@@ -26,51 +42,86 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField2 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        fieldMaterialName = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        ProductsTable = new javax.swing.JTable();
-        btnOverPerforming = new javax.swing.JButton();
-        btnUnderperforming = new javax.swing.JButton();
+        tbMaterial = new javax.swing.JTable();
+        btnEditQuantity = new javax.swing.JButton();
+        btnRestorckRequest = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel3 = new javax.swing.JLabel();
+        cbCategory = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        btnViewMaterialDetail = new javax.swing.JButton();
+        rbtnLowerStockOnly = new javax.swing.JRadioButton();
+        btnBack = new javax.swing.JButton();
+
+        jTextField2.setText("jTextField2");
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jLabel1.setText("Raw Material Inventory Management");
 
-        jLabel2.setText("Search by Name:");
+        jLabel2.setText("Material Name:");
 
-        jButton1.setText("Search");
+        btnSearch.setText("Search");
 
-        ProductsTable.setModel(new javax.swing.table.DefaultTableModel(
+        tbMaterial.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Material Name ", "Quantity", "Unit", "Status"
+                "Material Code ", "Material Name", "Category", "Qty", "Unit", "Location", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(ProductsTable);
+        jScrollPane1.setViewportView(tbMaterial);
 
-        btnOverPerforming.setText("Edit Quantity");
-        btnOverPerforming.addActionListener(new java.awt.event.ActionListener() {
+        btnEditQuantity.setText("Edit Quantity");
+        btnEditQuantity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOverPerformingActionPerformed(evt);
+                btnEditQuantityActionPerformed(evt);
             }
         });
 
-        btnUnderperforming.setText("Add Material");
-        btnUnderperforming.addActionListener(new java.awt.event.ActionListener() {
+        btnRestorckRequest.setText("Create Restock Request");
+        btnRestorckRequest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUnderperformingActionPerformed(evt);
+                btnRestorckRequestActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Helvetica Neue", 2, 14)); // NOI18N
+        jLabel3.setText("Filters:");
+
+        cbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel4.setText("Category:");
+
+        btnViewMaterialDetail.setText("View Material Details");
+        btnViewMaterialDetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewMaterialDetailActionPerformed(evt);
+            }
+        });
+
+        rbtnLowerStockOnly.setText("Low Stock Only");
+
+        btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
             }
         });
 
@@ -78,50 +129,82 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(203, 203, 203))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE)
+                    .addComponent(jSeparator2)
+                    .addComponent(jSeparator1)
+                    .addComponent(jSeparator3)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnUnderperforming)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnOverPerforming)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnViewMaterialDetail)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnEditQuantity)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnRestorckRequest))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(fieldMaterialName, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(rbtnLowerStockOnly)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(216, 216, 216)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnBack)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBack))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(cbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(fieldMaterialName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSearch)
+                            .addComponent(rbtnLowerStockOnly))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnUnderperforming)
-                    .addComponent(btnOverPerforming))
-                .addContainerGap(82, Short.MAX_VALUE))
+                    .addComponent(btnViewMaterialDetail)
+                    .addComponent(btnEditQuantity)
+                    .addComponent(btnRestorckRequest))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnOverPerformingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOverPerformingActionPerformed
+    private void btnEditQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditQuantityActionPerformed
         // TODO add your handling code here:
 ////        DefaultTableModel model = (DefaultTableModel) ProductsTable.getModel();
 ////        model.setRowCount(0);
@@ -148,9 +231,9 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
 ////            row[6] = "$" + p.getOrderPricePerformance();
 ////            model.addRow(row);
 ////        }
-    }//GEN-LAST:event_btnOverPerformingActionPerformed
+    }//GEN-LAST:event_btnEditQuantityActionPerformed
 
-    private void btnUnderperformingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUnderperformingActionPerformed
+    private void btnRestorckRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestorckRequestActionPerformed
         // TODO add your handling code here:
 //        DefaultTableModel model = (DefaultTableModel) ProductsTable.getModel();
 //        model.setRowCount(0);
@@ -178,17 +261,37 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
 //            model.addRow(row);
 //        }
 
-    }//GEN-LAST:event_btnUnderperformingActionPerformed
+    }//GEN-LAST:event_btnRestorckRequestActionPerformed
+
+    private void btnViewMaterialDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewMaterialDetailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnViewMaterialDetailActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+         userProcessContainer.remove(this);
+        ((java.awt.CardLayout) userProcessContainer.getLayout()).next(userProcessContainer);
+    }//GEN-LAST:event_btnBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable ProductsTable;
-    private javax.swing.JButton btnOverPerforming;
-    private javax.swing.JButton btnUnderperforming;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnEditQuantity;
+    private javax.swing.JButton btnRestorckRequest;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnViewMaterialDetail;
+    private javax.swing.JComboBox<String> cbCategory;
+    private javax.swing.JTextField fieldMaterialName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JRadioButton rbtnLowerStockOnly;
+    private javax.swing.JTable tbMaterial;
     // End of variables declaration//GEN-END:variables
 }
