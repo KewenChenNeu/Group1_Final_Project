@@ -4,6 +4,12 @@
  */
 package ui.DistributorRole.WholesaleSalesRole;
 
+import Business.EcoSystem;
+import Business.Enterprise.Enterprise;
+import Business.Organization.Distributor.WholesaleSalesOrganization;
+import Business.UserAccount.UserAccount;
+import javax.swing.JPanel;
+
 /**
  *
  * @author chris
@@ -13,7 +19,7 @@ public class SalesEditProfilePanel extends javax.swing.JPanel {
     /**
      * Creates new form SalesEditProfilePanel
      */
-    public SalesEditProfilePanel() {
+    public SalesEditProfilePanel(JPanel userProcessContainer, UserAccount account, WholesaleSalesOrganization wholesaleSalesOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
     }
 

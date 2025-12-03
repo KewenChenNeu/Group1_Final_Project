@@ -8,6 +8,11 @@ import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Distributor.WholesaleSalesOrganization;
 import Business.UserAccount.UserAccount;
+import Business.WorkQueue.RetailPurchaseOrderRequest;
+import Business.WorkQueue.WholesalePurchaseRequest;
+import Business.WorkQueue.WholesalesShippingRequest;
+import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 /**
@@ -16,12 +21,68 @@ import javax.swing.JPanel;
  */
 public class WholesaleSalesWorkAreaJPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private UserAccount userAccount;
+    private WholesaleSalesOrganization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;
+    
     /**
      * Creates new form WholesaleSalesWorkAreaJPanel
      */
     public WholesaleSalesWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, WholesaleSalesOrganization wholesaleSalesOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.userAccount = account;
+        this.organization = wholesaleSalesOrganization;
+        this.enterprise = enterprise;
+        this.system = system;
         
+        populateInfo();
+        updateSummary();
+    }
+    
+    private void populateInfo() {
+        lblEnterpriseName.setText(enterprise.getName());
+        lblOrganizationName.setText(organization.getName());
+        lblUserName.setText(userAccount.getEmployee().getName());
+    }
+
+    void updateSummary() {
+        int pendingRestockRequests = 0;
+        int activePurchaseOrders = 0;
+        int shipmentsInProgress = 0;
+        
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof RetailPurchaseOrderRequest) {
+                String status = request.getStatus();
+                if ("Pending".equalsIgnoreCase(status) || "Sent".equalsIgnoreCase(status)) {
+                    pendingRestockRequests++;
+                }
+            }
+        }
+        
+        for (WorkRequest request : userAccount.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof WholesalePurchaseRequest) {
+                String status = request.getStatus();
+                if ("Pending".equalsIgnoreCase(status) || "Sent".equalsIgnoreCase(status) || "Processing".equalsIgnoreCase(status)) {
+                    activePurchaseOrders++;
+                }
+            }
+        }
+        
+        for (WorkRequest request : userAccount.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof WholesalesShippingRequest) {
+                String status = request.getStatus();
+                if ("In Transit".equalsIgnoreCase(status) || "Pending".equalsIgnoreCase(status)) {
+                    shipmentsInProgress++;
+                }
+            }
+        }
+        
+        lblNumberOfRestockRequest.setText(String.valueOf(pendingRestockRequests));
+        lblNumberOfActiveRequest.setText(String.valueOf(activePurchaseOrders));
+        lblNumberOfShipments.setText(String.valueOf(shipmentsInProgress));
     }
 
     /**
@@ -81,12 +142,32 @@ public class WholesaleSalesWorkAreaJPanel extends javax.swing.JPanel {
         lblNumberOfShipments.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
 
         btnViewRetailOrders.setText("📥 View Retail Orders");
+        btnViewRetailOrders.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewRetailOrdersActionPerformed(evt);
+            }
+        });
 
         btnManageShipping.setText("🚚 Manage Shipping");
+        btnManageShipping.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageShippingActionPerformed(evt);
+            }
+        });
 
         btnCreatePurchaseOrder.setText("📤 Create Purchase Order");
+        btnCreatePurchaseOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreatePurchaseOrderActionPerformed(evt);
+            }
+        });
 
         btnDeliveryConfirmation.setText("✅ Delivery Confirmation");
+        btnDeliveryConfirmation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeliveryConfirmationActionPerformed(evt);
+            }
+        });
 
         btnEditProfile.setText("👤  Edit Profile");
 
@@ -187,6 +268,38 @@ public class WholesaleSalesWorkAreaJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnViewRetailOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewRetailOrdersActionPerformed
+        // TODO add your handling code here:
+        ViewRetailOrdersPanel panel = new ViewRetailOrdersPanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("ViewRetailOrdersPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnViewRetailOrdersActionPerformed
+
+    private void btnCreatePurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreatePurchaseOrderActionPerformed
+        // TODO add your handling code here:
+        CreatePurchaseOrderPanel panel = new CreatePurchaseOrderPanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("CreatePurchaseOrderPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnCreatePurchaseOrderActionPerformed
+
+    private void btnManageShippingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageShippingActionPerformed
+        // TODO add your handling code here:
+        ManageShippingPanel panel = new ManageShippingPanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("ManageShippingPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnManageShippingActionPerformed
+
+    private void btnDeliveryConfirmationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeliveryConfirmationActionPerformed
+        // TODO add your handling code here:
+        DeliveryConfirmationPanel panel = new DeliveryConfirmationPanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("DeliveryConfirmationPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnDeliveryConfirmationActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreatePurchaseOrder;
@@ -211,4 +324,6 @@ public class WholesaleSalesWorkAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblUser;
     private javax.swing.JLabel lblUserName;
     // End of variables declaration//GEN-END:variables
+
+    
 }
