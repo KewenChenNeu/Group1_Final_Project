@@ -170,6 +170,11 @@ public class WholesaleSalesWorkAreaJPanel extends javax.swing.JPanel {
         });
 
         btnEditProfile.setText("👤  Edit Profile");
+        btnEditProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditProfileActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -299,6 +304,14 @@ public class WholesaleSalesWorkAreaJPanel extends javax.swing.JPanel {
         CardLayout layout = (CardLayout) userProcessContainer.getLayout();
         layout.next(userProcessContainer);
     }//GEN-LAST:event_btnDeliveryConfirmationActionPerformed
+
+    private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
+        // TODO add your handling code here:
+        SalesEditProfilePanel panel = new SalesEditProfilePanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("SalesEditProfilePanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnEditProfileActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
