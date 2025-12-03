@@ -197,6 +197,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="\ud83d\udccb View Inventory" containsInvalidXMLChars="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnViewInventoryActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lblOrganizationName">
     </Component>
@@ -206,6 +209,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="\ud83d\udce5 Receive Shipment" containsInvalidXMLChars="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnReceiveShipmentActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
