@@ -75,8 +75,18 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
         lblPendingShipments.setText("Pending Incoming Shipments:");
 
         btnViewInventory.setText("📋 View Inventory");
+        btnViewInventory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewInventoryActionPerformed(evt);
+            }
+        });
 
         btnReceiveShipment.setText("📥 Receive Shipment");
+        btnReceiveShipment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReceiveShipmentActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -166,6 +176,14 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
                 .addContainerGap(323, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnViewInventoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInventoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnViewInventoryActionPerformed
+
+    private void btnReceiveShipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReceiveShipmentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnReceiveShipmentActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
