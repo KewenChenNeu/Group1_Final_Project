@@ -191,6 +191,8 @@ public class ConfigureASystem {
         Organization storeOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(0);
         Organization inventoryOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(1);
         
+
+        
         // Create employees for Store Management Organization
         Employee storeMgr = storeOrg.getEmployeeDirectory().createEmployee("Nancy Robinson");
         storeOrg.getUserAccountDirectory().createUserAccount("retail_mgr1", "password", storeMgr, new StoreManagerRole());
@@ -427,6 +429,8 @@ public class ConfigureASystem {
         Organization distSalesOrg = distributor.getOrganizationDirectory().getOrganizationList().get(0);
         Organization shipMgmtOrg = shipping.getOrganizationDirectory().getOrganizationList().get(0);
         Organization retailStoreOrg = retail.getOrganizationDirectory().getOrganizationList().get(0);
+        UserAccount retailUser = retailStoreOrg.getUserAccountDirectory().getUserAccountList().get(0);
+
         
         // Sample 1: Raw Material Restock Request (Manufacturer → RM Supplier)
         RawMaterialRestockRequest rmRequest1 = new RawMaterialRestockRequest();
@@ -464,6 +468,7 @@ public class ConfigureASystem {
         
         // Sample 3: Retail Purchase Order (Retail → Distributor)
         RetailPurchaseOrderRequest retailPO1 = new RetailPurchaseOrderRequest();
+        retailPO1.setSender(retailUser);
         retailPO1.setProductName("Electronic Components Set A");
         retailPO1.setProductCode("EC-001");
         retailPO1.setQuantity(50);
@@ -477,6 +482,7 @@ public class ConfigureASystem {
         distSalesOrg.getWorkQueue().addWorkRequest(retailPO1);
         
         RetailPurchaseOrderRequest retailPO2 = new RetailPurchaseOrderRequest();
+        retailPO2.setSender(retailUser);
         retailPO2.setProductName("Home Appliance Kit B");
         retailPO2.setProductCode("HA-002");
         retailPO2.setQuantity(30);
