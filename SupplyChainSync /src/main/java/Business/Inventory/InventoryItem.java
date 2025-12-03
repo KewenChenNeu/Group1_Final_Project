@@ -203,5 +203,50 @@ public class InventoryItem {
     public String toString() {
         return getItemCode() + " - " + getItemName() + " (Qty: " + quantity + ")";
     }
+    
+    
+    
+    private int reservedQuantity = 0;
+
+    /**
+     * Get reserved quantity (for approved but not yet shipped orders)
+     */
+    public int getReservedQuantity() {
+        return reservedQuantity;
+    }
+
+    /**
+     * Set reserved quantity
+     */
+    public void setReservedQuantity(int reservedQuantity) {
+        this.reservedQuantity = reservedQuantity;
+    }
+
+    /**
+     * Reserve stock for an approved order
+     */
+    public boolean reserveStock(int amount) {
+        if (getAvailableQuantity() >= amount) {
+            this.reservedQuantity += amount;
+            this.lastUpdated = new Date();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Release reserved stock (when order is shipped or cancelled)
+     */
+    public void releaseReservedStock(int amount) {
+        this.reservedQuantity = Math.max(0, this.reservedQuantity - amount);
+        this.lastUpdated = new Date();
+    }
+
+    /**
+     * Get available quantity (total - reserved)
+     */
+    public int getAvailableQuantity() {
+        return quantity - reservedQuantity;
+    }
 }
 

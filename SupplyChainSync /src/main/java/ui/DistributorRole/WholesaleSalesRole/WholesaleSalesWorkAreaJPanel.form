@@ -216,21 +216,33 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="\ud83d\udce5 View Retail Orders" containsInvalidXMLChars="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnViewRetailOrdersActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnManageShipping">
       <Properties>
         <Property name="text" type="java.lang.String" value="\ud83d\ude9a Manage Shipping" containsInvalidXMLChars="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnManageShippingActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnCreatePurchaseOrder">
       <Properties>
         <Property name="text" type="java.lang.String" value="\ud83d\udce4 Create Purchase Order" containsInvalidXMLChars="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCreatePurchaseOrderActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnDeliveryConfirmation">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x2705; Delivery Confirmation"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeliveryConfirmationActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnEditProfile">
       <Properties>
