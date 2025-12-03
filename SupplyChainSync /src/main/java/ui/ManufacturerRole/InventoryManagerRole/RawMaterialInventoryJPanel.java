@@ -6,9 +6,18 @@ package ui.ManufacturerRole.InventoryManagerRole;
 
 import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
+import Business.Enterprise.ManufacturerEnterprise;
+import Business.Inventory.InventoryItem;
+import Business.Material.Material;
+import Business.Material.MaterialCatalog;
 import Business.Organization.Manufacturer.InventoryOrganization;
-import Business.UserAccount.UserAccount;
+import Business.Organization.Organization;
+import Business.WorkQueue.RawMaterialRestockRequest;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -21,7 +30,6 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
      */
     
     JPanel userProcessContainer;
-    UserAccount accoun;
     InventoryOrganization inventoryOrganization;
     Enterprise enterprise;
     EcoSystem system;
@@ -31,6 +39,67 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
         this.inventoryOrganization = inventoryOrganization;
         this.enterprise = enterprise;
         initComponents();
+        populateComboBox();
+        populateTable("All");
+    }
+    
+    private void populateComboBox(){
+        // Order Status
+        cbCategory.removeAllItems();
+        cbCategory.addItem("All");
+        ManufacturerEnterprise mfg = (ManufacturerEnterprise) enterprise;
+        MaterialCatalog materialCatalog = mfg.getMaterialCatalog();
+
+        Set<String> categorySet = new HashSet<>();
+
+        for (Material m : materialCatalog.getMaterialList()) {
+            if (m.getCategory() != null && !m.getCategory().isEmpty()) {
+                categorySet.add(m.getCategory());
+            }
+        }
+
+        for (String category : categorySet) {
+            cbCategory.addItem(category);
+        }
+    }
+    
+    
+    
+    private void populateTable(String selectedCategory) {
+        if (selectedCategory == null) {
+            return; 
+        }
+
+        DefaultTableModel model = (DefaultTableModel) tbMaterial.getModel();
+        model.setRowCount(0);
+
+        boolean showLowStockOnly = rbtnLowerStockOnly.isSelected();   // ⭐ 获取 RadioButton 状态
+
+        for (InventoryItem item : enterprise.getInventory().getMaterialInventory()) {
+            String itemCategory = item.getMaterial().getCategory();
+
+
+            if (!selectedCategory.equals("All")
+                    && !itemCategory.equalsIgnoreCase(selectedCategory)) {
+                continue;
+            }
+
+            if (showLowStockOnly && !item.isLowStock()) {
+                continue; 
+            }
+
+            Object[] row = new Object[]{
+                item.getMaterial().getMaterialCode(),
+                item.getMaterial().getMaterialName(),
+                item.getMaterial().getCategory(),
+                item.getQuantity(),
+                item.getMaterial().getUnit(),
+                item.getLocation(),
+                item.isLowStock() ? "Low Stock" : "Normal"
+            };
+
+            model.addRow(row);
+        }
     }
 
     /**
@@ -45,8 +114,8 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
         jTextField2 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        fieldMaterialName = new javax.swing.JTextField();
-        btnSearch = new javax.swing.JButton();
+        fieldMaterialCode = new javax.swing.JTextField();
+        btnSearchCode = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbMaterial = new javax.swing.JTable();
         btnEditQuantity = new javax.swing.JButton();
@@ -60,15 +129,23 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
         btnViewMaterialDetail = new javax.swing.JButton();
         rbtnLowerStockOnly = new javax.swing.JRadioButton();
         btnBack = new javax.swing.JButton();
+        btnSearchName = new javax.swing.JButton();
+        fieldMaterialName = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
 
         jTextField2.setText("jTextField2");
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jLabel1.setText("Raw Material Inventory Management");
 
-        jLabel2.setText("Material Name:");
+        jLabel2.setText("Material Code:");
 
-        btnSearch.setText("Search");
+        btnSearchCode.setText("Search");
+        btnSearchCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchCodeActionPerformed(evt);
+            }
+        });
 
         tbMaterial.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -106,6 +183,11 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
         jLabel3.setText("Filters:");
 
         cbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCategoryActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Category:");
 
@@ -117,6 +199,11 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
         });
 
         rbtnLowerStockOnly.setText("Low Stock Only");
+        rbtnLowerStockOnly.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtnLowerStockOnlyActionPerformed(evt);
+            }
+        });
 
         btnBack.setText("<< Back");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
@@ -124,6 +211,15 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
                 btnBackActionPerformed(evt);
             }
         });
+
+        btnSearchName.setText("Search");
+        btnSearchName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchNameActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Material Name:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -137,7 +233,7 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
                     .addComponent(jSeparator3)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
@@ -149,23 +245,32 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
                                         .addComponent(btnRestorckRequest))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(6, 6, 6)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(cbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(fieldMaterialName, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(fieldMaterialCode, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(cbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addGap(18, 18, 18)
-                                        .addComponent(rbtnLowerStockOnly)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnSearchCode, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(rbtnLowerStockOnly)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(fieldMaterialName, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnSearchName, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(90, 90, 90)))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())))
             .addGroup(layout.createSequentialGroup()
                 .addGap(216, 216, 216)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 176, Short.MAX_VALUE)
                 .addComponent(btnBack)
                 .addContainerGap())
         );
@@ -185,86 +290,155 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(cbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2)
-                            .addComponent(fieldMaterialName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSearch)
                             .addComponent(rbtnLowerStockOnly))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(fieldMaterialCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearchCode))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(fieldMaterialName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearchName))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnViewMaterialDetail)
                     .addComponent(btnEditQuantity)
                     .addComponent(btnRestorckRequest))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEditQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditQuantityActionPerformed
         // TODO add your handling code here:
-////        DefaultTableModel model = (DefaultTableModel) ProductsTable.getModel();
-////        model.setRowCount(0);
-////
-////        String supplierName = (String) SuppliersComboBox.getSelectedItem();
-////        if (supplierName == null) return;
-////
-////        Supplier selectedSupplier = business.getSupplierDirectory().findSupplier(supplierName);
-////        if (selectedSupplier == null) return;
-////
-////        ProductCatalog pc = selectedSupplier.getProductCatalog();
-////
-////        for (Product p : pc.getProductList()) {
-////            if (p.getOrderPricePerformance() <= 0){
-////                continue;
-////            }
-////            Object[] row = new Object[7];
-////            row[0] = p.toString();
-////            row[1] = "$" + p.getTargetPrice();
-////            row[2] = p.getNumberOfProductSalesAtTarget();
-////            row[3] = p.getNumberOfProductSalesAboveTarget();
-////            row[4] = p.getNumberOfProductSalesBelowTarget();
-////            row[5] = "$" + p.getSalesVolume();
-////            row[6] = "$" + p.getOrderPricePerformance();
-////            model.addRow(row);
-////        }
+        int selectedRow = tbMaterial.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a material to edit.", "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String materialCode = (String) tbMaterial.getValueAt(selectedRow, 0);
+
+        InventoryItem item = enterprise.getInventory().findByMaterialCode(materialCode);
+
+        String newQtyStr = JOptionPane.showInputDialog(this, "Enter new quantity for " + item.getMaterial().getMaterialName() + ":", item.getQuantity());
+        if (newQtyStr == null) {
+            return;
+        }
+
+        try {
+            int newQty = Integer.parseInt(newQtyStr);
+            if (newQty < 0) {
+                JOptionPane.showMessageDialog(this, "Quantity cannot be negative.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            if (newQty > item.getMaxStockLevel()) {
+                JOptionPane.showMessageDialog(this, 
+                    "Quantity cannot exceed max stock level (" + item.getMaxStockLevel() + ").", 
+                    "Invalid Input", 
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            item.setQuantity(newQty);
+
+            String selectedCategory = (String) cbCategory.getSelectedItem();
+            populateTable(selectedCategory);
+
+            JOptionPane.showMessageDialog(this, "Quantity updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid integer.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_btnEditQuantityActionPerformed
 
     private void btnRestorckRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestorckRequestActionPerformed
-        // TODO add your handling code here:
-//        DefaultTableModel model = (DefaultTableModel) ProductsTable.getModel();
-//        model.setRowCount(0);
-//
-//        String supplierName = (String) SuppliersComboBox.getSelectedItem();
-//        if (supplierName == null) return;
-//
-//        Supplier selectedSupplier = business.getSupplierDirectory().findSupplier(supplierName);
-//        if (selectedSupplier == null) return;
-//
-//        ProductCatalog pc = selectedSupplier.getProductCatalog();
-//
-//        for (Product p : pc.getProductList()) {
-//            if (p.getOrderPricePerformance() >= 0){
-//                continue;
-//            }
-//            Object[] row = new Object[7];
-//            row[0] = p.toString();
-//            row[1] = "$" + p.getTargetPrice();
-//            row[2] = p.getNumberOfProductSalesAtTarget();
-//            row[3] = p.getNumberOfProductSalesAboveTarget();
-//            row[4] = p.getNumberOfProductSalesBelowTarget();
-//            row[5] = "$" + p.getSalesVolume();
-//            row[6] = "$" + p.getOrderPricePerformance();
-//            model.addRow(row);
-//        }
+        int selectedRow = tbMaterial.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a material to request restock.", "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
+        String materialCode = (String) tbMaterial.getValueAt(selectedRow, 0);
+        InventoryItem item = enterprise.getInventory().findByMaterialCode(materialCode);
+        if (item == null) {
+            JOptionPane.showMessageDialog(this, "Selected material not found in inventory.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Material material = item.getMaterial();
+
+
+        String quantityStr = JOptionPane.showInputDialog(this, "Enter quantity to restock:", "Restock Quantity", JOptionPane.PLAIN_MESSAGE);
+        if (quantityStr == null) return; 
+        int quantity;
+        try {
+            quantity = Integer.parseInt(quantityStr);
+            if (quantity <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid quantity.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String[] urgencies = {"Normal", "Urgent", "Critical"};
+        String urgency = (String) JOptionPane.showInputDialog(this, "Select urgency level:", 
+                                    "Urgency", JOptionPane.PLAIN_MESSAGE, null, urgencies, "Normal");
+        if (urgency == null) urgency = "Normal";
+
+
+        RawMaterialRestockRequest request = new RawMaterialRestockRequest(material, quantity);
+        request.setUrgencyLevel(urgency);
+
+ 
+        Organization rmProcurementOrg = null;
+        for (Organization org : enterprise.getOrganizationDirectory().getOrganizationList()) {
+            rmProcurementOrg = org;
+            break;
+        }
+
+        if (rmProcurementOrg != null) {
+            rmProcurementOrg.getWorkQueue().addWorkRequest(request);
+            JOptionPane.showMessageDialog(this, "Restock request submitted:\n" + request.toString(), "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "No RM Procurement Organization found to handle this request.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnRestorckRequestActionPerformed
 
     private void btnViewMaterialDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewMaterialDetailActionPerformed
         // TODO add your handling code here:
+        int selectedRow = tbMaterial.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a material first.", "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String materialCode = (String) tbMaterial.getValueAt(selectedRow, 0);
+        InventoryItem item = enterprise.getInventory().findByMaterialCode(materialCode);
+
+        if (item != null) {
+            Material mat = item.getMaterial();
+            String details = "Material Code: " + mat.getMaterialCode() + "\n"
+                           + "Material Name: " + mat.getMaterialName() + "\n"
+                           + "Category: " + mat.getCategory() + "\n"
+                           + "Description: " + mat.getDescription() + "\n"
+                           + "Quantity: " + item.getQuantity() + "\n"
+                           + "Unit: " + mat.getUnit() + "\n"
+                           + "Location: " + item.getLocation() + "\n"
+                           + "Min Stock Level: " + item.getMinStockLevel() + "\n"
+                           + "Max Stock Level: " + item.getMaxStockLevel() + "\n"
+                           + "Status: " + (item.isLowStock() ? "Low Stock" : "Normal");
+
+            JOptionPane.showMessageDialog(this, details, "Material Details", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Material not found in inventory.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnViewMaterialDetailActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
@@ -273,19 +447,108 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
         ((java.awt.CardLayout) userProcessContainer.getLayout()).next(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
+    private void cbCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoryActionPerformed
+        // TODO add your handling code here:
+        String selectedCategory = (String) cbCategory.getSelectedItem();
+        populateTable(selectedCategory);
+    }//GEN-LAST:event_cbCategoryActionPerformed
+
+    private void rbtnLowerStockOnlyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnLowerStockOnlyActionPerformed
+        // TODO add your handling code here:
+        String selectedCategory = (String) cbCategory.getSelectedItem();
+        populateTable(selectedCategory);
+        
+    }//GEN-LAST:event_rbtnLowerStockOnlyActionPerformed
+
+    private void btnSearchCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchCodeActionPerformed
+        // TODO add your handling code here:
+         String materialCode = fieldMaterialCode.getText().trim();
+    
+        DefaultTableModel model = (DefaultTableModel) tbMaterial.getModel();
+        model.setRowCount(0); 
+
+        if (materialCode.isEmpty()) {
+            populateTable("All"); 
+            return;
+        }
+
+        InventoryItem item = enterprise.getInventory().findByMaterialCode(materialCode);
+
+        if (item != null) {
+            if (rbtnLowerStockOnly.isSelected() && !item.isLowStock()) {
+                return; 
+            }
+
+            Object[] row = new Object[]{
+                item.getMaterial().getMaterialCode(),
+                item.getMaterial().getMaterialName(),
+                item.getMaterial().getCategory(),
+                item.getQuantity(),
+                item.getMaterial().getUnit(),
+                item.getLocation(),
+                item.isLowStock() ? "Low Stock" : "Normal"
+            };
+            model.addRow(row);
+        } else {
+            JOptionPane.showMessageDialog(this, "No material found with code: " + materialCode);
+        }
+        String selectedCategory = (String) cbCategory.getSelectedItem();
+        populateTable(selectedCategory);
+
+    }//GEN-LAST:event_btnSearchCodeActionPerformed
+
+    private void btnSearchNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchNameActionPerformed
+        // TODO add your handling code here:
+         String searchName = fieldMaterialName.getText().trim().toLowerCase();
+    
+        DefaultTableModel model = (DefaultTableModel) tbMaterial.getModel();
+        model.setRowCount(0);
+
+        if (searchName.isEmpty()) {
+            populateTable("All");
+            return;
+        }
+
+        for (InventoryItem item : enterprise.getInventory().getMaterialInventory()) {
+            String materialName = item.getMaterial().getMaterialName().toLowerCase();
+
+            if (!materialName.contains(searchName)) {
+                continue; 
+            }
+
+            if (rbtnLowerStockOnly.isSelected() && !item.isLowStock()) {
+                continue;
+            }
+
+            Object[] row = new Object[]{
+                item.getMaterial().getMaterialCode(),
+                item.getMaterial().getMaterialName(),
+                item.getMaterial().getCategory(),
+                item.getQuantity(),
+                item.getMaterial().getUnit(),
+                item.getLocation(),
+                item.isLowStock() ? "Low Stock" : "Normal"
+            };
+            model.addRow(row);
+        }
+    }//GEN-LAST:event_btnSearchNameActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnEditQuantity;
     private javax.swing.JButton btnRestorckRequest;
-    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnSearchCode;
+    private javax.swing.JButton btnSearchName;
     private javax.swing.JButton btnViewMaterialDetail;
     private javax.swing.JComboBox<String> cbCategory;
+    private javax.swing.JTextField fieldMaterialCode;
     private javax.swing.JTextField fieldMaterialName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
