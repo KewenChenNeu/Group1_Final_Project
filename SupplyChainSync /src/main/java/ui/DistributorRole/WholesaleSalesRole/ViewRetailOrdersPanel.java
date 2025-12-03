@@ -101,8 +101,8 @@ public class ViewRetailOrdersPanel extends javax.swing.JPanel {
                 if ("Pending".equalsIgnoreCase(status) || "Sent".equalsIgnoreCase(status)) {
                     Object[] row = new Object[6];
                     row[0] = retailRequest.getRequestId();
-                    row[1] = retailRequest.getSender() != null ? 
-                             retailRequest.getSender().getEmployee().getName() : "Unknown";
+                    row[1] = retailRequest.getStoreName() != null ? 
+                             retailRequest.getStoreName() : "Unknown";
                     row[2] = retailRequest.getProductName() != null ? 
                              retailRequest.getProductName() : "N/A";
                     row[3] = retailRequest.getQuantity();
@@ -199,8 +199,8 @@ public class ViewRetailOrdersPanel extends javax.swing.JPanel {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             
             fieldId.setText(String.valueOf(selectedRequest.getRequestId()));
-            fieldRetailer.setText(selectedRequest.getSender() != null ? 
-                                  selectedRequest.getSender().getEmployee().getName() : "Unknown");
+            fieldRetailer.setText(selectedRequest.getStoreName() != null ? 
+                                  selectedRequest.getStoreName() : "Unknown");
             fieldProduct.setText(selectedRequest.getProductName() != null ? 
                                  selectedRequest.getProductName() : "N/A");
             fieldQuantity.setText(String.valueOf(selectedRequest.getQuantity()));

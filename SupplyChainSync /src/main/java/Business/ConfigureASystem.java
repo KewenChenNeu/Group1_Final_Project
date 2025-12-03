@@ -24,10 +24,11 @@ import Business.Role.Shipping.DeliveryStaffRole;
 import Business.Role.Shipping.ShippingManagerRole;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.*;
+import java.util.Calendar;
 
 /**
  *
- * @author rrheg
+ * @author chris
  */
 public class ConfigureASystem {
     
@@ -132,9 +133,6 @@ public class ConfigureASystem {
         
         Employee invStaff = inventoryOrg.getEmployeeDirectory().createEmployee("Lisa Anderson");
         inventoryOrg.getUserAccountDirectory().createUserAccount("mfg_inv2", "password", invStaff, new InventoryManagerRole());
-        
-        Employee invtest = inventoryOrg.getEmployeeDirectory().createEmployee("David Anderson");
-        inventoryOrg.getUserAccountDirectory().createUserAccount("mi", "", invtest, new InventoryManagerRole());
     }
     
     /**
@@ -165,25 +163,19 @@ public class ConfigureASystem {
      */
     private static void configureShippingEnterprise(ShippingEnterprise enterprise) {
         // Get organizations
-        Organization managementOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(0);
-        Organization operationOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(1);
+        Organization shipMgmtOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(0);
+        Organization shipOpOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(1);
         
         // Create employees for Shipping Management Organization
-        Employee shipMgr = managementOrg.getEmployeeDirectory().createEmployee("Christopher Lee");
-        managementOrg.getUserAccountDirectory().createUserAccount("ship_mgr1", "password", shipMgr, new ShippingManagerRole());
-        
-        Employee shipCoord = managementOrg.getEmployeeDirectory().createEmployee("Patricia White");
-        managementOrg.getUserAccountDirectory().createUserAccount("ship_mgr2", "password", shipCoord, new ShippingManagerRole());
+        Employee shipMgr = shipMgmtOrg.getEmployeeDirectory().createEmployee("Christopher Lee");
+        shipMgmtOrg.getUserAccountDirectory().createUserAccount("ship_mgr1", "password", shipMgr, new ShippingManagerRole());
         
         // Create employees for Shipping Operation Organization
-        Employee driver1 = operationOrg.getEmployeeDirectory().createEmployee("Daniel Harris");
-        operationOrg.getUserAccountDirectory().createUserAccount("ship_staff1", "password", driver1, new DeliveryStaffRole());
+        Employee deliveryStaff1 = shipOpOrg.getEmployeeDirectory().createEmployee("Daniel Harris");
+        shipOpOrg.getUserAccountDirectory().createUserAccount("ship_del1", "password", deliveryStaff1, new DeliveryStaffRole());
         
-        Employee driver2 = operationOrg.getEmployeeDirectory().createEmployee("Kevin Clark");
-        operationOrg.getUserAccountDirectory().createUserAccount("ship_staff2", "password", driver2, new DeliveryStaffRole());
-        
-        Employee driver3 = operationOrg.getEmployeeDirectory().createEmployee("Brian Lewis");
-        operationOrg.getUserAccountDirectory().createUserAccount("ship_staff3", "password", driver3, new DeliveryStaffRole());
+        Employee deliveryStaff2 = shipOpOrg.getEmployeeDirectory().createEmployee("Kevin Garcia");
+        shipOpOrg.getUserAccountDirectory().createUserAccount("ship_del2", "password", deliveryStaff2, new DeliveryStaffRole());
     }
     
     /**
@@ -192,30 +184,22 @@ public class ConfigureASystem {
     private static void configureRetailEnterprise(RetailEnterprise enterprise) {
         // Get organizations
         Organization storeOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(0);
-        Organization inventoryOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(1);
-        
-
+        Organization retailInvOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(1);
         
         // Create employees for Store Management Organization
-        Employee storeMgr = storeOrg.getEmployeeDirectory().createEmployee("Nancy Robinson");
+        Employee storeMgr = storeOrg.getEmployeeDirectory().createEmployee("Patricia White");
         storeOrg.getUserAccountDirectory().createUserAccount("retail_mgr1", "password", storeMgr, new StoreManagerRole());
         
-        Employee orderClerk = storeOrg.getEmployeeDirectory().createEmployee("Steven Walker");
+        Employee orderClerk = storeOrg.getEmployeeDirectory().createEmployee("Steven Clark");
         storeOrg.getUserAccountDirectory().createUserAccount("retail_clerk1", "password", orderClerk, new OrderClerkRole());
         
-        Employee orderClerk2 = storeOrg.getEmployeeDirectory().createEmployee("Michelle Hall");
-        storeOrg.getUserAccountDirectory().createUserAccount("retail_clerk2", "password", orderClerk2, new OrderClerkRole());
-        
         // Create employees for Retail Inventory Organization
-        Employee retailAnalyst = inventoryOrg.getEmployeeDirectory().createEmployee("George Allen");
-        inventoryOrg.getUserAccountDirectory().createUserAccount("retail_analyst1", "password", retailAnalyst, new RetailAnalyticsRole());
-        
-        Employee retailAnalyst2 = inventoryOrg.getEmployeeDirectory().createEmployee("Betty Young");
-        inventoryOrg.getUserAccountDirectory().createUserAccount("retail_analyst2", "password", retailAnalyst2, new RetailAnalyticsRole());
+        Employee retailAnalyst = retailInvOrg.getEmployeeDirectory().createEmployee("Nancy Rodriguez");
+        retailInvOrg.getUserAccountDirectory().createUserAccount("retail_analyst1", "password", retailAnalyst, new RetailAnalyticsRole());
     }
     
     /**
-     * Setup Products, Materials, and Inventory for all enterprises
+     * Setup product catalogs and inventory for all enterprises
      */
     private static void setupCatalogsAndInventory(
             RawMaterialSupplierEnterprise rmSupplier,
@@ -224,71 +208,54 @@ public class ConfigureASystem {
             RetailEnterprise retail) {
         
         // ============================
-        // Raw Material Supplier - Materials Catalog & Inventory
+        // Raw Material Supplier - Material Catalog & Inventory
         // ============================
         MaterialCatalog rmMaterialCatalog = rmSupplier.getMaterialCatalog();
         Inventory rmInventory = rmSupplier.getInventory();
         
-        // Create materials that RM Supplier sells
+        // Create materials
         Material steelSheets = rmMaterialCatalog.createMaterial("RM-001", "Steel Sheets", 2.50, "kg");
-        steelSheets.setCategory("Metal");
-        steelSheets.setDescription("High-grade steel sheets for manufacturing");
+        steelSheets.setCategory("Metals");
+        steelSheets.setDescription("High-quality steel sheets for manufacturing");
         
         Material copperWire = rmMaterialCatalog.createMaterial("RM-002", "Copper Wire", 5.00, "meters");
-        copperWire.setCategory("Metal");
-        copperWire.setDescription("Pure copper wire for electronics");
+        copperWire.setCategory("Metals");
+        copperWire.setDescription("Pure copper wire for electrical components");
         
-        Material aluminumBars = rmMaterialCatalog.createMaterial("RM-003", "Aluminum Bars", 3.00, "kg");
-        aluminumBars.setCategory("Metal");
-        aluminumBars.setDescription("Lightweight aluminum bars");
-        
-        Material plasticPellets = rmMaterialCatalog.createMaterial("RM-004", "Plastic Pellets", 1.50, "kg");
-        plasticPellets.setCategory("Plastic");
+        Material plasticPellets = rmMaterialCatalog.createMaterial("RM-003", "Plastic Pellets", 1.20, "kg");
+        plasticPellets.setCategory("Plastics");
         plasticPellets.setDescription("Industrial grade plastic pellets");
         
-        Material rubberSheets = rmMaterialCatalog.createMaterial("RM-005", "Rubber Sheets", 4.00, "sheets");
-        rubberSheets.setCategory("Rubber");
-        rubberSheets.setDescription("Natural rubber sheets");
+        Material aluminumBars = rmMaterialCatalog.createMaterial("RM-004", "Aluminum Bars", 3.75, "kg");
+        aluminumBars.setCategory("Metals");
+        aluminumBars.setDescription("Lightweight aluminum bars");
         
-        Material glassPanel = rmMaterialCatalog.createMaterial("RM-006", "Glass Panels", 8.00, "panels");
-        glassPanel.setCategory("Glass");
-        glassPanel.setDescription("Tempered glass panels");
-        
-        // Add inventory for RM Supplier
-        rmInventory.addMaterial(steelSheets, 10000, 1000, 20000, "Warehouse A-1");
-        rmInventory.addMaterial(copperWire, 5000, 500, 10000, "Warehouse A-2");
-        rmInventory.addMaterial(aluminumBars, 8000, 800, 15000, "Warehouse A-3");
-        rmInventory.addMaterial(plasticPellets, 15000, 2000, 30000, "Warehouse B-1");
-        rmInventory.addMaterial(rubberSheets, 3000, 300, 6000, "Warehouse B-2");
-        rmInventory.addMaterial(glassPanel, 2000, 200, 4000, "Warehouse C-1");
+        // Add inventory for materials
+        rmInventory.addMaterial(steelSheets, 10000, 1000, 20000, "Warehouse A");
+        rmInventory.addMaterial(copperWire, 5000, 500, 10000, "Warehouse B");
+        rmInventory.addMaterial(plasticPellets, 8000, 800, 15000, "Warehouse A");
+        rmInventory.addMaterial(aluminumBars, 6000, 600, 12000, "Warehouse C");
         
         // ============================
         // Manufacturer - Products Catalog & Inventory
         // ============================
         ProductCatalog mfgProductCatalog = manufacturer.getProductCatalog();
-        MaterialCatalog mfgMaterialCatalog = manufacturer.getMaterialCatalog();
         Inventory mfgInventory = manufacturer.getInventory();
         
-        // Add materials that manufacturer needs (reference from RM Supplier)
-        mfgMaterialCatalog.addMaterial(steelSheets);
-        mfgMaterialCatalog.addMaterial(copperWire);
-        mfgMaterialCatalog.addMaterial(aluminumBars);
-        mfgMaterialCatalog.addMaterial(plasticPellets);
-        
-        // Create products that Manufacturer produces
+        // Create products that manufacturer produces
         Product electronicSet = mfgProductCatalog.createProduct("EC-001", "Electronic Components Set A", 15.00, "sets");
         electronicSet.setCategory("Electronics");
-        electronicSet.setDescription("Complete set of electronic components for assembly");
+        electronicSet.setDescription("Complete set of electronic components");
         
-        Product homeAppliance = mfgProductCatalog.createProduct("HA-001", "Home Appliance Kit A", 50.00, "units");
-        homeAppliance.setCategory("Appliances");
-        homeAppliance.setDescription("Basic home appliance assembly kit");
+        Product applianceKitA = mfgProductCatalog.createProduct("HA-001", "Home Appliance Kit A", 45.00, "units");
+        applianceKitA.setCategory("Appliances");
+        applianceKitA.setDescription("Basic home appliance kit");
         
-        Product homeApplianceB = mfgProductCatalog.createProduct("HA-002", "Home Appliance Kit B", 75.00, "units");
-        homeApplianceB.setCategory("Appliances");
-        homeApplianceB.setDescription("Premium home appliance assembly kit");
+        Product applianceKitB = mfgProductCatalog.createProduct("HA-002", "Home Appliance Kit B", 75.00, "units");
+        applianceKitB.setCategory("Appliances");
+        applianceKitB.setDescription("Premium home appliance kit");
         
-        Product officeSupply = mfgProductCatalog.createProduct("OS-001", "Office Supplies Pack", 12.00, "packs");
+        Product officeSupply = mfgProductCatalog.createProduct("OS-001", "Office Supplies Pack", 8.50, "packs");
         officeSupply.setCategory("Office");
         officeSupply.setDescription("Standard office supplies pack");
         
@@ -296,70 +263,12 @@ public class ConfigureASystem {
         industrialTool.setCategory("Industrial");
         industrialTool.setDescription("Professional industrial tool set");
         
-        // Add raw material inventory for Manufacturer
-        mfgInventory.addMaterial(steelSheets, 2000, 500, 5000, "Raw Materials Section A");
-        mfgInventory.addMaterial(copperWire, 1000, 200, 3000, "Raw Materials Section B");
-        mfgInventory.addMaterial(aluminumBars, 1500, 300, 4000, "Raw Materials Section C");
-        mfgInventory.addMaterial(plasticPellets, 3000, 500, 8000, "Raw Materials Section D");
-        
-        // Add finished product inventory for Manufacturer
-        mfgInventory.addProduct(electronicSet, 5000, 500, 10000, "Finished Goods A");
-        mfgInventory.addProduct(homeAppliance, 2000, 200, 5000, "Finished Goods B");
-        mfgInventory.addProduct(homeApplianceB, 1500, 150, 4000, "Finished Goods B");
-        mfgInventory.addProduct(officeSupply, 8000, 1000, 15000, "Finished Goods C");
-        mfgInventory.addProduct(industrialTool, 500, 50, 1000, "Finished Goods D");
-        
-        // ============================
-        // Setup BOM (Bill of Materials) for each product
-        // ============================
-        Business.Production.ProductionManager prodManager = manufacturer.getProductionManager();
-        
-        // BOM for Electronic Components Set A (EC-001)
-        // Requires: 0.5kg steel, 2m copper wire, 0.1kg plastic
-        Business.Production.BillOfMaterials bomElectronic = prodManager.createBOM(electronicSet);
-        bomElectronic.addMaterial(steelSheets, 0.5);      // 0.5 kg per set
-        bomElectronic.addMaterial(copperWire, 2.0);       // 2 meters per set
-        bomElectronic.addMaterial(plasticPellets, 0.1);   // 0.1 kg per set
-        bomElectronic.setLaborHours(0.5);
-        bomElectronic.setProductionCostPerUnit(3.00);     // Labor + overhead
-        
-        // BOM for Home Appliance Kit A (HA-001)
-        // Requires: 2kg steel, 1m copper, 0.5kg plastic, 0.3kg aluminum
-        Business.Production.BillOfMaterials bomApplianceA = prodManager.createBOM(homeAppliance);
-        bomApplianceA.addMaterial(steelSheets, 2.0);      // 2 kg per unit
-        bomApplianceA.addMaterial(copperWire, 1.0);       // 1 meter per unit
-        bomApplianceA.addMaterial(plasticPellets, 0.5);   // 0.5 kg per unit
-        bomApplianceA.addMaterial(aluminumBars, 0.3);     // 0.3 kg per unit
-        bomApplianceA.setLaborHours(1.5);
-        bomApplianceA.setProductionCostPerUnit(10.00);
-        
-        // BOM for Home Appliance Kit B (HA-002) - Premium version
-        // Requires: 3kg steel, 2m copper, 1kg plastic, 0.5kg aluminum
-        Business.Production.BillOfMaterials bomApplianceB = prodManager.createBOM(homeApplianceB);
-        bomApplianceB.addMaterial(steelSheets, 3.0);      // 3 kg per unit
-        bomApplianceB.addMaterial(copperWire, 2.0);       // 2 meters per unit
-        bomApplianceB.addMaterial(plasticPellets, 1.0);   // 1 kg per unit
-        bomApplianceB.addMaterial(aluminumBars, 0.5);     // 0.5 kg per unit
-        bomApplianceB.setLaborHours(2.0);
-        bomApplianceB.setProductionCostPerUnit(15.00);
-        
-        // BOM for Office Supplies Pack (OS-001)
-        // Requires: 0.2kg plastic, 0.1kg aluminum
-        Business.Production.BillOfMaterials bomOffice = prodManager.createBOM(officeSupply);
-        bomOffice.addMaterial(plasticPellets, 0.2);       // 0.2 kg per pack
-        bomOffice.addMaterial(aluminumBars, 0.1);         // 0.1 kg per pack
-        bomOffice.setLaborHours(0.25);
-        bomOffice.setProductionCostPerUnit(2.00);
-        
-        // BOM for Industrial Tool Set (IT-001)
-        // Requires: 5kg steel, 3m copper, 2kg plastic, 1kg aluminum
-        Business.Production.BillOfMaterials bomTool = prodManager.createBOM(industrialTool);
-        bomTool.addMaterial(steelSheets, 5.0);            // 5 kg per set
-        bomTool.addMaterial(copperWire, 3.0);             // 3 meters per set
-        bomTool.addMaterial(plasticPellets, 2.0);         // 2 kg per set
-        bomTool.addMaterial(aluminumBars, 1.0);           // 1 kg per set
-        bomTool.setLaborHours(3.0);
-        bomTool.setProductionCostPerUnit(25.00);
+        // Add inventory for manufactured products
+        mfgInventory.addProduct(electronicSet, 2000, 200, 5000, "Production Line A");
+        mfgInventory.addProduct(applianceKitA, 500, 50, 1000, "Production Line B");
+        mfgInventory.addProduct(applianceKitB, 300, 30, 600, "Production Line B");
+        mfgInventory.addProduct(officeSupply, 3000, 300, 6000, "Production Line C");
+        mfgInventory.addProduct(industrialTool, 150, 20, 300, "Production Line D");
         
         // ============================
         // Distributor - Products Catalog & Inventory
@@ -367,19 +276,33 @@ public class ConfigureASystem {
         ProductCatalog distProductCatalog = distributor.getProductCatalog();
         Inventory distInventory = distributor.getInventory();
         
-        // Distributor sells products from Manufacturer
-        distProductCatalog.addProduct(electronicSet);
-        distProductCatalog.addProduct(homeAppliance);
-        distProductCatalog.addProduct(homeApplianceB);
-        distProductCatalog.addProduct(officeSupply);
-        distProductCatalog.addProduct(industrialTool);
+        // Distributor sells same products from manufacturer (wholesale pricing)
+        Product distElectronic = distProductCatalog.createProduct("EC-001", "Electronic Components Set A", 18.00, "sets");
+        distElectronic.setCategory("Electronics");
+        distElectronic.setDescription("Complete set of electronic components");
         
-        // Add inventory for Distributor (wholesale quantities)
-        distInventory.addProduct(electronicSet, 3000, 500, 8000, "Distribution Center A");
-        distInventory.addProduct(homeAppliance, 1000, 200, 3000, "Distribution Center A");
-        distInventory.addProduct(homeApplianceB, 800, 100, 2000, "Distribution Center B");
-        distInventory.addProduct(officeSupply, 5000, 1000, 12000, "Distribution Center C");
-        distInventory.addProduct(industrialTool, 200, 30, 500, "Distribution Center D");
+        Product distApplianceA = distProductCatalog.createProduct("HA-001", "Home Appliance Kit A", 55.00, "units");
+        distApplianceA.setCategory("Appliances");
+        distApplianceA.setDescription("Basic home appliance kit");
+        
+        Product distApplianceB = distProductCatalog.createProduct("HA-002", "Home Appliance Kit B", 85.00, "units");
+        distApplianceB.setCategory("Appliances");
+        distApplianceB.setDescription("Premium home appliance kit");
+        
+        Product distOfficeSupply = distProductCatalog.createProduct("OS-001", "Office Supplies Pack", 12.00, "packs");
+        distOfficeSupply.setCategory("Office");
+        distOfficeSupply.setDescription("Standard office supplies pack");
+        
+        Product distIndustrialTool = distProductCatalog.createProduct("IT-001", "Industrial Tool Set", 150.00, "sets");
+        distIndustrialTool.setCategory("Industrial");
+        distIndustrialTool.setDescription("Professional industrial tool set");
+        
+        // Add inventory for distributor (wholesale quantities)
+        distInventory.addProduct(distElectronic, 3000, 500, 8000, "Distribution Center A");
+        distInventory.addProduct(distApplianceA, 800, 100, 2000, "Distribution Center B");
+        distInventory.addProduct(distApplianceB, 400, 50, 1000, "Distribution Center B");
+        distInventory.addProduct(distOfficeSupply, 5000, 1000, 12000, "Distribution Center C");
+        distInventory.addProduct(distIndustrialTool, 200, 30, 500, "Distribution Center D");
         
         // ============================
         // Retail - Products Catalog & Inventory
@@ -432,8 +355,8 @@ public class ConfigureASystem {
         Organization distSalesOrg = distributor.getOrganizationDirectory().getOrganizationList().get(0);
         Organization shipMgmtOrg = shipping.getOrganizationDirectory().getOrganizationList().get(0);
         Organization retailStoreOrg = retail.getOrganizationDirectory().getOrganizationList().get(0);
+        
         UserAccount retailUser = retailStoreOrg.getUserAccountDirectory().getUserAccountList().get(0);
-
         
         // Sample 1: Raw Material Restock Request (Manufacturer → RM Supplier)
         RawMaterialRestockRequest rmRequest1 = new RawMaterialRestockRequest();
@@ -471,13 +394,13 @@ public class ConfigureASystem {
         
         // Sample 3: Retail Purchase Order (Retail → Distributor)
         RetailPurchaseOrderRequest retailPO1 = new RetailPurchaseOrderRequest();
-        retailPO1.setSender(retailUser);
         retailPO1.setProductName("Electronic Components Set A");
         retailPO1.setProductCode("EC-001");
         retailPO1.setQuantity(50);
         retailPO1.setUnit("sets");
         retailPO1.setUnitPrice(25.00);
         retailPO1.setStoreName("MegaMart Downtown");
+        retailPO1.setSender(retailUser);
         retailPO1.setStoreAddress("123 Main Street, Boston, MA");
         retailPO1.setPaymentMethod("Credit");
         retailPO1.setMessage("Restock for weekend sale");
@@ -485,13 +408,13 @@ public class ConfigureASystem {
         distSalesOrg.getWorkQueue().addWorkRequest(retailPO1);
         
         RetailPurchaseOrderRequest retailPO2 = new RetailPurchaseOrderRequest();
-        retailPO2.setSender(retailUser);
         retailPO2.setProductName("Home Appliance Kit B");
         retailPO2.setProductCode("HA-002");
         retailPO2.setQuantity(30);
         retailPO2.setUnit("units");
         retailPO2.setUnitPrice(75.00);
         retailPO2.setStoreName("MegaMart Suburbs");
+        retailPO2.setSender(retailUser);
         retailPO2.setStoreAddress("456 Oak Avenue, Cambridge, MA");
         retailPO2.setPaymentMethod("Invoice");
         retailPO2.setUrgencyLevel("Urgent");
@@ -514,24 +437,116 @@ public class ConfigureASystem {
         shipRequest1.setStatus("Pending");
         shipMgmtOrg.getWorkQueue().addWorkRequest(shipRequest1);
         
-        // Sample 5: Delivery Confirmation (for testing completed workflow)
-        DeliveryConfirmationRequest delConfirm1 = new DeliveryConfirmationRequest();
-        delConfirm1.setProductName("Office Supplies Pack");
-        delConfirm1.setProductCode("OS-001");
-        delConfirm1.setQuantityDelivered(100);
-        delConfirm1.setUnit("packs");
-        delConfirm1.setStoreName("MegaMart Downtown");
+        // ============================================================
+        // Sample 5: DeliveryConfirmationRequest for Distributor Sales
+        // (These go to distSalesOrg - WholesaleSalesOrganization)
+        // ============================================================
+        
+        // Create a completed shipping request to link with delivery confirmation
+        ProductShippingRequest completedShipment1 = new ProductShippingRequest();
+        completedShipment1.setProductName("Office Supplies Pack");
+        completedShipment1.setProductCode("OS-001");
+        completedShipment1.setQuantity(100);
+        completedShipment1.setUnit("packs");
+        completedShipment1.setOriginAddress("Global Distribution LLC Warehouse");
+        completedShipment1.setDestinationAddress("123 Main Street, Boston, MA");
+        completedShipment1.setDestinationStoreName("MegaMart Downtown");
+        completedShipment1.setShippingStatus(ProductShippingRequest.SHIP_STATUS_DELIVERED);
+        completedShipment1.setCarrierName("FastShip Logistics");
+        completedShipment1.setTrackingNumber("TRK123456789");
+        completedShipment1.setStatus("Delivered");
+        
+        // Delivery Confirmation 1 - Good condition, pending confirmation
+        DeliveryConfirmationRequest delConfirm1 = new DeliveryConfirmationRequest(completedShipment1);
         delConfirm1.setDeliveredBy("Daniel Harris");
-        delConfirm1.setConditionOnArrival("Good");
-        delConfirm1.setDeliveryNotes("Delivered to back entrance");
+        delConfirm1.setConditionOnArrival(DeliveryConfirmationRequest.CONDITION_GOOD);
+        delConfirm1.setDeliveryNotes("Delivered to back entrance, signed by store manager");
         delConfirm1.setConfirmed(false);
-        delConfirm1.setMessage("Please confirm receipt");
+        delConfirm1.setMessage("Please confirm receipt of Office Supplies Pack");
         delConfirm1.setStatus("Awaiting Confirmation");
-        retailStoreOrg.getWorkQueue().addWorkRequest(delConfirm1);
+        // Set delivery date to yesterday
+        Calendar cal1 = Calendar.getInstance();
+        cal1.add(Calendar.DAY_OF_MONTH, -1);
+        delConfirm1.setDeliveryDate(cal1.getTime());
+        // Add to Distributor Sales Organization (WholesaleSalesOrganization)
+        distSalesOrg.getWorkQueue().addWorkRequest(delConfirm1);
+        
+        // Create another completed shipping request
+        ProductShippingRequest completedShipment2 = new ProductShippingRequest();
+        completedShipment2.setProductName("Home Appliance Kit A");
+        completedShipment2.setProductCode("HA-001");
+        completedShipment2.setQuantity(25);
+        completedShipment2.setUnit("units");
+        completedShipment2.setOriginAddress("Global Distribution LLC Warehouse");
+        completedShipment2.setDestinationAddress("456 Oak Avenue, Cambridge, MA");
+        completedShipment2.setDestinationStoreName("MegaMart Suburbs");
+        completedShipment2.setShippingStatus(ProductShippingRequest.SHIP_STATUS_DELIVERED);
+        completedShipment2.setCarrierName("FastShip Logistics");
+        completedShipment2.setTrackingNumber("TRK987654321");
+        completedShipment2.setStatus("Delivered");
+        
+        // Delivery Confirmation 2 - Partial delivery, pending confirmation
+        DeliveryConfirmationRequest delConfirm2 = new DeliveryConfirmationRequest(completedShipment2);
+        delConfirm2.setDeliveredBy("Kevin Garcia");
+        delConfirm2.setConditionOnArrival(DeliveryConfirmationRequest.CONDITION_PARTIAL);
+        delConfirm2.setDeliveryNotes("Only 20 out of 25 units delivered. 5 units backordered.");
+        delConfirm2.setQuantityDelivered(20);  // Override to show partial
+        delConfirm2.setConfirmed(false);
+        delConfirm2.setMessage("Partial delivery - please confirm receipt");
+        delConfirm2.setStatus("Awaiting Confirmation");
+        // Set delivery date to 2 hours ago
+        Calendar cal2 = Calendar.getInstance();
+        cal2.add(Calendar.HOUR_OF_DAY, -2);
+        delConfirm2.setDeliveryDate(cal2.getTime());
+        // Add to Distributor Sales Organization
+        distSalesOrg.getWorkQueue().addWorkRequest(delConfirm2);
+        
+        // ============================================================
+        // Sample 6: Already confirmed delivery (for history table)
+        // ============================================================
+        ProductShippingRequest completedShipment3 = new ProductShippingRequest();
+        completedShipment3.setProductName("Electronic Components Set A");
+        completedShipment3.setProductCode("EC-001");
+        completedShipment3.setQuantity(75);
+        completedShipment3.setUnit("sets");
+        completedShipment3.setOriginAddress("Global Distribution LLC Warehouse");
+        completedShipment3.setDestinationAddress("789 Harbor View, Boston, MA");
+        completedShipment3.setDestinationStoreName("MegaMart Harbor");
+        completedShipment3.setShippingStatus(ProductShippingRequest.SHIP_STATUS_DELIVERED);
+        completedShipment3.setCarrierName("FastShip Logistics");
+        completedShipment3.setTrackingNumber("TRK111222333");
+        completedShipment3.setStatus("Delivered");
+        
+        DeliveryConfirmationRequest delConfirm3 = new DeliveryConfirmationRequest(completedShipment3);
+        delConfirm3.setDeliveredBy("Daniel Harris");
+        delConfirm3.setConditionOnArrival(DeliveryConfirmationRequest.CONDITION_GOOD);
+        delConfirm3.setDeliveryNotes("All items received in good condition");
+        // Set delivery date to 3 days ago
+        Calendar cal3 = Calendar.getInstance();
+        cal3.add(Calendar.DAY_OF_MONTH, -3);
+        delConfirm3.setDeliveryDate(cal3.getTime());
+        // Confirm this one (for history display)
+        delConfirm3.confirmDelivery("James Taylor");
+        delConfirm3.setMessage("Delivery confirmed");
+        delConfirm3.setStatus("Completed");
+        // Add to Distributor Sales Organization
+        distSalesOrg.getWorkQueue().addWorkRequest(delConfirm3);
+        
+        // ============================================================
+        // Sample 7: Delivery confirmation for Retail (optional - as per original)
+        // ============================================================
+        DeliveryConfirmationRequest delConfirmRetail = new DeliveryConfirmationRequest();
+        delConfirmRetail.setProductName("Industrial Tool Set");
+        delConfirmRetail.setProductCode("IT-001");
+        delConfirmRetail.setQuantityDelivered(10);
+        delConfirmRetail.setUnit("sets");
+        delConfirmRetail.setStoreName("MegaMart Downtown");
+        delConfirmRetail.setDeliveredBy("Daniel Harris");
+        delConfirmRetail.setConditionOnArrival(DeliveryConfirmationRequest.CONDITION_GOOD);
+        delConfirmRetail.setDeliveryNotes("Delivered to warehouse area");
+        delConfirmRetail.setConfirmed(false);
+        delConfirmRetail.setMessage("Please confirm receipt");
+        delConfirmRetail.setStatus("Awaiting Confirmation");
+        retailStoreOrg.getWorkQueue().addWorkRequest(delConfirmRetail);
     }
 }
-
-
-
-
-
