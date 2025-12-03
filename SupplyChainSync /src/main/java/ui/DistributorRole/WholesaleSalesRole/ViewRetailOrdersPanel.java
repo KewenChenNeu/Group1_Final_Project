@@ -47,23 +47,17 @@ public class ViewRetailOrdersPanel extends javax.swing.JPanel {
         this.enterprise = enterprise;
         this.system = system;
         
-        // 获取库存信息
+        // get inventory information
         this.inventory = getDistributorInventory();
         
-        // 设置详情字段为不可编辑
         setFieldsEditable(false);
         
-        // 添加表格选择监听器
         addTableSelectionListener();
         
-        // 加载数据
         populateRequestsTable();
         populateInventoryTable();
     }
     
-    /**
-     * 获取Distributor的库存（从WholesaleInventoryOrganization）
-     */
     private Inventory getDistributorInventory() {
         if (enterprise instanceof ProductDistributorEnterprise) {
             ProductDistributorEnterprise distEnterprise = (ProductDistributorEnterprise) enterprise;
@@ -552,13 +546,11 @@ public class ViewRetailOrdersPanel extends javax.swing.JPanel {
             return;
         }
 
-        // 使用 productCode 查找库存项
         InventoryItem item = null;
         if (inventory != null && selectedRequest.getProductCode() != null) {
             item = inventory.findByProductCode(selectedRequest.getProductCode());
         }
 
-        // 检查库存是否充足
         if (item == null) {
             JOptionPane.showMessageDialog(this, 
                 "Warning: Product not found in inventory!", 
@@ -573,11 +565,9 @@ public class ViewRetailOrdersPanel extends javax.swing.JPanel {
             if (choice != JOptionPane.YES_OPTION) return;
         }
 
-        // 更新请求状态
         selectedRequest.setStatus("Approved");
         selectedRequest.setReceiver(userAccount);
 
-        // 预留库存
         if (item != null) {
             item.reserveStock(selectedRequest.getQuantity());
         }
@@ -586,7 +576,6 @@ public class ViewRetailOrdersPanel extends javax.swing.JPanel {
             "Request approved successfully!\nPlease proceed to Manage Shipping to arrange delivery.", 
             "Success", JOptionPane.INFORMATION_MESSAGE);
 
-        // 刷新表格
         populateRequestsTable();
         populateInventoryTable();
         clearDetailFields();
