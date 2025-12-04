@@ -47,7 +47,7 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         lblUserName = new javax.swing.JLabel();
-        btnFinishedGoods = new javax.swing.JButton();
+        btnFinishedProduct = new javax.swing.JButton();
         btnRawMaterials = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
@@ -57,10 +57,10 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
 
         jLabel2.setText("Welcome,");
 
-        btnFinishedGoods.setText("Finished Goods");
-        btnFinishedGoods.addActionListener(new java.awt.event.ActionListener() {
+        btnFinishedProduct.setText("Finished Goods");
+        btnFinishedProduct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFinishedGoodsActionPerformed(evt);
+                btnFinishedProductActionPerformed(evt);
             }
         });
 
@@ -103,13 +103,12 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnRawMaterials, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnFinishedGoods, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(125, 125, 125))))
+                                .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnRawMaterials, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnFinishedProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(183, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,7 +121,7 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
                     .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(72, 72, 72)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnFinishedGoods)
+                    .addComponent(btnFinishedProduct)
                     .addComponent(btnRawMaterials))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -132,9 +131,9 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnFinishedGoodsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinishedGoodsActionPerformed
+    private void btnFinishedProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinishedProductActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnFinishedGoodsActionPerformed
+    }//GEN-LAST:event_btnFinishedProductActionPerformed
 
     private void btnRawMaterialsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRawMaterialsActionPerformed
         // TODO add your handling code here:
@@ -154,7 +153,7 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnFinishedGoods;
+    private javax.swing.JButton btnFinishedProduct;
     private javax.swing.JButton btnRawMaterials;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
