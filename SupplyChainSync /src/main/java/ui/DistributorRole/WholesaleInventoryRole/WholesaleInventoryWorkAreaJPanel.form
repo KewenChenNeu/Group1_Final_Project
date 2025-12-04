@@ -130,6 +130,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="\ud83d\udc64  Edit Profile" containsInvalidXMLChars="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditProfileActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lblEnterprise">
       <Properties>
