@@ -9,6 +9,9 @@ import Business.Enterprise.Enterprise;
 import Business.Organization.Distributor.WholesaleInventoryOrganization;
 import Business.Organization.Distributor.WholesaleSalesOrganization;
 import Business.UserAccount.UserAccount;
+import Business.WorkQueue.ProductShippingRequest;
+import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 /**
@@ -16,6 +19,12 @@ import javax.swing.JPanel;
  * @author chris
  */
 public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
+    
+    private JPanel userProcessContainer;
+    private UserAccount userAccount;
+    private WholesaleInventoryOrganization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;
 
     /**
      * Creates new form WholesaleInventoryWorkAreaJPanel
@@ -23,7 +32,51 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
     
     public WholesaleInventoryWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, WholesaleInventoryOrganization wholesaleInventoryOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
+        
+        this.userProcessContainer = userProcessContainer;
+        this.userAccount = account;
+        this.organization = wholesaleInventoryOrganization;
+        this.enterprise = enterprise;
+        this.system = system;
+        
+        // Populate the dashboard
+        populateDashboard();
     }
+    
+    private void populateDashboard() {
+        // Set enterprise, organization, and user info
+        lblEnterpriseName.setText(enterprise.getName());
+        lblOrganizationName.setText(organization.getName());
+        lblUserName.setText(userAccount.getEmployee().getName());
+        
+        // Calculate and display summary statistics
+        updateQuickSummary();
+    }
+    
+    public void updateQuickSummary() {
+        // Total products in inventory (from enterprise inventory)
+        int totalProducts = enterprise.getInventory().getProductInventory().size();
+        lblNumProducts.setText(String.valueOf(totalProducts));
+        
+        // Count pending incoming shipments (ProductShippingRequest with status not delivered)
+        int pendingShipments = countPendingIncomingShipments();
+        lblNumIncomingShipments.setText(String.valueOf(pendingShipments));
+    }
+    
+    private int countPendingIncomingShipments() {
+        int count = 0;
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof ProductShippingRequest) {
+                ProductShippingRequest shippingRequest = (ProductShippingRequest) request;
+                // Count if not delivered yet
+                if (!shippingRequest.isDelivered()) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,22 +87,22 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         btnEditProfile = new javax.swing.JButton();
-        lblEnterprise = new javax.swing.JLabel();
         lblQuickSummary = new javax.swing.JLabel();
         lblNumProducts = new javax.swing.JLabel();
-        lblOrganization = new javax.swing.JLabel();
         lblTotalProducts = new javax.swing.JLabel();
         lblNumIncomingShipments = new javax.swing.JLabel();
         lblTitle = new javax.swing.JLabel();
-        lblUser = new javax.swing.JLabel();
         lblPendingShipments = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
-        lblEnterpriseName = new javax.swing.JLabel();
         btnViewInventory = new javax.swing.JButton();
-        lblOrganizationName = new javax.swing.JLabel();
-        lblUserName = new javax.swing.JLabel();
         btnReceiveShipment = new javax.swing.JButton();
+        lblOrganizationName = new javax.swing.JLabel();
+        lblEnterpriseName = new javax.swing.JLabel();
+        lblUser = new javax.swing.JLabel();
+        lblOrganization = new javax.swing.JLabel();
+        lblEnterprise = new javax.swing.JLabel();
+        lblUserName = new javax.swing.JLabel();
 
         btnEditProfile.setText("👤  Edit Profile");
         btnEditProfile.addActionListener(new java.awt.event.ActionListener() {
@@ -58,14 +111,10 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
-        lblEnterprise.setText("Enterprise:");
-
         lblQuickSummary.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         lblQuickSummary.setText("Quick Summary:");
 
         lblNumProducts.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-
-        lblOrganization.setText("Organization:");
 
         lblTotalProducts.setText("Total Products:");
 
@@ -74,8 +123,6 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
         lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         lblTitle.setText("📦 Wholesale Inventory Work Area");
         lblTitle.setToolTipText("");
-
-        lblUser.setText("User:");
 
         lblPendingShipments.setText("Pending Incoming Shipments:");
 
@@ -93,6 +140,12 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
+        lblUser.setText("User:");
+
+        lblOrganization.setText("Organization:");
+
+        lblEnterprise.setText("Enterprise:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -107,19 +160,9 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblEnterprise)
-                                    .addComponent(lblOrganization)
-                                    .addComponent(lblUser))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblEnterpriseName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblUserName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblOrganizationName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(lblQuickSummary)
                             .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(476, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -135,7 +178,18 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(btnViewInventory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnReceiveShipment, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)))
-                        .addGap(130, 130, 130))))
+                        .addGap(130, 130, 130))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblEnterprise)
+                            .addComponent(lblOrganization)
+                            .addComponent(lblUser))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblOrganizationName, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+                            .addComponent(lblEnterpriseName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblUserName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,20 +199,18 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblEnterprise)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblOrganization)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblUser))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblEnterpriseName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblOrganizationName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(12, 12, 12)
-                        .addComponent(lblUserName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblEnterprise, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblEnterpriseName, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblOrganization, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblOrganizationName, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblQuickSummary)
@@ -184,14 +236,42 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
 
     private void btnViewInventoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInventoryActionPerformed
         // TODO add your handling code here:
+        // Navigate to View Inventory Panel
+        ViewInventoryPanel viewInventoryPanel = new ViewInventoryPanel(
+                userProcessContainer, 
+                userAccount, 
+                organization, 
+                enterprise, 
+                system);
+        userProcessContainer.add("ViewInventoryPanel", viewInventoryPanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_btnViewInventoryActionPerformed
 
     private void btnReceiveShipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReceiveShipmentActionPerformed
         // TODO add your handling code here:
+        ReceiveShipmentPanel receiveShipmentPanel = new ReceiveShipmentPanel(
+                userProcessContainer, 
+                userAccount, 
+                organization, 
+                enterprise, 
+                system);
+        userProcessContainer.add("ReceiveShipmentPanel", receiveShipmentPanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_btnReceiveShipmentActionPerformed
 
     private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
         // TODO add your handling code here:
+        InventoryEditProfilePanel editProfilePanel = new InventoryEditProfilePanel(
+                userProcessContainer, 
+                userAccount, 
+                organization, 
+                enterprise, 
+                system);
+        userProcessContainer.add("InventoryEditProfilePanel", editProfilePanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_btnEditProfileActionPerformed
 
 

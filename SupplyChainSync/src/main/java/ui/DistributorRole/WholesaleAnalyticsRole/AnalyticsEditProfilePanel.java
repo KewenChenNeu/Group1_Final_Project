@@ -26,31 +26,40 @@ public class AnalyticsEditProfilePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        fieldEmail = new javax.swing.JTextField();
-        fieldPhone = new javax.swing.JTextField();
-        fieldOrganization = new javax.swing.JTextField();
-        btnSaveChanges = new javax.swing.JButton();
-        lblChangePassword = new javax.swing.JLabel();
-        lblRole = new javax.swing.JLabel();
-        lblOrganization = new javax.swing.JLabel();
-        lblTitle = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        btnBack = new javax.swing.JButton();
-        fieldRole = new javax.swing.JTextField();
-        lblUserInformation = new javax.swing.JLabel();
+        lblConfirmPassword = new javax.swing.JLabel();
+        lblNewPassword = new javax.swing.JLabel();
         lblCurrentPassword = new javax.swing.JLabel();
+        lblChangePassword = new javax.swing.JLabel();
+        btnSaveChanges = new javax.swing.JButton();
+        fieldOrganization = new javax.swing.JTextField();
+        lblUserName = new javax.swing.JLabel();
+        lblUserInformation = new javax.swing.JLabel();
+        btnBack = new javax.swing.JButton();
+        btnChangePassword = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        fieldConfirmPassword = new javax.swing.JTextField();
+        lblTitle = new javax.swing.JLabel();
+        fieldNewPassword = new javax.swing.JTextField();
+        fieldCurrPassword = new javax.swing.JTextField();
+        lblOrganization = new javax.swing.JLabel();
+        lblRole = new javax.swing.JLabel();
         lblPhone = new javax.swing.JLabel();
         lblEmail = new javax.swing.JLabel();
-        lblNewPassword = new javax.swing.JLabel();
-        lblConfirmPassword = new javax.swing.JLabel();
-        fieldCurrPassword = new javax.swing.JTextField();
-        fieldNewPassword = new javax.swing.JTextField();
-        fieldConfirmPassword = new javax.swing.JTextField();
-        btnChangePassword = new javax.swing.JButton();
-        fieldUserName = new javax.swing.JTextField();
-        fieldFullName = new javax.swing.JTextField();
-        lblUserName = new javax.swing.JLabel();
         lblFullName = new javax.swing.JLabel();
+        fieldRole = new javax.swing.JTextField();
+        fieldPhone = new javax.swing.JTextField();
+        fieldEmail = new javax.swing.JTextField();
+        fieldFullName = new javax.swing.JTextField();
+        fieldUserName = new javax.swing.JTextField();
+
+        lblConfirmPassword.setText("Confirm Password:");
+
+        lblNewPassword.setText("New Password:");
+
+        lblCurrentPassword.setText("Current Password:");
+
+        lblChangePassword.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        lblChangePassword.setText("Change Password");
 
         btnSaveChanges.setText("💾 Save Changes");
         btnSaveChanges.addActionListener(new java.awt.event.ActionListener() {
@@ -59,15 +68,10 @@ public class AnalyticsEditProfilePanel extends javax.swing.JPanel {
             }
         });
 
-        lblChangePassword.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        lblChangePassword.setText("Change Password");
+        lblUserName.setText("Username:");
 
-        lblRole.setText("Role:");
-
-        lblOrganization.setText("Organization:");
-
-        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        lblTitle.setText("👤 Edit Profile");
+        lblUserInformation.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        lblUserInformation.setText("User Information");
 
         btnBack.setText("<< Back");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
@@ -76,19 +80,6 @@ public class AnalyticsEditProfilePanel extends javax.swing.JPanel {
             }
         });
 
-        lblUserInformation.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        lblUserInformation.setText("User Information");
-
-        lblCurrentPassword.setText("Current Password:");
-
-        lblPhone.setText("Phone:");
-
-        lblEmail.setText("Email:");
-
-        lblNewPassword.setText("New Password:");
-
-        lblConfirmPassword.setText("Confirm Password:");
-
         btnChangePassword.setText("🔐 Change Password");
         btnChangePassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,7 +87,16 @@ public class AnalyticsEditProfilePanel extends javax.swing.JPanel {
             }
         });
 
-        lblUserName.setText("Username:");
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        lblTitle.setText("👤 Edit Profile");
+
+        lblOrganization.setText("Organization:");
+
+        lblRole.setText("Role:");
+
+        lblPhone.setText("Phone:");
+
+        lblEmail.setText("Email:");
 
         lblFullName.setText("Full Name:");
 
@@ -109,7 +109,7 @@ public class AnalyticsEditProfilePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnBack)
                             .addGroup(layout.createSequentialGroup()
@@ -122,29 +122,33 @@ public class AnalyticsEditProfilePanel extends javax.swing.JPanel {
                                     .addComponent(lblRole)
                                     .addComponent(lblOrganization))
                                 .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(fieldRole, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+                                    .addComponent(fieldPhone)
+                                    .addComponent(fieldEmail)
+                                    .addComponent(fieldFullName)
+                                    .addComponent(fieldUserName)
+                                    .addComponent(fieldOrganization))
+                                .addGap(63, 63, 63)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(fieldUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldFullName, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldRole, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(fieldOrganization, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(139, 139, 139)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnChangePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(btnSaveChanges, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(btnChangePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnSaveChanges, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(lblCurrentPassword)
                                     .addComponent(lblChangePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblNewPassword)
                                     .addComponent(lblConfirmPassword))
-                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(fieldCurrPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(fieldNewPassword, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(fieldCurrPassword)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(fieldConfirmPassword)))
+                                .addGap(229, 229, 229)))
                         .addGap(0, 133, Short.MAX_VALUE)))
                 .addContainerGap())
         );

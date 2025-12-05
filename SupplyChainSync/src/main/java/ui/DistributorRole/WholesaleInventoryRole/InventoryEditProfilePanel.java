@@ -4,17 +4,178 @@
  */
 package ui.DistributorRole.WholesaleInventoryRole;
 
+import Business.EcoSystem;
+import Business.Enterprise.Enterprise;
+import Business.Organization.Distributor.WholesaleInventoryOrganization;
+import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 /**
  *
  * @author chris
  */
 public class InventoryEditProfilePanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private UserAccount userAccount;
+    private WholesaleInventoryOrganization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;
+    
     /**
      * Creates new form InventoryEditProfilePanel
      */
-    public InventoryEditProfilePanel() {
+    public InventoryEditProfilePanel(JPanel userProcessContainer, UserAccount account, WholesaleInventoryOrganization wholesaleInventoryOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
+        
+        this.userProcessContainer = userProcessContainer;
+        this.userAccount = account;
+        this.organization = wholesaleInventoryOrganization;
+        this.enterprise = enterprise;
+        this.system = system;
+        
+        setReadOnlyFields();
+
+        populateUserInfo();
+        
+    }
+    
+    private void setReadOnlyFields() {
+        fieldUserName.setEditable(false);
+        fieldRole.setEditable(false);
+        fieldOrganization.setEditable(false);
+        
+        fieldUserName.setBackground(new java.awt.Color(240, 240, 240));
+        fieldRole.setBackground(new java.awt.Color(240, 240, 240));
+        fieldOrganization.setBackground(new java.awt.Color(240, 240, 240));
+    }
+    
+    private void populateUserInfo() {
+        if (userAccount != null) {
+            fieldUserName.setText(userAccount.getUsername());
+            
+            fieldRole.setText(userAccount.getRole() != null ? 
+                userAccount.getRole().getClass().getSimpleName().replace("Role", "") : "N/A");
+            
+            fieldOrganization.setText(organization != null ? organization.getName() : "N/A");
+            if (userAccount.getEmployee() != null) {
+                fieldFullName.setText(userAccount.getEmployee().getName() != null ? 
+                    userAccount.getEmployee().getName() : "");
+                
+                fieldEmail.setText(userAccount.getEmployee().getEmail() != null ? 
+                     userAccount.getEmployee().getEmail() : "");
+                
+                fieldPhone.setText(userAccount.getEmployee().getPhone() != null ? 
+                    userAccount.getEmployee().getPhone() : "");
+
+            }
+        }
+    }
+    
+    
+    private boolean validateUserInfo() {
+        String fullName = fieldFullName.getText().trim();
+        
+        if (fullName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Full Name cannot be empty.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldFullName.requestFocus();
+            return false;
+        }
+        
+        String email = fieldEmail.getText().trim();
+        if (!email.isEmpty() && !isValidEmail(email)) {
+            JOptionPane.showMessageDialog(this, 
+                "Please enter a valid email address.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldEmail.requestFocus();
+            return false;
+        }
+        
+        String phone = fieldPhone.getText().trim();
+        if (!phone.isEmpty() && !isValidPhone(phone)) {
+            JOptionPane.showMessageDialog(this, 
+                "Please enter a valid phone number.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldPhone.requestFocus();
+            return false;
+        }
+        
+        return true;
+    }
+    
+    private boolean isValidEmail(String email) {
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+    }
+    
+    private boolean isValidPhone(String phone) {
+        // allow numbers, space, brackets...
+        return phone.matches("^[0-9\\s\\-\\(\\)]{7,15}$");
+    }
+    
+    private boolean validatePasswordChange() {
+        String currentPassword = fieldCurrPassword.getText().trim();
+        String newPassword = fieldNewPassword.getText().trim();
+        String confirmPassword = fieldConfirmPassword.getText().trim();
+        
+        if (!currentPassword.equals(userAccount.getPassword())) {
+            JOptionPane.showMessageDialog(this, 
+                "Current password is incorrect.", 
+                "Validation Error", 
+                JOptionPane.ERROR_MESSAGE);
+            fieldCurrPassword.requestFocus();
+            return false;
+        }
+        
+        if (newPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "New password cannot be empty.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldNewPassword.requestFocus();
+            return false;
+        }
+        
+        if (newPassword.length() < 4) {
+            JOptionPane.showMessageDialog(this, 
+                "New password must be at least 4 characters.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldNewPassword.requestFocus();
+            return false;
+        }
+        
+        if (!newPassword.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this, 
+                "New password and confirm password do not match.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldConfirmPassword.requestFocus();
+            return false;
+        }
+        
+        if (newPassword.equals(currentPassword)) {
+            JOptionPane.showMessageDialog(this, 
+                "New password must be different from current password.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldNewPassword.requestFocus();
+            return false;
+        }
+        
+        return true;
+    }
+    
+    private void clearPasswordFields() {
+        fieldCurrPassword.setText("");
+        fieldNewPassword.setText("");
+        fieldConfirmPassword.setText("");
     }
 
     /**
@@ -109,7 +270,7 @@ public class InventoryEditProfilePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnBack)
                             .addGroup(layout.createSequentialGroup()
@@ -122,29 +283,33 @@ public class InventoryEditProfilePanel extends javax.swing.JPanel {
                                     .addComponent(lblRole)
                                     .addComponent(lblOrganization))
                                 .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(fieldRole, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                                    .addComponent(fieldPhone)
+                                    .addComponent(fieldEmail)
+                                    .addComponent(fieldFullName)
+                                    .addComponent(fieldUserName)
+                                    .addComponent(fieldOrganization))
+                                .addGap(82, 82, 82)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(fieldUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldFullName, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldRole, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(fieldOrganization, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(139, 139, 139)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnChangePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(btnSaveChanges, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(btnChangePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnSaveChanges, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(lblCurrentPassword)
                                     .addComponent(lblChangePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblNewPassword)
                                     .addComponent(lblConfirmPassword))
-                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(fieldCurrPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(fieldNewPassword, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(fieldCurrPassword)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(fieldConfirmPassword)))
+                                .addGap(248, 248, 248)))
                         .addGap(0, 133, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -205,17 +370,43 @@ public class InventoryEditProfilePanel extends javax.swing.JPanel {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnSaveChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveChangesActionPerformed
         // TODO add your handling code here:
+        if (!validateUserInfo()) {
+            return;
+        }
         
+        if (userAccount.getEmployee() != null) {
+            userAccount.getEmployee().setName(fieldFullName.getText().trim());
+            userAccount.getEmployee().setEmail(fieldEmail.getText().trim());
+            userAccount.getEmployee().setPhone(fieldPhone.getText().trim());
+        }
+        
+        JOptionPane.showMessageDialog(this, 
+            "Profile updated successfully!", 
+            "Success", 
+            JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnSaveChangesActionPerformed
 
     private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
         // TODO add your handling code here:
+        if (!validatePasswordChange()) {
+            return;
+        }
         
+        userAccount.setPassword(fieldNewPassword.getText().trim());
+
+        clearPasswordFields();
+        
+        JOptionPane.showMessageDialog(this, 
+            "Password changed successfully!", 
+            "Success", 
+            JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnChangePasswordActionPerformed
 
 
