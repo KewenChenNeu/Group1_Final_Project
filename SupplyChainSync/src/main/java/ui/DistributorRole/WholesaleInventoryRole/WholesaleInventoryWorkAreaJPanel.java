@@ -52,6 +52,11 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
         btnReceiveShipment = new javax.swing.JButton();
 
         btnEditProfile.setText("👤  Edit Profile");
+        btnEditProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditProfileActionPerformed(evt);
+            }
+        });
 
         lblEnterprise.setText("Enterprise:");
 
@@ -184,6 +189,10 @@ public class WholesaleInventoryWorkAreaJPanel extends javax.swing.JPanel {
     private void btnReceiveShipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReceiveShipmentActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnReceiveShipmentActionPerformed
+
+    private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEditProfileActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
