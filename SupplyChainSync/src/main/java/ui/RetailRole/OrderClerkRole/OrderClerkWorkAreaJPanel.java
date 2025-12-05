@@ -99,6 +99,8 @@ public class OrderClerkWorkAreaJPanel extends javax.swing.JPanel {
         btnViewOrderHistory = new javax.swing.JButton();
         btnEditProfile = new javax.swing.JButton();
 
+        setBackground(new java.awt.Color(255, 255, 255));
+
         lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         lblTitle.setText("Order Clerk Work Area");
 
@@ -109,7 +111,9 @@ public class OrderClerkWorkAreaJPanel extends javax.swing.JPanel {
         lblUser.setText("User:");
 
         txtEnterpriseName.setEditable(false);
+
         txtOrganizationName.setEditable(false);
+
         txtUserName.setEditable(false);
 
         lblQuickSummary.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
@@ -172,9 +176,9 @@ public class OrderClerkWorkAreaJPanel extends javax.swing.JPanel {
                                     .addComponent(lblUser))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtEnterpriseName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtEnterpriseName)
                                     .addComponent(txtUserName, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                                    .addComponent(txtOrganizationName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(txtOrganizationName)))
                             .addComponent(lblQuickSummary))
                         .addGap(146, 146, 146))
                     .addGroup(layout.createSequentialGroup()
