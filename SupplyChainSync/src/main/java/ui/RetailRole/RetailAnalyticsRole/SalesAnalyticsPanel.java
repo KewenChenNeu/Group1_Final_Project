@@ -57,7 +57,7 @@ public class SalesAnalyticsPanel extends javax.swing.JPanel {
                 row[0] = order.getRequestId();
                 row[1] = order.getProduct() != null ? order.getProduct().getProductName() : "N/A";
                 row[2] = order.getQuantity();
-                row[3] = order.getTotalAmount() > 0 ? String.format("$%.2f", order.getTotalAmount()) : "N/A";
+                row[3] = order.getTotalPrice() > 0 ? String.format("$%.2f", order.getTotalPrice()) : "N/A";
                 row[4] = order.getStatus();
                 row[5] = order.getRequestDate() != null ? dateFormat.format(order.getRequestDate()) : "N/A";
 
@@ -84,8 +84,8 @@ public class SalesAnalyticsPanel extends javax.swing.JPanel {
                     completedOrders++;
                 }
 
-                if (order.getTotalAmount() > 0) {
-                    totalValue += order.getTotalAmount();
+                if (order.getTotalPrice() > 0) {
+                    totalValue += order.getTotalPrice();
                 }
             }
         }
