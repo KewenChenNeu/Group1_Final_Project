@@ -304,6 +304,51 @@ public class ConfigureASystem {
         distInventory.addProduct(distOfficeSupply, 5000, 1000, 12000, "Distribution Center C");
         distInventory.addProduct(distIndustrialTool, 200, 30, 500, "Distribution Center D");
         
+        // ============================================================
+        // Additional Products in Catalog (NOT yet in inventory)
+        // These can be added via "Add New Product" button
+        // ============================================================
+        Product distElectronicB = distProductCatalog.createProduct("EC-002", "Electronic Components Set B", 22.00, "sets");
+        distElectronicB.setCategory("Electronics");
+        distElectronicB.setDescription("Advanced electronic components set with premium parts");
+        
+        Product distElectronicC = distProductCatalog.createProduct("EC-003", "Electronic Starter Kit", 12.00, "sets");
+        distElectronicC.setCategory("Electronics");
+        distElectronicC.setDescription("Basic electronic starter kit for beginners");
+        
+        Product distApplianceC = distProductCatalog.createProduct("HA-003", "Home Appliance Kit C - Deluxe", 120.00, "units");
+        distApplianceC.setCategory("Appliances");
+        distApplianceC.setDescription("Deluxe home appliance kit with extended warranty");
+        
+        Product distOfficeSupplyB = distProductCatalog.createProduct("OS-002", "Office Supplies Pack - Premium", 18.00, "packs");
+        distOfficeSupplyB.setCategory("Office");
+        distOfficeSupplyB.setDescription("Premium office supplies pack with ergonomic items");
+        
+        Product distFurnitureA = distProductCatalog.createProduct("FN-001", "Office Furniture Set A", 250.00, "sets");
+        distFurnitureA.setCategory("Furniture");
+        distFurnitureA.setDescription("Complete office furniture set including desk and chair");
+        
+        Product distFurnitureB = distProductCatalog.createProduct("FN-002", "Office Furniture Set B - Executive", 450.00, "sets");
+        distFurnitureB.setCategory("Furniture");
+        distFurnitureB.setDescription("Executive office furniture set with premium materials");
+        
+        Product distSafetyKit = distProductCatalog.createProduct("SF-001", "Safety Equipment Kit", 65.00, "kits");
+        distSafetyKit.setCategory("Safety");
+        distSafetyKit.setDescription("Comprehensive workplace safety equipment kit");
+        
+        Product distCleaningSupply = distProductCatalog.createProduct("CL-001", "Industrial Cleaning Supplies", 35.00, "sets");
+        distCleaningSupply.setCategory("Cleaning");
+        distCleaningSupply.setDescription("Industrial grade cleaning supplies set");
+        
+        // Add inventory for distributor (wholesale quantities) - ONLY original 5 products
+        distInventory.addProduct(distElectronic, 3000, 500, 8000, "Distribution Center A");
+        distInventory.addProduct(distApplianceA, 800, 100, 2000, "Distribution Center B");
+        distInventory.addProduct(distApplianceB, 400, 50, 1000, "Distribution Center B");
+        distInventory.addProduct(distOfficeSupply, 5000, 1000, 12000, "Distribution Center C");
+        distInventory.addProduct(distIndustrialTool, 200, 30, 500, "Distribution Center D");
+        
+        
+        
         // ============================
         // Retail - Products Catalog & Inventory
         // ============================

@@ -327,6 +327,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x270f; Edit Stock"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditStockActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
