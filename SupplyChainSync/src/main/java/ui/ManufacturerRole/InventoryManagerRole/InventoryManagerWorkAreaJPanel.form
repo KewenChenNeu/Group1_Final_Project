@@ -36,7 +36,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="btnRawMaterials" min="-2" pref="183" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="btnFinishedProduct" min="-2" pref="178" max="-2" attributes="0"/>
+                              <Component id="btnProducts" min="-2" pref="178" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace pref="183" max="32767" attributes="0"/>
@@ -57,7 +57,7 @@
               </Group>
               <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnFinishedProduct" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnProducts" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnRawMaterials" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -86,12 +86,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblUserName">
     </Component>
-    <Component class="javax.swing.JButton" name="btnFinishedProduct">
+    <Component class="javax.swing.JButton" name="btnProducts">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Finished Goods"/>
+        <Property name="text" type="java.lang.String" value="Products"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFinishedProductActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnProductsActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnRawMaterials">

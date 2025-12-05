@@ -31,16 +31,13 @@
                   <Component id="jSeparator3" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane1" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" attributes="0">
-                                      <Component id="btnViewMaterialDetail" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btnViewProductDetail" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="btnEditQuantity" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="btnRestorckRequest" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
@@ -50,7 +47,7 @@
                                                   <Group type="102" attributes="0">
                                                       <Component id="jLabel2" min="-2" pref="94" max="-2" attributes="0"/>
                                                       <EmptySpace max="-2" attributes="0"/>
-                                                      <Component id="fieldMaterialCode" min="-2" pref="169" max="-2" attributes="0"/>
+                                                      <Component id="fieldProductCode" min="-2" pref="169" max="-2" attributes="0"/>
                                                   </Group>
                                                   <Group type="102" attributes="0">
                                                       <Component id="jLabel4" min="-2" pref="84" max="-2" attributes="0"/>
@@ -67,25 +64,27 @@
                                           <Group type="102" alignment="1" attributes="0">
                                               <Component id="jLabel5" min="-2" pref="94" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="fieldMaterialName" min="-2" pref="169" max="-2" attributes="0"/>
+                                              <Component id="fieldProductName" min="-2" pref="169" max="-2" attributes="0"/>
                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                               <Component id="btnSearchName" min="-2" pref="84" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="90" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace min="0" pref="317" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel1" min="-2" pref="318" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="btnBack" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="jScrollPane1" pref="784" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="jLabel1" min="-2" pref="256" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="btnBack" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -113,13 +112,13 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="fieldMaterialCode" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldProductCode" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnSearchCode" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="fieldMaterialName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldProductName" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnSearchName" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -130,9 +129,8 @@
               <Component id="jSeparator3" min="-2" pref="9" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnViewMaterialDetail" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnViewProductDetail" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnEditQuantity" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnRestorckRequest" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="13" max="32767" attributes="0"/>
           </Group>
@@ -145,15 +143,15 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Helvetica Neue" size="14" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Raw Material Inventory Management"/>
+        <Property name="text" type="java.lang.String" value="Product Inventory Management"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Material Code:"/>
+        <Property name="text" type="java.lang.String" value="Product Code:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="fieldMaterialCode">
+    <Component class="javax.swing.JTextField" name="fieldProductCode">
     </Component>
     <Component class="javax.swing.JButton" name="btnSearchCode">
       <Properties>
@@ -170,13 +168,13 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="tbMaterial">
+        <Component class="javax.swing.JTable" name="tbProduct">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="8" rowCount="0">
-                <Column editable="false" title="Material ID" type="java.lang.Object"/>
-                <Column editable="false" title="Material Code " type="java.lang.Object"/>
-                <Column editable="false" title="Material Name" type="java.lang.Object"/>
+                <Column editable="false" title="Product ID" type="java.lang.Object"/>
+                <Column editable="false" title="Product Code " type="java.lang.Object"/>
+                <Column editable="false" title="Product Name" type="java.lang.Object"/>
                 <Column editable="false" title="Category" type="java.lang.Object"/>
                 <Column editable="false" title="Qty" type="java.lang.Object"/>
                 <Column editable="false" title="Unit" type="java.lang.Object"/>
@@ -186,7 +184,7 @@
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                   <Title/>
                   <Editor/>
                   <Renderer/>
@@ -243,14 +241,6 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditQuantityActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnRestorckRequest">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Create Restock Request"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRestorckRequestActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator1">
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator2">
@@ -288,12 +278,12 @@
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator3">
     </Component>
-    <Component class="javax.swing.JButton" name="btnViewMaterialDetail">
+    <Component class="javax.swing.JButton" name="btnViewProductDetail">
       <Properties>
-        <Property name="text" type="java.lang.String" value="View Material Details"/>
+        <Property name="text" type="java.lang.String" value="View Product Details"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnViewMaterialDetailActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnViewProductDetailActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="rbtnLowerStockOnly">
@@ -320,11 +310,11 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSearchNameActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="fieldMaterialName">
+    <Component class="javax.swing.JTextField" name="fieldProductName">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Material Name:"/>
+        <Property name="text" type="java.lang.String" value="Product Name:"/>
       </Properties>
     </Component>
   </SubComponents>
