@@ -7,7 +7,7 @@ package Business.Role.Retail;
 import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
-import Business.Organization.Retail.RetailInventoryOrganization;
+import Business.Organization.Retail.StoreManagementOrganization;
 import Business.Role.Role;
 import Business.UserAccount.UserAccount;
 import javax.swing.JPanel;
@@ -22,8 +22,7 @@ public class OrderClerkRole extends Role {
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account,
             Organization organization, Enterprise enterprise, EcoSystem system) {
-        // TODO: Return OrderClerkWorkAreaJPanel once UI is created
-        return new OrderClerkWorkAreaJPanel(userProcessContainer, account, (RetailInventoryOrganization)organization, enterprise, system);
+        return new OrderClerkWorkAreaJPanel(userProcessContainer, account, (StoreManagementOrganization)organization, enterprise, system);
     }
 
     @Override
