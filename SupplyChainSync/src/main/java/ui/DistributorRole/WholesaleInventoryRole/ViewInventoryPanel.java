@@ -578,7 +578,10 @@ public class ViewInventoryPanel extends javax.swing.JPanel {
        dialog.setVisible(true);
    }
 
-    
+    public void refreshTable() {
+        populateInventoryTable();
+        updateInventorySummary();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
