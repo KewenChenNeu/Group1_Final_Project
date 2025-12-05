@@ -4,6 +4,12 @@
  */
 package ui.DistributorRole.WholesaleInventoryRole;
 
+import Business.EcoSystem;
+import Business.Enterprise.Enterprise;
+import Business.Organization.Distributor.WholesaleInventoryOrganization;
+import Business.UserAccount.UserAccount;
+import javax.swing.JPanel;
+
 /**
  *
  * @author chris
@@ -13,7 +19,7 @@ public class ReceiveShipmentPanel extends javax.swing.JPanel {
     /**
      * Creates new form ReceiveShipmentPanel
      */
-    public ReceiveShipmentPanel() {
+    public ReceiveShipmentPanel(JPanel userProcessContainer, UserAccount account, WholesaleInventoryOrganization wholesaleInventoryOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
     }
 
