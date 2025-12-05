@@ -304,6 +304,51 @@ public class ConfigureASystem {
         distInventory.addProduct(distOfficeSupply, 5000, 1000, 12000, "Distribution Center C");
         distInventory.addProduct(distIndustrialTool, 200, 30, 500, "Distribution Center D");
         
+        // ============================================================
+        // Additional Products in Catalog (NOT yet in inventory)
+        // These can be added via "Add New Product" button
+        // ============================================================
+        Product distElectronicB = distProductCatalog.createProduct("EC-002", "Electronic Components Set B", 22.00, "sets");
+        distElectronicB.setCategory("Electronics");
+        distElectronicB.setDescription("Advanced electronic components set with premium parts");
+        
+        Product distElectronicC = distProductCatalog.createProduct("EC-003", "Electronic Starter Kit", 12.00, "sets");
+        distElectronicC.setCategory("Electronics");
+        distElectronicC.setDescription("Basic electronic starter kit for beginners");
+        
+        Product distApplianceC = distProductCatalog.createProduct("HA-003", "Home Appliance Kit C - Deluxe", 120.00, "units");
+        distApplianceC.setCategory("Appliances");
+        distApplianceC.setDescription("Deluxe home appliance kit with extended warranty");
+        
+        Product distOfficeSupplyB = distProductCatalog.createProduct("OS-002", "Office Supplies Pack - Premium", 18.00, "packs");
+        distOfficeSupplyB.setCategory("Office");
+        distOfficeSupplyB.setDescription("Premium office supplies pack with ergonomic items");
+        
+        Product distFurnitureA = distProductCatalog.createProduct("FN-001", "Office Furniture Set A", 250.00, "sets");
+        distFurnitureA.setCategory("Furniture");
+        distFurnitureA.setDescription("Complete office furniture set including desk and chair");
+        
+        Product distFurnitureB = distProductCatalog.createProduct("FN-002", "Office Furniture Set B - Executive", 450.00, "sets");
+        distFurnitureB.setCategory("Furniture");
+        distFurnitureB.setDescription("Executive office furniture set with premium materials");
+        
+        Product distSafetyKit = distProductCatalog.createProduct("SF-001", "Safety Equipment Kit", 65.00, "kits");
+        distSafetyKit.setCategory("Safety");
+        distSafetyKit.setDescription("Comprehensive workplace safety equipment kit");
+        
+        Product distCleaningSupply = distProductCatalog.createProduct("CL-001", "Industrial Cleaning Supplies", 35.00, "sets");
+        distCleaningSupply.setCategory("Cleaning");
+        distCleaningSupply.setDescription("Industrial grade cleaning supplies set");
+        
+        // Add inventory for distributor (wholesale quantities) - ONLY original 5 products
+        distInventory.addProduct(distElectronic, 3000, 500, 8000, "Distribution Center A");
+        distInventory.addProduct(distApplianceA, 800, 100, 2000, "Distribution Center B");
+        distInventory.addProduct(distApplianceB, 400, 50, 1000, "Distribution Center B");
+        distInventory.addProduct(distOfficeSupply, 5000, 1000, 12000, "Distribution Center C");
+        distInventory.addProduct(distIndustrialTool, 200, 30, 500, "Distribution Center D");
+        
+        
+        
         // ============================
         // Retail - Products Catalog & Inventory
         // ============================
@@ -548,5 +593,161 @@ public class ConfigureASystem {
         delConfirmRetail.setMessage("Please confirm receipt");
         delConfirmRetail.setStatus("Awaiting Confirmation");
         retailStoreOrg.getWorkQueue().addWorkRequest(delConfirmRetail);
+        
+        // ============================================================
+        // Sample 8: Product Shipping Requests TO Distributor (for Receive Shipment testing)
+        // These are shipments FROM Manufacturer TO Distributor
+        // ============================================================
+        Organization distInventoryOrg = distributor.getOrganizationDirectory().getOrganizationList().get(1); // WholesaleInventoryOrganization
+        UserAccount distInvUser = distInventoryOrg.getUserAccountDirectory().getUserAccountList().get(0);
+        
+        // 8.1 Shipment - Delivered, ready to receive
+        ProductShippingRequest toDistShip1 = new ProductShippingRequest();
+        toDistShip1.setProductName("Electronic Components Set A");
+        toDistShip1.setProductCode("EC-001");
+        toDistShip1.setQuantity(200);
+        toDistShip1.setUnit("sets");
+        toDistShip1.setOriginAddress("XYZ Manufacturing Inc., 100 Factory Lane, Worcester, MA");
+        toDistShip1.setDestinationAddress("Global Distribution LLC, 789 Warehouse Blvd, Worcester, MA");
+        toDistShip1.setDestinationStoreName("Global Distribution LLC");
+        toDistShip1.setShippingStatus(ProductShippingRequest.SHIP_STATUS_DELIVERED);
+        toDistShip1.setCarrierName("FastShip Logistics");
+        toDistShip1.setTrackingNumber("MFG-DIST-001");
+        toDistShip1.setPackageWeight(150.0);
+        toDistShip1.setMessage("Monthly supply of electronic components");
+        toDistShip1.setStatus("Delivered");
+        Calendar ship1Date = Calendar.getInstance();
+        ship1Date.add(Calendar.DAY_OF_MONTH, -2);
+        toDistShip1.setRequestDate(ship1Date.getTime());
+        distInventoryOrg.getWorkQueue().addWorkRequest(toDistShip1);
+        
+        // 8.2 Shipment - Out for Delivery, ready to receive
+        ProductShippingRequest toDistShip2 = new ProductShippingRequest();
+        toDistShip2.setProductName("Home Appliance Kit A");
+        toDistShip2.setProductCode("HA-001");
+        toDistShip2.setQuantity(100);
+        toDistShip2.setUnit("units");
+        toDistShip2.setOriginAddress("XYZ Manufacturing Inc., 100 Factory Lane, Worcester, MA");
+        toDistShip2.setDestinationAddress("Global Distribution LLC, 789 Warehouse Blvd, Worcester, MA");
+        toDistShip2.setDestinationStoreName("Global Distribution LLC");
+        toDistShip2.setShippingStatus(ProductShippingRequest.SHIP_STATUS_OUT_FOR_DELIVERY);
+        toDistShip2.setCarrierName("FastShip Logistics");
+        toDistShip2.setTrackingNumber("MFG-DIST-002");
+        toDistShip2.setPackageWeight(500.0);
+        toDistShip2.setMessage("Urgent appliance shipment");
+        toDistShip2.setStatus("Out for Delivery");
+        Calendar ship2Date = Calendar.getInstance();
+        ship2Date.add(Calendar.DAY_OF_MONTH, -1);
+        toDistShip2.setRequestDate(ship2Date.getTime());
+        distInventoryOrg.getWorkQueue().addWorkRequest(toDistShip2);
+        
+        // 8.3 Shipment - In Transit
+        ProductShippingRequest toDistShip3 = new ProductShippingRequest();
+        toDistShip3.setProductName("Home Appliance Kit B");
+        toDistShip3.setProductCode("HA-002");
+        toDistShip3.setQuantity(75);
+        toDistShip3.setUnit("units");
+        toDistShip3.setOriginAddress("XYZ Manufacturing Inc., 100 Factory Lane, Worcester, MA");
+        toDistShip3.setDestinationAddress("Global Distribution LLC, 789 Warehouse Blvd, Worcester, MA");
+        toDistShip3.setDestinationStoreName("Global Distribution LLC");
+        toDistShip3.setShippingStatus(ProductShippingRequest.SHIP_STATUS_IN_TRANSIT);
+        toDistShip3.setCarrierName("QuickDeliver Express");
+        toDistShip3.setTrackingNumber("MFG-DIST-003");
+        toDistShip3.setPackageWeight(350.0);
+        toDistShip3.setMessage("Standard shipment - appliances");
+        toDistShip3.setStatus("In Transit");
+        Calendar ship3Date = Calendar.getInstance();
+        ship3Date.add(Calendar.DAY_OF_MONTH, -3);
+        toDistShip3.setRequestDate(ship3Date.getTime());
+        // Set estimated delivery date
+        Calendar estDel3 = Calendar.getInstance();
+        estDel3.add(Calendar.DAY_OF_MONTH, 2);
+        toDistShip3.setEstimatedDeliveryDate(estDel3.getTime());
+        distInventoryOrg.getWorkQueue().addWorkRequest(toDistShip3);
+        
+        // 8.4 Shipment - Pending (just created)
+        ProductShippingRequest toDistShip4 = new ProductShippingRequest();
+        toDistShip4.setProductName("Office Supplies Pack");
+        toDistShip4.setProductCode("OS-001");
+        toDistShip4.setQuantity(300);
+        toDistShip4.setUnit("packs");
+        toDistShip4.setOriginAddress("XYZ Manufacturing Inc., 100 Factory Lane, Worcester, MA");
+        toDistShip4.setDestinationAddress("Global Distribution LLC, 789 Warehouse Blvd, Worcester, MA");
+        toDistShip4.setDestinationStoreName("Global Distribution LLC");
+        toDistShip4.setShippingStatus(ProductShippingRequest.SHIP_STATUS_PENDING);
+        toDistShip4.setCarrierName("FastShip Logistics");
+        toDistShip4.setTrackingNumber("MFG-DIST-004");
+        toDistShip4.setPackageWeight(120.0);
+        toDistShip4.setMessage("Office supplies restock");
+        toDistShip4.setStatus("Pending");
+        distInventoryOrg.getWorkQueue().addWorkRequest(toDistShip4);
+        
+        // 8.5 Shipment - Already Received (for history table)
+        ProductShippingRequest toDistShip5 = new ProductShippingRequest();
+        toDistShip5.setProductName("Industrial Tool Set");
+        toDistShip5.setProductCode("IT-001");
+        toDistShip5.setQuantity(50);
+        toDistShip5.setUnit("sets");
+        toDistShip5.setOriginAddress("XYZ Manufacturing Inc., 100 Factory Lane, Worcester, MA");
+        toDistShip5.setDestinationAddress("Global Distribution LLC, 789 Warehouse Blvd, Worcester, MA");
+        toDistShip5.setDestinationStoreName("Global Distribution LLC");
+        toDistShip5.setShippingStatus(ProductShippingRequest.SHIP_STATUS_DELIVERED);
+        toDistShip5.setCarrierName("FastShip Logistics");
+        toDistShip5.setTrackingNumber("MFG-DIST-005");
+        toDistShip5.setPackageWeight(200.0);
+        toDistShip5.setMessage("Tool set shipment");
+        toDistShip5.setStatus("Received");
+        toDistShip5.setReceiver(distInvUser);
+        Calendar ship5Date = Calendar.getInstance();
+        ship5Date.add(Calendar.DAY_OF_MONTH, -5);
+        toDistShip5.setRequestDate(ship5Date.getTime());
+        Calendar recv5Date = Calendar.getInstance();
+        recv5Date.add(Calendar.DAY_OF_MONTH, -4);
+        toDistShip5.setResolveDate(recv5Date.getTime());
+        distInventoryOrg.getWorkQueue().addWorkRequest(toDistShip5);
+        
+        // 8.6 Another Already Received (for history table)
+        ProductShippingRequest toDistShip6 = new ProductShippingRequest();
+        toDistShip6.setProductName("Electronic Components Set A");
+        toDistShip6.setProductCode("EC-001");
+        toDistShip6.setQuantity(150);
+        toDistShip6.setUnit("sets");
+        toDistShip6.setOriginAddress("XYZ Manufacturing Inc., 100 Factory Lane, Worcester, MA");
+        toDistShip6.setDestinationAddress("Global Distribution LLC, 789 Warehouse Blvd, Worcester, MA");
+        toDistShip6.setDestinationStoreName("Global Distribution LLC");
+        toDistShip6.setShippingStatus(ProductShippingRequest.SHIP_STATUS_DELIVERED);
+        toDistShip6.setCarrierName("QuickDeliver Express");
+        toDistShip6.setTrackingNumber("MFG-DIST-006");
+        toDistShip6.setPackageWeight(110.0);
+        toDistShip6.setMessage("Electronic components restock");
+        toDistShip6.setStatus("Received");
+        toDistShip6.setReceiver(distInvUser);
+        Calendar ship6Date = Calendar.getInstance();
+        ship6Date.add(Calendar.DAY_OF_MONTH, -7);
+        toDistShip6.setRequestDate(ship6Date.getTime());
+        Calendar recv6Date = Calendar.getInstance();
+        recv6Date.add(Calendar.DAY_OF_MONTH, -6);
+        toDistShip6.setResolveDate(recv6Date.getTime());
+        distInventoryOrg.getWorkQueue().addWorkRequest(toDistShip6);
+        
+        // 8.7 Shipment - Delivered yesterday (another ready to receive)
+        ProductShippingRequest toDistShip7 = new ProductShippingRequest();
+        toDistShip7.setProductName("Electronic Components Set B");
+        toDistShip7.setProductCode("EC-002");
+        toDistShip7.setQuantity(80);
+        toDistShip7.setUnit("sets");
+        toDistShip7.setOriginAddress("XYZ Manufacturing Inc., 100 Factory Lane, Worcester, MA");
+        toDistShip7.setDestinationAddress("Global Distribution LLC, 789 Warehouse Blvd, Worcester, MA");
+        toDistShip7.setDestinationStoreName("Global Distribution LLC");
+        toDistShip7.setShippingStatus(ProductShippingRequest.SHIP_STATUS_DELIVERED);
+        toDistShip7.setCarrierName("FastShip Logistics");
+        toDistShip7.setTrackingNumber("MFG-DIST-007");
+        toDistShip7.setPackageWeight(60.0);
+        toDistShip7.setMessage("Electronic set B - new product line");
+        toDistShip7.setStatus("Delivered");
+        Calendar ship7Date = Calendar.getInstance();
+        ship7Date.add(Calendar.DAY_OF_MONTH, -1);
+        toDistShip7.setRequestDate(ship7Date.getTime());
+        distInventoryOrg.getWorkQueue().addWorkRequest(toDistShip7);
     }
 }

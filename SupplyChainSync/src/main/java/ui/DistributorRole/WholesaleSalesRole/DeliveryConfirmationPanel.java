@@ -138,7 +138,7 @@ public class DeliveryConfirmationPanel extends javax.swing.JPanel {
             case DeliveryConfirmationRequest.CONDITION_DAMAGED:
                 return "❌ Damaged";
             case DeliveryConfirmationRequest.CONDITION_PARTIAL:
-                return "⚠️ Partial";
+                return "⚠Partial";
             default:
                 return condition;
         }

@@ -2,179 +2,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package ui.DistributorRole.WholesaleSalesRole;
-
-import Business.EcoSystem;
-import Business.Enterprise.Enterprise;
-import Business.Organization.Distributor.WholesaleSalesOrganization;
-import Business.UserAccount.UserAccount;
-import java.awt.CardLayout;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+package ui.DistributorRole.WholesaleAnalyticsRole;
 
 /**
  *
  * @author chris
  */
-public class SalesEditProfilePanel extends javax.swing.JPanel {
-    
-    private JPanel userProcessContainer;
-    private UserAccount userAccount;
-    private WholesaleSalesOrganization organization;
-    private Enterprise enterprise;
-    private EcoSystem system;
+public class AnalyticsEditProfilePanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form SalesEditProfilePanel
+     * Creates new form AnalyticsEditProfilePanel
      */
-    public SalesEditProfilePanel(JPanel userProcessContainer, UserAccount account, WholesaleSalesOrganization wholesaleSalesOrganization, Enterprise enterprise, EcoSystem system) {
+    public AnalyticsEditProfilePanel() {
         initComponents();
-        
-        this.userProcessContainer = userProcessContainer;
-        this.userAccount = account;
-        this.organization = wholesaleSalesOrganization;
-        this.enterprise = enterprise;
-        this.system = system;
-        
-        setReadOnlyFields();
-
-        populateUserInfo();
-    }
-    
-    private void setReadOnlyFields() {
-        fieldUserName.setEditable(false);
-        fieldRole.setEditable(false);
-        fieldOrganization.setEditable(false);
-        
-        fieldUserName.setBackground(new java.awt.Color(240, 240, 240));
-        fieldRole.setBackground(new java.awt.Color(240, 240, 240));
-        fieldOrganization.setBackground(new java.awt.Color(240, 240, 240));
-    }
-    
-    private void populateUserInfo() {
-        if (userAccount != null) {
-            fieldUserName.setText(userAccount.getUsername());
-            
-            fieldRole.setText(userAccount.getRole() != null ? 
-                userAccount.getRole().getClass().getSimpleName().replace("Role", "") : "N/A");
-            
-            fieldOrganization.setText(organization != null ? organization.getName() : "N/A");
-            if (userAccount.getEmployee() != null) {
-                fieldFullName.setText(userAccount.getEmployee().getName() != null ? 
-                    userAccount.getEmployee().getName() : "");
-                
-                fieldEmail.setText(userAccount.getEmployee().getEmail() != null ? 
-                     userAccount.getEmployee().getEmail() : "");
-                
-                fieldPhone.setText(userAccount.getEmployee().getPhone() != null ? 
-                    userAccount.getEmployee().getPhone() : "");
-
-            }
-        }
-    }
-    
-    
-    private boolean validateUserInfo() {
-        String fullName = fieldFullName.getText().trim();
-        
-        if (fullName.isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "Full Name cannot be empty.", 
-                "Validation Error", 
-                JOptionPane.WARNING_MESSAGE);
-            fieldFullName.requestFocus();
-            return false;
-        }
-        
-        String email = fieldEmail.getText().trim();
-        if (!email.isEmpty() && !isValidEmail(email)) {
-            JOptionPane.showMessageDialog(this, 
-                "Please enter a valid email address.", 
-                "Validation Error", 
-                JOptionPane.WARNING_MESSAGE);
-            fieldEmail.requestFocus();
-            return false;
-        }
-        
-        String phone = fieldPhone.getText().trim();
-        if (!phone.isEmpty() && !isValidPhone(phone)) {
-            JOptionPane.showMessageDialog(this, 
-                "Please enter a valid phone number.", 
-                "Validation Error", 
-                JOptionPane.WARNING_MESSAGE);
-            fieldPhone.requestFocus();
-            return false;
-        }
-        
-        return true;
-    }
-    
-    private boolean isValidEmail(String email) {
-        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
-    }
-    
-    private boolean isValidPhone(String phone) {
-        // allow numbers, space, brackets...
-        return phone.matches("^[0-9\\s\\-\\(\\)]{7,15}$");
-    }
-    
-    private boolean validatePasswordChange() {
-        String currentPassword = fieldCurrPassword.getText().trim();
-        String newPassword = fieldNewPassword.getText().trim();
-        String confirmPassword = fieldConfirmPassword.getText().trim();
-        
-        if (!currentPassword.equals(userAccount.getPassword())) {
-            JOptionPane.showMessageDialog(this, 
-                "Current password is incorrect.", 
-                "Validation Error", 
-                JOptionPane.ERROR_MESSAGE);
-            fieldCurrPassword.requestFocus();
-            return false;
-        }
-        
-        if (newPassword.isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "New password cannot be empty.", 
-                "Validation Error", 
-                JOptionPane.WARNING_MESSAGE);
-            fieldNewPassword.requestFocus();
-            return false;
-        }
-        
-        if (newPassword.length() < 4) {
-            JOptionPane.showMessageDialog(this, 
-                "New password must be at least 4 characters.", 
-                "Validation Error", 
-                JOptionPane.WARNING_MESSAGE);
-            fieldNewPassword.requestFocus();
-            return false;
-        }
-        
-        if (!newPassword.equals(confirmPassword)) {
-            JOptionPane.showMessageDialog(this, 
-                "New password and confirm password do not match.", 
-                "Validation Error", 
-                JOptionPane.WARNING_MESSAGE);
-            fieldConfirmPassword.requestFocus();
-            return false;
-        }
-        
-        if (newPassword.equals(currentPassword)) {
-            JOptionPane.showMessageDialog(this, 
-                "New password must be different from current password.", 
-                "Validation Error", 
-                JOptionPane.WARNING_MESSAGE);
-            fieldNewPassword.requestFocus();
-            return false;
-        }
-        
-        return true;
-    }
-    
-    private void clearPasswordFields() {
-        fieldCurrPassword.setText("");
-        fieldNewPassword.setText("");
-        fieldConfirmPassword.setText("");
     }
 
     /**
@@ -186,56 +26,40 @@ public class SalesEditProfilePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblTitle = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        btnBack = new javax.swing.JButton();
-        lblUserInformation = new javax.swing.JLabel();
-        lblUserName = new javax.swing.JLabel();
-        lblFullName = new javax.swing.JLabel();
-        lblEmail = new javax.swing.JLabel();
-        lblPhone = new javax.swing.JLabel();
-        lblRole = new javax.swing.JLabel();
-        lblOrganization = new javax.swing.JLabel();
-        fieldUserName = new javax.swing.JTextField();
-        fieldFullName = new javax.swing.JTextField();
-        fieldEmail = new javax.swing.JTextField();
-        fieldPhone = new javax.swing.JTextField();
-        fieldRole = new javax.swing.JTextField();
-        fieldOrganization = new javax.swing.JTextField();
-        btnSaveChanges = new javax.swing.JButton();
-        lblChangePassword = new javax.swing.JLabel();
-        lblCurrentPassword = new javax.swing.JLabel();
-        lblNewPassword = new javax.swing.JLabel();
         lblConfirmPassword = new javax.swing.JLabel();
-        fieldCurrPassword = new javax.swing.JTextField();
-        fieldNewPassword = new javax.swing.JTextField();
-        fieldConfirmPassword = new javax.swing.JTextField();
+        lblNewPassword = new javax.swing.JLabel();
+        lblCurrentPassword = new javax.swing.JLabel();
+        lblChangePassword = new javax.swing.JLabel();
+        btnSaveChanges = new javax.swing.JButton();
+        fieldOrganization = new javax.swing.JTextField();
+        lblUserName = new javax.swing.JLabel();
+        lblUserInformation = new javax.swing.JLabel();
+        btnBack = new javax.swing.JButton();
         btnChangePassword = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        fieldConfirmPassword = new javax.swing.JTextField();
+        lblTitle = new javax.swing.JLabel();
+        fieldNewPassword = new javax.swing.JTextField();
+        fieldCurrPassword = new javax.swing.JTextField();
+        lblOrganization = new javax.swing.JLabel();
+        lblRole = new javax.swing.JLabel();
+        lblPhone = new javax.swing.JLabel();
+        lblEmail = new javax.swing.JLabel();
+        lblFullName = new javax.swing.JLabel();
+        fieldRole = new javax.swing.JTextField();
+        fieldPhone = new javax.swing.JTextField();
+        fieldEmail = new javax.swing.JTextField();
+        fieldFullName = new javax.swing.JTextField();
+        fieldUserName = new javax.swing.JTextField();
 
-        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        lblTitle.setText("👤 Edit Profile");
+        lblConfirmPassword.setText("Confirm Password:");
 
-        btnBack.setText("<< Back");
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackActionPerformed(evt);
-            }
-        });
+        lblNewPassword.setText("New Password:");
 
-        lblUserInformation.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        lblUserInformation.setText("User Information");
+        lblCurrentPassword.setText("Current Password:");
 
-        lblUserName.setText("Username:");
-
-        lblFullName.setText("Full Name:");
-
-        lblEmail.setText("Email:");
-
-        lblPhone.setText("Phone:");
-
-        lblRole.setText("Role:");
-
-        lblOrganization.setText("Organization:");
+        lblChangePassword.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        lblChangePassword.setText("Change Password");
 
         btnSaveChanges.setText("💾 Save Changes");
         btnSaveChanges.addActionListener(new java.awt.event.ActionListener() {
@@ -244,14 +68,17 @@ public class SalesEditProfilePanel extends javax.swing.JPanel {
             }
         });
 
-        lblChangePassword.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        lblChangePassword.setText("Change Password");
+        lblUserName.setText("Username:");
 
-        lblCurrentPassword.setText("Current Password:");
+        lblUserInformation.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        lblUserInformation.setText("User Information");
 
-        lblNewPassword.setText("New Password:");
-
-        lblConfirmPassword.setText("Confirm Password:");
+        btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         btnChangePassword.setText("🔐 Change Password");
         btnChangePassword.addActionListener(new java.awt.event.ActionListener() {
@@ -259,6 +86,19 @@ public class SalesEditProfilePanel extends javax.swing.JPanel {
                 btnChangePasswordActionPerformed(evt);
             }
         });
+
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        lblTitle.setText("👤 Edit Profile");
+
+        lblOrganization.setText("Organization:");
+
+        lblRole.setText("Role:");
+
+        lblPhone.setText("Phone:");
+
+        lblEmail.setText("Email:");
+
+        lblFullName.setText("Full Name:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -369,44 +209,18 @@ public class SalesEditProfilePanel extends javax.swing.JPanel {
 
     private void btnSaveChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveChangesActionPerformed
         // TODO add your handling code here:
-        if (!validateUserInfo()) {
-            return;
-        }
         
-        if (userAccount.getEmployee() != null) {
-            userAccount.getEmployee().setName(fieldFullName.getText().trim());
-            userAccount.getEmployee().setEmail(fieldEmail.getText().trim());
-            userAccount.getEmployee().setPhone(fieldPhone.getText().trim());
-        }
-        
-        JOptionPane.showMessageDialog(this, 
-            "Profile updated successfully!", 
-            "Success", 
-            JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnSaveChangesActionPerformed
-
-    private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
-        // TODO add your handling code here:
-        if (!validatePasswordChange()) {
-            return;
-        }
-        
-        userAccount.setPassword(fieldNewPassword.getText().trim());
-
-        clearPasswordFields();
-        
-        JOptionPane.showMessageDialog(this, 
-            "Password changed successfully!", 
-            "Success", 
-            JOptionPane.INFORMATION_MESSAGE);
-    }//GEN-LAST:event_btnChangePasswordActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        userProcessContainer.remove(this);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.previous(userProcessContainer);
+        
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnChangePasswordActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

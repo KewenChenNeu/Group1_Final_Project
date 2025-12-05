@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.8" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lblTitle" alignment="0" min="-2" pref="232" max="-2" attributes="0"/>
+                                  <Component id="btnBack" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                                      <Component id="lblBasicInformation" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                                          <Component id="lblReservedQuantity" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblCurrentQuantity" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblAvailableQuantity" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblMinStockLevel" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblMaxStockLevel" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblLocation" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblLastUpdated" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblStatus" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblUnit" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblUnitPrice" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblDescription" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblCategory" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblProdcutName" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblProductCode" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Component id="lblInventoryInformation" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="fieldProductCode" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldProductName" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldCategory" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldDescription" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldUnitPrice" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldUnit" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldStatus" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldCurrentQuantity" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldReservedQuantity" alignment="0" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldAvailaleQuantity" alignment="0" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldMinStockLevel" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldLastUpdated" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldMaxStockLevel" alignment="0" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="fieldLocation" alignment="0" min="-2" pref="260" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                              <Component id="lblStockStatus" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="fieldStockStatus" min="-2" pref="260" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="0" pref="362" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <Component id="btnEditStock" min="-2" pref="174" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="90" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jSeparator1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="btnBack" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="lblBasicInformation" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblProductCode" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldProductCode" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblProdcutName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldProductName" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblCategory" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldCategory" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblDescription" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldDescription" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblUnitPrice" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldUnitPrice" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblUnit" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldUnit" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblStatus" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldStatus" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <Component id="lblInventoryInformation" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblCurrentQuantity" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldCurrentQuantity" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblReservedQuantity" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldReservedQuantity" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblAvailableQuantity" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldAvailaleQuantity" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblMinStockLevel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldMinStockLevel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblMaxStockLevel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldMaxStockLevel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblLocation" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldLocation" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblLastUpdated" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldLastUpdated" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblStockStatus" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldStockStatus" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnEditStock" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="56" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JButton" name="btnBack">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&lt;&lt; Back"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTitle">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Helvetica Neue" size="18" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="\ud83d\udce6 Product Details" containsInvalidXMLChars="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSeparator" name="jSeparator1">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblBasicInformation">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Basic Information"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblProductCode">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Product Code:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblProdcutName">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Product Name:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblCategory">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Category:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblDescription">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Description:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblUnitPrice">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Unit Price:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblUnit">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Unit:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblStatus">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Status:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblInventoryInformation">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Inventory Information:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblCurrentQuantity">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Current Quantity:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblReservedQuantity">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Reserved Quantity:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblAvailableQuantity">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Available Quantity:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblMinStockLevel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Min Stock Level:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblMaxStockLevel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Max Stock Level:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblLocation">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Location:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblLastUpdated">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Last Updated:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblStockStatus">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Stock Status:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldProductCode">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldProductName">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldCategory">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldDescription">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldUnitPrice">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldUnit">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldStatus">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldCurrentQuantity">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldReservedQuantity">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldAvailaleQuantity">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldMinStockLevel">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldMaxStockLevel">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldLocation">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldLastUpdated">
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldStockStatus">
+    </Component>
+    <Component class="javax.swing.JButton" name="btnEditStock">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#x270f; Edit Stock"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditStockActionPerformed"/>
+      </Events>
+    </Component>
+  </SubComponents>
+</Form>

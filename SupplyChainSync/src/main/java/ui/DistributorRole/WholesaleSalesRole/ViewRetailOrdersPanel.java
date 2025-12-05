@@ -279,7 +279,6 @@ public class ViewRetailOrdersPanel extends javax.swing.JPanel {
         fieldMessage = new javax.swing.JTextField();
         btnApprove = new javax.swing.JButton();
         btnReject = new javax.swing.JButton();
-        btnViewHistory = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblProductInventory = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -359,13 +358,6 @@ public class ViewRetailOrdersPanel extends javax.swing.JPanel {
             }
         });
 
-        btnViewHistory.setText("📋 View History");
-        btnViewHistory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewHistoryActionPerformed(evt);
-            }
-        });
-
         tblProductInventory.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -423,10 +415,9 @@ public class ViewRetailOrdersPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnApprove, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnReject, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnViewHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(62, 62, 62)
+                                .addComponent(btnReject, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(105, 105, 105))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnBack)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -518,8 +509,7 @@ public class ViewRetailOrdersPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnApprove)
-                    .addComponent(btnReject)
-                    .addComponent(btnViewHistory))
+                    .addComponent(btnReject))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -607,15 +597,6 @@ public class ViewRetailOrdersPanel extends javax.swing.JPanel {
         clearDetailFields();
     }//GEN-LAST:event_btnRejectActionPerformed
 
-    private void btnViewHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewHistoryActionPerformed
-        // TODO add your handling code here:
-        ViewRetailerHistoryPanel historyPanel = new ViewRetailerHistoryPanel(
-            userProcessContainer, userAccount, organization, enterprise, system);
-        userProcessContainer.add("ViewRetailerHistoryPanel", historyPanel);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-    }//GEN-LAST:event_btnViewHistoryActionPerformed
-
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
         // Only search in tblProductInventory
@@ -657,7 +638,6 @@ public class ViewRetailOrdersPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnReject;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSearch;
-    private javax.swing.JButton btnViewHistory;
     private javax.swing.JTextField fieldDate;
     private javax.swing.JTextField fieldId;
     private javax.swing.JTextField fieldMessage;

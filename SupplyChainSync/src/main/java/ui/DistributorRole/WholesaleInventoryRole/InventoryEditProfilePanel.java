@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package ui.DistributorRole.WholesaleSalesRole;
+package ui.DistributorRole.WholesaleInventoryRole;
 
 import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
-import Business.Organization.Distributor.WholesaleSalesOrganization;
+import Business.Organization.Distributor.WholesaleInventoryOrganization;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
 import javax.swing.JOptionPane;
@@ -16,29 +16,30 @@ import javax.swing.JPanel;
  *
  * @author chris
  */
-public class SalesEditProfilePanel extends javax.swing.JPanel {
-    
+public class InventoryEditProfilePanel extends javax.swing.JPanel {
+
     private JPanel userProcessContainer;
     private UserAccount userAccount;
-    private WholesaleSalesOrganization organization;
+    private WholesaleInventoryOrganization organization;
     private Enterprise enterprise;
     private EcoSystem system;
-
+    
     /**
-     * Creates new form SalesEditProfilePanel
+     * Creates new form InventoryEditProfilePanel
      */
-    public SalesEditProfilePanel(JPanel userProcessContainer, UserAccount account, WholesaleSalesOrganization wholesaleSalesOrganization, Enterprise enterprise, EcoSystem system) {
+    public InventoryEditProfilePanel(JPanel userProcessContainer, UserAccount account, WholesaleInventoryOrganization wholesaleInventoryOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
         
         this.userProcessContainer = userProcessContainer;
         this.userAccount = account;
-        this.organization = wholesaleSalesOrganization;
+        this.organization = wholesaleInventoryOrganization;
         this.enterprise = enterprise;
         this.system = system;
         
         setReadOnlyFields();
 
         populateUserInfo();
+        
     }
     
     private void setReadOnlyFields() {
@@ -186,34 +187,40 @@ public class SalesEditProfilePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblTitle = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        btnBack = new javax.swing.JButton();
-        lblUserInformation = new javax.swing.JLabel();
-        lblUserName = new javax.swing.JLabel();
-        lblFullName = new javax.swing.JLabel();
         lblEmail = new javax.swing.JLabel();
-        lblPhone = new javax.swing.JLabel();
-        lblRole = new javax.swing.JLabel();
+        lblFullName = new javax.swing.JLabel();
+        lblUserName = new javax.swing.JLabel();
+        lblUserInformation = new javax.swing.JLabel();
+        btnBack = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        lblTitle = new javax.swing.JLabel();
         lblOrganization = new javax.swing.JLabel();
-        fieldUserName = new javax.swing.JTextField();
-        fieldFullName = new javax.swing.JTextField();
-        fieldEmail = new javax.swing.JTextField();
-        fieldPhone = new javax.swing.JTextField();
-        fieldRole = new javax.swing.JTextField();
-        fieldOrganization = new javax.swing.JTextField();
-        btnSaveChanges = new javax.swing.JButton();
+        lblRole = new javax.swing.JLabel();
         lblChangePassword = new javax.swing.JLabel();
-        lblCurrentPassword = new javax.swing.JLabel();
-        lblNewPassword = new javax.swing.JLabel();
-        lblConfirmPassword = new javax.swing.JLabel();
-        fieldCurrPassword = new javax.swing.JTextField();
-        fieldNewPassword = new javax.swing.JTextField();
-        fieldConfirmPassword = new javax.swing.JTextField();
+        btnSaveChanges = new javax.swing.JButton();
+        fieldOrganization = new javax.swing.JTextField();
+        fieldRole = new javax.swing.JTextField();
+        fieldPhone = new javax.swing.JTextField();
+        fieldEmail = new javax.swing.JTextField();
+        fieldFullName = new javax.swing.JTextField();
+        fieldUserName = new javax.swing.JTextField();
         btnChangePassword = new javax.swing.JButton();
+        fieldConfirmPassword = new javax.swing.JTextField();
+        fieldNewPassword = new javax.swing.JTextField();
+        fieldCurrPassword = new javax.swing.JTextField();
+        lblConfirmPassword = new javax.swing.JLabel();
+        lblNewPassword = new javax.swing.JLabel();
+        lblPhone = new javax.swing.JLabel();
+        lblCurrentPassword = new javax.swing.JLabel();
 
-        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        lblTitle.setText("👤 Edit Profile");
+        lblEmail.setText("Email:");
+
+        lblFullName.setText("Full Name:");
+
+        lblUserName.setText("Username:");
+
+        lblUserInformation.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        lblUserInformation.setText("User Information");
 
         btnBack.setText("<< Back");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
@@ -222,20 +229,15 @@ public class SalesEditProfilePanel extends javax.swing.JPanel {
             }
         });
 
-        lblUserInformation.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        lblUserInformation.setText("User Information");
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        lblTitle.setText("👤 Edit Profile");
 
-        lblUserName.setText("Username:");
-
-        lblFullName.setText("Full Name:");
-
-        lblEmail.setText("Email:");
-
-        lblPhone.setText("Phone:");
+        lblOrganization.setText("Organization:");
 
         lblRole.setText("Role:");
 
-        lblOrganization.setText("Organization:");
+        lblChangePassword.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        lblChangePassword.setText("Change Password");
 
         btnSaveChanges.setText("💾 Save Changes");
         btnSaveChanges.addActionListener(new java.awt.event.ActionListener() {
@@ -244,21 +246,20 @@ public class SalesEditProfilePanel extends javax.swing.JPanel {
             }
         });
 
-        lblChangePassword.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        lblChangePassword.setText("Change Password");
-
-        lblCurrentPassword.setText("Current Password:");
-
-        lblNewPassword.setText("New Password:");
-
-        lblConfirmPassword.setText("Confirm Password:");
-
         btnChangePassword.setText("🔐 Change Password");
         btnChangePassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnChangePasswordActionPerformed(evt);
             }
         });
+
+        lblConfirmPassword.setText("Confirm Password:");
+
+        lblNewPassword.setText("New Password:");
+
+        lblPhone.setText("Phone:");
+
+        lblCurrentPassword.setText("Current Password:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -283,13 +284,13 @@ public class SalesEditProfilePanel extends javax.swing.JPanel {
                                     .addComponent(lblOrganization))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(fieldRole, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+                                    .addComponent(fieldRole, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
                                     .addComponent(fieldPhone)
                                     .addComponent(fieldEmail)
                                     .addComponent(fieldFullName)
                                     .addComponent(fieldUserName)
                                     .addComponent(fieldOrganization))
-                                .addGap(63, 63, 63)
+                                .addGap(82, 82, 82)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(btnChangePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(btnSaveChanges, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -308,7 +309,7 @@ public class SalesEditProfilePanel extends javax.swing.JPanel {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(18, 18, 18)
                                         .addComponent(fieldConfirmPassword)))
-                                .addGap(229, 229, 229)))
+                                .addGap(248, 248, 248)))
                         .addGap(0, 133, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -367,6 +368,13 @@ public class SalesEditProfilePanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
+    }//GEN-LAST:event_btnBackActionPerformed
+
     private void btnSaveChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveChangesActionPerformed
         // TODO add your handling code here:
         if (!validateUserInfo()) {
@@ -400,13 +408,6 @@ public class SalesEditProfilePanel extends javax.swing.JPanel {
             "Success", 
             JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnChangePasswordActionPerformed
-
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
-        userProcessContainer.remove(this);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.previous(userProcessContainer);
-    }//GEN-LAST:event_btnBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
