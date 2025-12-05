@@ -205,43 +205,17 @@ public class InventoryEditProfilePanel extends javax.swing.JPanel {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        userProcessContainer.remove(this);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.previous(userProcessContainer);
+        
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnSaveChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveChangesActionPerformed
         // TODO add your handling code here:
-        if (!validateUserInfo()) {
-            return;
-        }
-
-        if (userAccount.getEmployee() != null) {
-            userAccount.getEmployee().setName(fieldFullName.getText().trim());
-            userAccount.getEmployee().setEmail(fieldEmail.getText().trim());
-            userAccount.getEmployee().setPhone(fieldPhone.getText().trim());
-        }
-
-        JOptionPane.showMessageDialog(this,
-            "Profile updated successfully!",
-            "Success",
-            JOptionPane.INFORMATION_MESSAGE);
+        
     }//GEN-LAST:event_btnSaveChangesActionPerformed
 
     private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
         // TODO add your handling code here:
-        if (!validatePasswordChange()) {
-            return;
-        }
-
-        userAccount.setPassword(fieldNewPassword.getText().trim());
-
-        clearPasswordFields();
-
-        JOptionPane.showMessageDialog(this,
-            "Password changed successfully!",
-            "Success",
-            JOptionPane.INFORMATION_MESSAGE);
+        
     }//GEN-LAST:event_btnChangePasswordActionPerformed
 
 
