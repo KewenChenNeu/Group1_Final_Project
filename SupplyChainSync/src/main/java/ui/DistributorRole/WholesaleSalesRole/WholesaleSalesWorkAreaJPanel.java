@@ -9,6 +9,9 @@ import Business.Enterprise.Enterprise;
 import Business.Enterprise.ManufacturerEnterprise;
 import Business.Enterprise.ShippingEnterprise;
 import Business.Network.Network;
+import Business.Enterprise.ManufacturerEnterprise;
+import Business.Enterprise.ShippingEnterprise;
+import Business.Network.Network;
 import Business.Organization.Distributor.WholesaleSalesOrganization;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
@@ -90,36 +93,11 @@ public class WholesaleSalesWorkAreaJPanel extends javax.swing.JPanel {
             }
         }
         
-        for (Network network : system.getNetworkList()) {
-            for (Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
-                if (ent instanceof ShippingEnterprise) {
-                    for (Organization org : ent.getOrganizationDirectory().getOrganizationList()) {
-                        for (WorkRequest request : org.getWorkQueue().getWorkRequestList()) {
-                            if (request instanceof WholesalesShippingRequest) {
-                                WholesalesShippingRequest shipReq = (WholesalesShippingRequest) request;
-                                String shippingStatus = shipReq.getShippingStatus();
-                                if (shippingStatus != null && 
-                                    !WholesalesShippingRequest.SHIP_STATUS_DELIVERED.equalsIgnoreCase(shippingStatus)) {
-                                    if (request.getSender() != null && 
-                                        request.getSender().getUsername().equals(userAccount.getUsername())) {
-                                        shipmentsInProgress++;
-                                    }
-                                }
-                            }
-
-                            if (request instanceof ProductShippingRequest) {
-                                ProductShippingRequest shipReq = (ProductShippingRequest) request;
-                                String shippingStatus = shipReq.getShippingStatus();
-                                if (shippingStatus != null && 
-                                    !ProductShippingRequest.SHIP_STATUS_DELIVERED.equalsIgnoreCase(shippingStatus)) {
-                                    if (request.getSender() != null && 
-                                        request.getSender().getUsername().equals(userAccount.getUsername())) {
-                                        shipmentsInProgress++;
-                                    }
-                                }
-                            }
-                        }
-                    }
+        for (WorkRequest request : userAccount.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof WholesalesShippingRequest) {
+                String status = request.getStatus();
+                if ("In Transit".equalsIgnoreCase(status) || "Pending".equalsIgnoreCase(status)) {
+                    shipmentsInProgress++;
                 }
             }
         }
