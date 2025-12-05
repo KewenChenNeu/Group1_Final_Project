@@ -6,21 +6,67 @@ package ui.RetailRole.OrderClerkRole;
 
 import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
-import Business.Organization.Retail.RetailInventoryOrganization;
+import Business.Organization.Retail.StoreManagementOrganization;
 import Business.UserAccount.UserAccount;
+import Business.WorkQueue.RetailPurchaseOrderRequest;
+import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 /**
  *
- * @author chris
+ * @author zhifei
  */
 public class OrderClerkWorkAreaJPanel extends javax.swing.JPanel {
+
+    private JPanel userProcessContainer;
+    private UserAccount userAccount;
+    private StoreManagementOrganization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;
 
     /**
      * Creates new form OrderClerkWorkAreaJPanel
      */
-    public OrderClerkWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, RetailInventoryOrganization retailInventoryOrganization, Enterprise enterprise, EcoSystem system) {
+    public OrderClerkWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, StoreManagementOrganization storeManagementOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.userAccount = account;
+        this.organization = storeManagementOrganization;
+        this.enterprise = enterprise;
+        this.system = system;
+
+        populateInfo();
+        updateSummary();
+    }
+
+    private void populateInfo() {
+        txtEnterpriseName.setText(enterprise.getName());
+        txtOrganizationName.setText(organization.getName());
+        txtUserName.setText(userAccount.getEmployee().getName());
+    }
+
+    void updateSummary() {
+        int pendingOrders = 0;
+        int approvedOrders = 0;
+        int deliveredOrders = 0;
+
+        for (WorkRequest request : userAccount.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof RetailPurchaseOrderRequest) {
+                String status = request.getStatus();
+                if ("Pending".equalsIgnoreCase(status) || "Sent".equalsIgnoreCase(status)) {
+                    pendingOrders++;
+                } else if ("Approved".equalsIgnoreCase(status) || "Processing".equalsIgnoreCase(status) || "In Transit".equalsIgnoreCase(status)) {
+                    approvedOrders++;
+                } else if ("Delivered".equalsIgnoreCase(status) || "Completed".equalsIgnoreCase(status)) {
+                    deliveredOrders++;
+                }
+            }
+        }
+
+        lblNumberOfPendingOrders.setText(String.valueOf(pendingOrders));
+        lblNumberOfApprovedOrders.setText(String.valueOf(approvedOrders));
+        lblNumberOfDeliveredOrders.setText(String.valueOf(deliveredOrders));
     }
 
     /**
@@ -32,9 +78,82 @@ public class OrderClerkWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        lblTitle = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        lblEnterprise = new javax.swing.JLabel();
+        lblOrganization = new javax.swing.JLabel();
+        lblUser = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        txtEnterpriseName = new javax.swing.JTextField();
+        txtOrganizationName = new javax.swing.JTextField();
+        txtUserName = new javax.swing.JTextField();
+        lblQuickSummary = new javax.swing.JLabel();
+        lblPendingOrders = new javax.swing.JLabel();
+        lblApprovedOrders = new javax.swing.JLabel();
+        lblDeliveredOrders = new javax.swing.JLabel();
+        lblNumberOfPendingOrders = new javax.swing.JLabel();
+        lblNumberOfApprovedOrders = new javax.swing.JLabel();
+        lblNumberOfDeliveredOrders = new javax.swing.JLabel();
+        btnCreatePurchaseOrder = new javax.swing.JButton();
+        btnViewPendingOrders = new javax.swing.JButton();
+        btnViewOrderHistory = new javax.swing.JButton();
+        btnEditProfile = new javax.swing.JButton();
 
-        jLabel1.setText("Order Clerk Role");
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        lblTitle.setText("Order Clerk Work Area");
+
+        lblEnterprise.setText("Enterprise:");
+
+        lblOrganization.setText("Organization:");
+
+        lblUser.setText("User:");
+
+        txtEnterpriseName.setEditable(false);
+        txtOrganizationName.setEditable(false);
+        txtUserName.setEditable(false);
+
+        lblQuickSummary.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        lblQuickSummary.setText("Quick Summary:");
+
+        lblPendingOrders.setText("Pending Orders:");
+
+        lblApprovedOrders.setText("Approved Orders:");
+
+        lblDeliveredOrders.setText("Delivered Orders:");
+
+        lblNumberOfPendingOrders.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+
+        lblNumberOfApprovedOrders.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+
+        lblNumberOfDeliveredOrders.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+
+        btnCreatePurchaseOrder.setText("Create Purchase Order");
+        btnCreatePurchaseOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreatePurchaseOrderActionPerformed(evt);
+            }
+        });
+
+        btnViewPendingOrders.setText("View Pending Orders");
+        btnViewPendingOrders.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewPendingOrdersActionPerformed(evt);
+            }
+        });
+
+        btnViewOrderHistory.setText("View Order History");
+        btnViewOrderHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewOrderHistoryActionPerformed(evt);
+            }
+        });
+
+        btnEditProfile.setText("Edit Profile");
+        btnEditProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditProfileActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -42,20 +161,143 @@ public class OrderClerkWorkAreaJPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(463, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblEnterprise)
+                                    .addComponent(lblOrganization)
+                                    .addComponent(lblUser))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtEnterpriseName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtUserName, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                                    .addComponent(txtOrganizationName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(lblQuickSummary))
+                        .addGap(146, 146, 146))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator2)
+                            .addComponent(jSeparator1))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblApprovedOrders)
+                            .addComponent(lblPendingOrders)
+                            .addComponent(lblDeliveredOrders))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblNumberOfPendingOrders, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                            .addComponent(lblNumberOfApprovedOrders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblNumberOfDeliveredOrders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnViewPendingOrders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnCreatePurchaseOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnViewOrderHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(130, 130, 130))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(411, Short.MAX_VALUE))
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEnterprise)
+                    .addComponent(txtEnterpriseName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblOrganization)
+                    .addComponent(txtOrganizationName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUser)
+                    .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblQuickSummary)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblPendingOrders)
+                            .addComponent(lblNumberOfPendingOrders, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNumberOfApprovedOrders, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblApprovedOrders))
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNumberOfDeliveredOrders, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblDeliveredOrders)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnCreatePurchaseOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(btnViewPendingOrders)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnViewOrderHistory)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnEditProfile)
+                .addContainerGap(252, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCreatePurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreatePurchaseOrderActionPerformed
+        CreateRetailPurchaseOrderPanel panel = new CreateRetailPurchaseOrderPanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("CreateRetailPurchaseOrderPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnCreatePurchaseOrderActionPerformed
+
+    private void btnViewPendingOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewPendingOrdersActionPerformed
+        ViewPendingOrdersPanel panel = new ViewPendingOrdersPanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("ViewPendingOrdersPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnViewPendingOrdersActionPerformed
+
+    private void btnViewOrderHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewOrderHistoryActionPerformed
+        ViewOrderHistoryPanel panel = new ViewOrderHistoryPanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("ViewOrderHistoryPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnViewOrderHistoryActionPerformed
+
+    private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
+        OrderClerkProfilePanel panel = new OrderClerkProfilePanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("OrderClerkProfilePanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnEditProfileActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnCreatePurchaseOrder;
+    private javax.swing.JButton btnEditProfile;
+    private javax.swing.JButton btnViewOrderHistory;
+    private javax.swing.JButton btnViewPendingOrders;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel lblApprovedOrders;
+    private javax.swing.JLabel lblDeliveredOrders;
+    private javax.swing.JLabel lblEnterprise;
+    private javax.swing.JLabel lblNumberOfApprovedOrders;
+    private javax.swing.JLabel lblNumberOfDeliveredOrders;
+    private javax.swing.JLabel lblNumberOfPendingOrders;
+    private javax.swing.JLabel lblOrganization;
+    private javax.swing.JLabel lblPendingOrders;
+    private javax.swing.JLabel lblQuickSummary;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblUser;
+    private javax.swing.JTextField txtEnterpriseName;
+    private javax.swing.JTextField txtOrganizationName;
+    private javax.swing.JTextField txtUserName;
     // End of variables declaration//GEN-END:variables
 }
