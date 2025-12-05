@@ -6,21 +6,92 @@ package ui.RetailRole.RetailAnalyticsRole;
 
 import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
+import Business.Enterprise.RetailEnterprise;
+import Business.Inventory.Inventory;
+import Business.Inventory.InventoryItem;
 import Business.Organization.Retail.RetailInventoryOrganization;
 import Business.UserAccount.UserAccount;
+import Business.WorkQueue.RetailPurchaseOrderRequest;
+import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 /**
  *
- * @author chris
+ * @author zhifei
  */
 public class RetailAnalyticsWorkAreaJPanel extends javax.swing.JPanel {
+
+    private JPanel userProcessContainer;
+    private UserAccount userAccount;
+    private RetailInventoryOrganization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;
+    private Inventory inventory;
 
     /**
      * Creates new form RetailAnalyticsWorkAreaJPanel
      */
     public RetailAnalyticsWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, RetailInventoryOrganization retailInventoryOrganization, Enterprise enterprise, EcoSystem system) {
-        initComponents(); 
+        initComponents();
+
+        this.userProcessContainer = userProcessContainer;
+        this.userAccount = account;
+        this.organization = retailInventoryOrganization;
+        this.enterprise = enterprise;
+        this.system = system;
+        this.inventory = getRetailInventory();
+
+        populateInfo();
+        updateSummary();
+    }
+
+    private Inventory getRetailInventory() {
+        if (enterprise instanceof RetailEnterprise) {
+            RetailEnterprise retailEnterprise = (RetailEnterprise) enterprise;
+            return retailEnterprise.getInventory();
+        }
+        return enterprise.getInventory();
+    }
+
+    private void populateInfo() {
+        txtEnterpriseName.setText(enterprise.getName());
+        txtOrganizationName.setText(organization.getName());
+        txtUserName.setText(userAccount.getEmployee().getName());
+    }
+
+    void updateSummary() {
+        int totalProducts = 0;
+        int lowStockItems = 0;
+        double totalInventoryValue = 0;
+        int totalOrders = 0;
+
+        if (inventory != null) {
+            for (InventoryItem item : inventory.getProductInventory()) {
+                if (item.getProduct() != null) {
+                    totalProducts++;
+                    totalInventoryValue += item.getQuantity() * item.getProduct().getUnitPrice();
+
+                    int available = item.getAvailableQuantity();
+                    int minLevel = item.getMinStockLevel();
+                    if (available <= 0 || (minLevel > 0 && available <= minLevel)) {
+                        lowStockItems++;
+                    }
+                }
+            }
+        }
+
+        // Count orders from work queue
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof RetailPurchaseOrderRequest) {
+                totalOrders++;
+            }
+        }
+
+        txtTotalProducts.setText(String.valueOf(totalProducts));
+        txtLowStockItems.setText(String.valueOf(lowStockItems));
+        txtInventoryValue.setText("$" + String.format("%,.2f", totalInventoryValue));
+        txtTotalOrders.setText(String.valueOf(totalOrders));
     }
 
     /**
@@ -32,9 +103,94 @@ public class RetailAnalyticsWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        lblTitle = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        lblEnterprise = new javax.swing.JLabel();
+        lblOrganization = new javax.swing.JLabel();
+        lblUser = new javax.swing.JLabel();
+        txtEnterpriseName = new javax.swing.JTextField();
+        txtOrganizationName = new javax.swing.JTextField();
+        txtUserName = new javax.swing.JTextField();
+        jSeparator2 = new javax.swing.JSeparator();
+        lblAnalyticsSummary = new javax.swing.JLabel();
+        lblTotalProducts = new javax.swing.JLabel();
+        lblLowStockItems = new javax.swing.JLabel();
+        lblInventoryValue = new javax.swing.JLabel();
+        lblTotalOrders = new javax.swing.JLabel();
+        txtTotalProducts = new javax.swing.JTextField();
+        txtLowStockItems = new javax.swing.JTextField();
+        txtInventoryValue = new javax.swing.JTextField();
+        txtTotalOrders = new javax.swing.JTextField();
+        btnSalesAnalytics = new javax.swing.JButton();
+        btnInventoryAnalytics = new javax.swing.JButton();
+        btnEditProfile = new javax.swing.JButton();
 
-        jLabel1.setText("Retail Analytics Role");
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        lblTitle.setText("Retail Analytics Work Area");
+
+        lblEnterprise.setText("Enterprise:");
+
+        lblOrganization.setText("Organization:");
+
+        lblUser.setText("User:");
+
+        txtEnterpriseName.setEditable(false);
+
+        txtOrganizationName.setEditable(false);
+
+        txtUserName.setEditable(false);
+
+        lblAnalyticsSummary.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        lblAnalyticsSummary.setText("Analytics Summary:");
+
+        lblTotalProducts.setText("Total Products:");
+
+        lblLowStockItems.setText("Low Stock Items:");
+
+        lblInventoryValue.setText("Inventory Value:");
+
+        lblTotalOrders.setText("Total Orders:");
+
+        txtTotalProducts.setEditable(false);
+        txtTotalProducts.setBackground(new java.awt.Color(204, 229, 255));
+        txtTotalProducts.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        txtTotalProducts.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        txtLowStockItems.setEditable(false);
+        txtLowStockItems.setBackground(new java.awt.Color(255, 255, 204));
+        txtLowStockItems.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        txtLowStockItems.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        txtInventoryValue.setEditable(false);
+        txtInventoryValue.setBackground(new java.awt.Color(204, 255, 204));
+        txtInventoryValue.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        txtInventoryValue.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        txtTotalOrders.setEditable(false);
+        txtTotalOrders.setBackground(new java.awt.Color(255, 204, 229));
+        txtTotalOrders.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        txtTotalOrders.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        btnSalesAnalytics.setText("Sales Analytics");
+        btnSalesAnalytics.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalesAnalyticsActionPerformed(evt);
+            }
+        });
+
+        btnInventoryAnalytics.setText("Inventory Analytics");
+        btnInventoryAnalytics.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInventoryAnalyticsActionPerformed(evt);
+            }
+        });
+
+        btnEditProfile.setText("Edit My Profile");
+        btnEditProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditProfileActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -42,20 +198,140 @@ public class RetailAnalyticsWorkAreaJPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(463, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblEnterprise)
+                                    .addComponent(lblOrganization)
+                                    .addComponent(lblUser))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtEnterpriseName, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                                    .addComponent(txtUserName)
+                                    .addComponent(txtOrganizationName)))
+                            .addComponent(lblAnalyticsSummary))
+                        .addGap(146, 146, 146))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator2)
+                            .addComponent(jSeparator1))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblTotalProducts)
+                            .addComponent(lblLowStockItems)
+                            .addComponent(lblInventoryValue)
+                            .addComponent(lblTotalOrders))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtTotalProducts, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                            .addComponent(txtLowStockItems)
+                            .addComponent(txtInventoryValue)
+                            .addComponent(txtTotalOrders))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnSalesAnalytics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnInventoryAnalytics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(130, 130, 130))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(411, Short.MAX_VALUE))
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEnterprise)
+                    .addComponent(txtEnterpriseName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblOrganization)
+                    .addComponent(txtOrganizationName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUser)
+                    .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblAnalyticsSummary)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblTotalProducts)
+                            .addComponent(txtTotalProducts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblLowStockItems)
+                            .addComponent(txtLowStockItems, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblInventoryValue)
+                            .addComponent(txtInventoryValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblTotalOrders)
+                            .addComponent(txtTotalOrders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnSalesAnalytics, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(btnInventoryAnalytics)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnEditProfile)))
+                .addContainerGap(200, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSalesAnalyticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalesAnalyticsActionPerformed
+        SalesAnalyticsPanel panel = new SalesAnalyticsPanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("SalesAnalyticsPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnSalesAnalyticsActionPerformed
+
+    private void btnInventoryAnalyticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventoryAnalyticsActionPerformed
+        InventoryAnalyticsPanel panel = new InventoryAnalyticsPanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("InventoryAnalyticsPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnInventoryAnalyticsActionPerformed
+
+    private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
+        AnalyticsProfilePanel panel = new AnalyticsProfilePanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("AnalyticsProfilePanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnEditProfileActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnEditProfile;
+    private javax.swing.JButton btnInventoryAnalytics;
+    private javax.swing.JButton btnSalesAnalytics;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel lblAnalyticsSummary;
+    private javax.swing.JLabel lblEnterprise;
+    private javax.swing.JLabel lblInventoryValue;
+    private javax.swing.JLabel lblLowStockItems;
+    private javax.swing.JLabel lblOrganization;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblTotalOrders;
+    private javax.swing.JLabel lblTotalProducts;
+    private javax.swing.JLabel lblUser;
+    private javax.swing.JTextField txtEnterpriseName;
+    private javax.swing.JTextField txtInventoryValue;
+    private javax.swing.JTextField txtLowStockItems;
+    private javax.swing.JTextField txtOrganizationName;
+    private javax.swing.JTextField txtTotalOrders;
+    private javax.swing.JTextField txtTotalProducts;
+    private javax.swing.JTextField txtUserName;
     // End of variables declaration//GEN-END:variables
 }
