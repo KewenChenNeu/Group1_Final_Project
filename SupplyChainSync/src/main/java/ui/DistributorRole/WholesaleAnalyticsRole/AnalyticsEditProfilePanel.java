@@ -4,7 +4,12 @@
  */
 package ui.DistributorRole.WholesaleAnalyticsRole;
 
+import Business.EcoSystem;
+import Business.Enterprise.Enterprise;
+import Business.Organization.Distributor.WholesaleSalesOrganization;
 import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -13,13 +18,166 @@ import javax.swing.JPanel;
  */
 public class AnalyticsEditProfilePanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private UserAccount userAccount;
+    private WholesaleSalesOrganization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;
+    
     /**
      * Creates new form AnalyticsEditProfilePanel
      */
-    public AnalyticsEditProfilePanel(JPanel userProcessContainer, UserAccount account) {
+    public AnalyticsEditProfilePanel(JPanel userProcessContainer, UserAccount account, 
+            WholesaleSalesOrganization wholesaleSalesOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
-    }
+        
+        this.userProcessContainer = userProcessContainer;
+        this.userAccount = account;
+        this.organization = wholesaleSalesOrganization;
+        this.enterprise = enterprise;
+        this.system = system;
+        
+        setReadOnlyFields();
 
+        populateUserInfo();
+        
+    }
+    
+    private void setReadOnlyFields() {
+        fieldUserName.setEditable(false);
+        fieldRole.setEditable(false);
+        fieldOrganization.setEditable(false);
+        
+        fieldUserName.setBackground(new java.awt.Color(240, 240, 240));
+        fieldRole.setBackground(new java.awt.Color(240, 240, 240));
+        fieldOrganization.setBackground(new java.awt.Color(240, 240, 240));
+    }
+    
+    private void populateUserInfo() {
+        if (userAccount != null) {
+            fieldUserName.setText(userAccount.getUsername());
+            
+            fieldRole.setText(userAccount.getRole() != null ? 
+                userAccount.getRole().getClass().getSimpleName().replace("Role", "") : "N/A");
+            
+            fieldOrganization.setText(organization != null ? organization.getName() : "N/A");
+            if (userAccount.getEmployee() != null) {
+                fieldFullName.setText(userAccount.getEmployee().getName() != null ? 
+                    userAccount.getEmployee().getName() : "");
+                
+                fieldEmail.setText(userAccount.getEmployee().getEmail() != null ? 
+                     userAccount.getEmployee().getEmail() : "");
+                
+                fieldPhone.setText(userAccount.getEmployee().getPhone() != null ? 
+                    userAccount.getEmployee().getPhone() : "");
+
+            }
+        }
+    }
+    
+    
+    private boolean validateUserInfo() {
+        String fullName = fieldFullName.getText().trim();
+        
+        if (fullName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Full Name cannot be empty.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldFullName.requestFocus();
+            return false;
+        }
+        
+        String email = fieldEmail.getText().trim();
+        if (!email.isEmpty() && !isValidEmail(email)) {
+            JOptionPane.showMessageDialog(this, 
+                "Please enter a valid email address.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldEmail.requestFocus();
+            return false;
+        }
+        
+        String phone = fieldPhone.getText().trim();
+        if (!phone.isEmpty() && !isValidPhone(phone)) {
+            JOptionPane.showMessageDialog(this, 
+                "Please enter a valid phone number.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldPhone.requestFocus();
+            return false;
+        }
+        
+        return true;
+    }
+    
+    private boolean isValidEmail(String email) {
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+    }
+    
+    private boolean isValidPhone(String phone) {
+        // allow numbers, space, brackets...
+        return phone.matches("^[0-9\\s\\-\\(\\)]{7,15}$");
+    }
+    
+    private boolean validatePasswordChange() {
+        String currentPassword = fieldCurrPassword.getText().trim();
+        String newPassword = fieldNewPassword.getText().trim();
+        String confirmPassword = fieldConfirmPassword.getText().trim();
+        
+        if (!currentPassword.equals(userAccount.getPassword())) {
+            JOptionPane.showMessageDialog(this, 
+                "Current password is incorrect.", 
+                "Validation Error", 
+                JOptionPane.ERROR_MESSAGE);
+            fieldCurrPassword.requestFocus();
+            return false;
+        }
+        
+        if (newPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "New password cannot be empty.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldNewPassword.requestFocus();
+            return false;
+        }
+        
+        if (newPassword.length() < 4) {
+            JOptionPane.showMessageDialog(this, 
+                "New password must be at least 4 characters.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldNewPassword.requestFocus();
+            return false;
+        }
+        
+        if (!newPassword.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this, 
+                "New password and confirm password do not match.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldConfirmPassword.requestFocus();
+            return false;
+        }
+        
+        if (newPassword.equals(currentPassword)) {
+            JOptionPane.showMessageDialog(this, 
+                "New password must be different from current password.", 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+            fieldNewPassword.requestFocus();
+            return false;
+        }
+        
+        return true;
+    }
+    
+    private void clearPasswordFields() {
+        fieldCurrPassword.setText("");
+        fieldNewPassword.setText("");
+        fieldConfirmPassword.setText("");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -212,17 +370,44 @@ public class AnalyticsEditProfilePanel extends javax.swing.JPanel {
 
     private void btnSaveChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveChangesActionPerformed
         // TODO add your handling code here:
+        if (!validateUserInfo()) {
+            return;
+        }
+        
+        if (userAccount.getEmployee() != null) {
+            userAccount.getEmployee().setName(fieldFullName.getText().trim());
+            userAccount.getEmployee().setEmail(fieldEmail.getText().trim());
+            userAccount.getEmployee().setPhone(fieldPhone.getText().trim());
+        }
+        
+        JOptionPane.showMessageDialog(this, 
+            "Profile updated successfully!", 
+            "Success", 
+            JOptionPane.INFORMATION_MESSAGE);
         
     }//GEN-LAST:event_btnSaveChangesActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
         // TODO add your handling code here:
+        if (!validatePasswordChange()) {
+            return;
+        }
         
+        userAccount.setPassword(fieldNewPassword.getText().trim());
+
+        clearPasswordFields();
+        
+        JOptionPane.showMessageDialog(this, 
+            "Password changed successfully!", 
+            "Success", 
+            JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnChangePasswordActionPerformed
 
 

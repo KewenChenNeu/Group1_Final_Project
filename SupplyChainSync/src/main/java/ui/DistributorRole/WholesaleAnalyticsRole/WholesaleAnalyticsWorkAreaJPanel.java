@@ -304,7 +304,8 @@ public class WholesaleAnalyticsWorkAreaJPanel extends javax.swing.JPanel {
 
     private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
         // TODO add your handling code here:
-        AnalyticsEditProfilePanel editPanel = new AnalyticsEditProfilePanel(userProcessContainer, account);
+        AnalyticsEditProfilePanel editPanel = new AnalyticsEditProfilePanel(userProcessContainer, 
+                account, wholesaleSalesOrganization, enterprise, system);
         userProcessContainer.add("AnalyticsEditProfilePanel", editPanel);
         CardLayout layout = (CardLayout) userProcessContainer.getLayout();
         layout.next(userProcessContainer);
