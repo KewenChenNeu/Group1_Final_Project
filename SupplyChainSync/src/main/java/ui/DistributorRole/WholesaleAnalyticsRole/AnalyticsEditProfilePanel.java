@@ -4,6 +4,9 @@
  */
 package ui.DistributorRole.WholesaleAnalyticsRole;
 
+import Business.UserAccount.UserAccount;
+import javax.swing.JPanel;
+
 /**
  *
  * @author chris
@@ -13,7 +16,7 @@ public class AnalyticsEditProfilePanel extends javax.swing.JPanel {
     /**
      * Creates new form AnalyticsEditProfilePanel
      */
-    public AnalyticsEditProfilePanel() {
+    public AnalyticsEditProfilePanel(JPanel userProcessContainer, UserAccount account) {
         initComponents();
     }
 

@@ -16,36 +16,14 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jSeparator2" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="jSeparator1" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="lblEnterprise" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblOrganization" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblUser" alignment="1" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="lblEnterpriseName" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="lblUserName" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="lblOrganizationName" alignment="0" min="-2" pref="180" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Component id="lblQuickSummary" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblTitle" alignment="0" min="-2" pref="318" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="jSeparator2" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
@@ -53,19 +31,40 @@
                           <Component id="lblOrdersCompleted" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblNumOrderCompleted" min="-2" pref="144" max="-2" attributes="0"/>
-                          <Component id="lblNameTopProduct" min="-2" pref="133" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="lblNameTopProduct" pref="202" max="32767" attributes="0"/>
+                          <Component id="lblNumOrderCompleted" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="126" max="32767" attributes="0"/>
+                      <EmptySpace pref="74" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="btnEditProfile" min="-2" pref="253" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
                               <Component id="btnSalesAnalytics" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnInventoryAnalytics" alignment="0" pref="253" max="32767" attributes="0"/>
+                              <Component id="btnInventoryAnalytics" alignment="0" min="-2" pref="253" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="130" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="124" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblTitle" alignment="0" min="-2" pref="318" max="-2" attributes="0"/>
+                          <Component id="lblQuickSummary" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="lblEnterprise" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblOrganization" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblUser" alignment="1" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="lblOrganizationName" alignment="0" max="32767" attributes="0"/>
+                          <Component id="lblEnterpriseName" alignment="0" max="32767" attributes="0"/>
+                          <Component id="lblUserName" alignment="0" min="-2" pref="384" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -79,23 +78,21 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="lblEnterprise" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="lblOrganization" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="lblUser" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="lblEnterpriseName" max="32767" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="lblOrganizationName" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                      <Component id="lblUserName" max="32767" attributes="0"/>
-                  </Group>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="lblEnterprise" alignment="0" max="32767" attributes="0"/>
+                  <Component id="lblEnterpriseName" alignment="0" min="-2" pref="17" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="lblOrganization" alignment="0" max="32767" attributes="0"/>
+                  <Component id="lblOrganizationName" alignment="0" min="-2" pref="17" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="lblUser" alignment="0" max="32767" attributes="0"/>
+                  <Component id="lblUserName" alignment="0" min="-2" pref="17" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="18" max="32767" attributes="0"/>
               <Component id="jSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="lblQuickSummary" min="-2" max="-2" attributes="0"/>
@@ -108,7 +105,7 @@
                       </Group>
                       <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblNameTopProduct" alignment="1" min="-2" pref="17" max="-2" attributes="0"/>
+                          <Component id="lblNameTopProduct" alignment="0" min="-2" pref="17" max="-2" attributes="0"/>
                           <Component id="lblTopProduct" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -120,27 +117,17 @@
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="btnEditProfile" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="323" max="32767" attributes="0"/>
+              <EmptySpace pref="311" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="lblEnterprise">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Enterprise:"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="lblNumOrderCompleted">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Helvetica Neue" size="13" style="1"/>
         </Property>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblOrganization">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Organization:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblNameTopProduct">
@@ -150,22 +137,23 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblUser">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="User:"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator2">
     </Component>
     <Component class="javax.swing.JButton" name="btnSalesAnalytics">
       <Properties>
         <Property name="text" type="java.lang.String" value="\ud83d\udcca Sales Analytics" containsInvalidXMLChars="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSalesAnalyticsActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnInventoryAnalytics">
       <Properties>
         <Property name="text" type="java.lang.String" value="\ud83d\udce6 Inventory Analytics" containsInvalidXMLChars="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnInventoryAnalyticsActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lblQuickSummary">
       <Properties>
@@ -196,15 +184,33 @@
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator1">
     </Component>
+    <Component class="javax.swing.JButton" name="btnEditProfile">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="\ud83d\udc64  Edit Profile" containsInvalidXMLChars="true"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditProfileActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblOrganization">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Organization:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblUser">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="User:"/>
+      </Properties>
+    </Component>
     <Component class="javax.swing.JLabel" name="lblEnterpriseName">
     </Component>
     <Component class="javax.swing.JLabel" name="lblOrganizationName">
     </Component>
     <Component class="javax.swing.JLabel" name="lblUserName">
     </Component>
-    <Component class="javax.swing.JButton" name="btnEditProfile">
+    <Component class="javax.swing.JLabel" name="lblEnterprise">
       <Properties>
-        <Property name="text" type="java.lang.String" value="\ud83d\udc64  Edit Profile" containsInvalidXMLChars="true"/>
+        <Property name="text" type="java.lang.String" value="Enterprise:"/>
       </Properties>
     </Component>
   </SubComponents>
