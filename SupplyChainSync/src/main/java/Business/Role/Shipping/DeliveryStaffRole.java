@@ -11,7 +11,7 @@ import Business.Organization.Shipping.ShippingOperationOrganization;
 import Business.Role.Role;
 import Business.UserAccount.UserAccount;
 import javax.swing.JPanel;
-import ui.ShippingRole.ShippingManagerRole.DeliveryStaffWorkAreaJPanel;
+import ui.ShippingRole.DeliveryStaffRole.DeliveryStaffRoleWorkAreaJPanel;
 
 /**
  *
@@ -23,7 +23,7 @@ public class DeliveryStaffRole extends Role {
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account,
             Organization organization, Enterprise enterprise, EcoSystem system) {
         // TODO: Return DeliveryStaffWorkAreaJPanel once UI is created
-        return new DeliveryStaffWorkAreaJPanel(userProcessContainer, account, (ShippingOperationOrganization)organization, enterprise, system);
+        return new DeliveryStaffRoleWorkAreaJPanel(userProcessContainer, account, (ShippingOperationOrganization)organization, enterprise, system);
     }
 
     @Override
