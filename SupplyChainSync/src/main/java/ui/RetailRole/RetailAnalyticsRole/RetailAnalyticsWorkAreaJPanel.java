@@ -13,7 +13,6 @@ import Business.Organization.Retail.RetailInventoryOrganization;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.RetailPurchaseOrderRequest;
 import Business.WorkQueue.WorkRequest;
-import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 /**
@@ -121,12 +120,9 @@ public class RetailAnalyticsWorkAreaJPanel extends javax.swing.JPanel {
         txtLowStockItems = new javax.swing.JTextField();
         txtInventoryValue = new javax.swing.JTextField();
         txtTotalOrders = new javax.swing.JTextField();
-        btnSalesAnalytics = new javax.swing.JButton();
-        btnInventoryAnalytics = new javax.swing.JButton();
-        btnEditProfile = new javax.swing.JButton();
 
         lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        lblTitle.setText("Retail Analytics Work Area");
+        lblTitle.setText("Retail Analytics Dashboard");
 
         lblEnterprise.setText("Enterprise:");
 
@@ -171,27 +167,6 @@ public class RetailAnalyticsWorkAreaJPanel extends javax.swing.JPanel {
         txtTotalOrders.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         txtTotalOrders.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
-        btnSalesAnalytics.setText("Sales Analytics");
-        btnSalesAnalytics.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalesAnalyticsActionPerformed(evt);
-            }
-        });
-
-        btnInventoryAnalytics.setText("Inventory Analytics");
-        btnInventoryAnalytics.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnInventoryAnalyticsActionPerformed(evt);
-            }
-        });
-
-        btnEditProfile.setText("Edit My Profile");
-        btnEditProfile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditProfileActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -199,6 +174,8 @@ public class RetailAnalyticsWorkAreaJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1)
+                    .addComponent(jSeparator2)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -212,31 +189,26 @@ public class RetailAnalyticsWorkAreaJPanel extends javax.swing.JPanel {
                                     .addComponent(txtEnterpriseName, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                                     .addComponent(txtUserName)
                                     .addComponent(txtOrganizationName)))
-                            .addComponent(lblAnalyticsSummary))
-                        .addGap(146, 146, 146))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator2)
-                            .addComponent(jSeparator1))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblTotalProducts)
-                            .addComponent(lblLowStockItems)
-                            .addComponent(lblInventoryValue)
-                            .addComponent(lblTotalOrders))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtTotalProducts, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                            .addComponent(txtLowStockItems)
-                            .addComponent(txtInventoryValue)
-                            .addComponent(txtTotalOrders))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnSalesAnalytics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnInventoryAnalytics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(130, 130, 130))))
+                            .addComponent(lblAnalyticsSummary)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblTotalProducts)
+                                    .addComponent(lblLowStockItems))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtTotalProducts, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                                    .addComponent(txtLowStockItems))
+                                .addGap(40, 40, 40)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblInventoryValue)
+                                    .addComponent(lblTotalOrders))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtInventoryValue, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                    .addComponent(txtTotalOrders))))
+                        .addGap(0, 200, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -261,60 +233,24 @@ public class RetailAnalyticsWorkAreaJPanel extends javax.swing.JPanel {
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblAnalyticsSummary)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblTotalProducts)
-                            .addComponent(txtTotalProducts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblLowStockItems)
-                            .addComponent(txtLowStockItems, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblInventoryValue)
-                            .addComponent(txtInventoryValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblTotalOrders)
-                            .addComponent(txtTotalOrders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnSalesAnalytics, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(btnInventoryAnalytics)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnEditProfile)))
-                .addContainerGap(200, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTotalProducts)
+                    .addComponent(txtTotalProducts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblInventoryValue)
+                    .addComponent(txtInventoryValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblLowStockItems)
+                    .addComponent(txtLowStockItems, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTotalOrders)
+                    .addComponent(txtTotalOrders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(250, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSalesAnalyticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalesAnalyticsActionPerformed
-        SalesAnalyticsPanel panel = new SalesAnalyticsPanel(userProcessContainer, userAccount, organization, enterprise, system);
-        userProcessContainer.add("SalesAnalyticsPanel", panel);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-    }//GEN-LAST:event_btnSalesAnalyticsActionPerformed
-
-    private void btnInventoryAnalyticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventoryAnalyticsActionPerformed
-        InventoryAnalyticsPanel panel = new InventoryAnalyticsPanel(userProcessContainer, userAccount, organization, enterprise, system);
-        userProcessContainer.add("InventoryAnalyticsPanel", panel);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-    }//GEN-LAST:event_btnInventoryAnalyticsActionPerformed
-
-    private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
-        AnalyticsProfilePanel panel = new AnalyticsProfilePanel(userProcessContainer, userAccount, organization, enterprise, system);
-        userProcessContainer.add("AnalyticsProfilePanel", panel);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-    }//GEN-LAST:event_btnEditProfileActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEditProfile;
-    private javax.swing.JButton btnInventoryAnalytics;
-    private javax.swing.JButton btnSalesAnalytics;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblAnalyticsSummary;

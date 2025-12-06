@@ -96,8 +96,6 @@ public class OrderClerkWorkAreaJPanel extends javax.swing.JPanel {
         lblNumberOfDeliveredOrders = new javax.swing.JLabel();
         btnCreatePurchaseOrder = new javax.swing.JButton();
         btnViewPendingOrders = new javax.swing.JButton();
-        btnViewOrderHistory = new javax.swing.JButton();
-        btnEditProfile = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -145,20 +143,6 @@ public class OrderClerkWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnViewOrderHistory.setText("View Order History");
-        btnViewOrderHistory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewOrderHistoryActionPerformed(evt);
-            }
-        });
-
-        btnEditProfile.setText("Edit Profile");
-        btnEditProfile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditProfileActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -199,9 +183,7 @@ public class OrderClerkWorkAreaJPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnViewPendingOrders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnCreatePurchaseOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnViewOrderHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnCreatePurchaseOrder, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
                         .addGap(130, 130, 130))))
         );
         layout.setVerticalGroup(
@@ -244,12 +226,8 @@ public class OrderClerkWorkAreaJPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnCreatePurchaseOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)
-                        .addComponent(btnViewPendingOrders)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnViewOrderHistory)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnEditProfile)
-                .addContainerGap(252, Short.MAX_VALUE))
+                        .addComponent(btnViewPendingOrders)))
+                .addContainerGap(301, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -261,31 +239,15 @@ public class OrderClerkWorkAreaJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCreatePurchaseOrderActionPerformed
 
     private void btnViewPendingOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewPendingOrdersActionPerformed
-        ViewPendingOrdersPanel panel = new ViewPendingOrdersPanel(userProcessContainer, userAccount, organization, enterprise, system);
-        userProcessContainer.add("ViewPendingOrdersPanel", panel);
+        ViewOrdersPanel panel = new ViewOrdersPanel(userProcessContainer, userAccount, organization, enterprise, system);
+        userProcessContainer.add("ViewOrdersPanel", panel);
         CardLayout layout = (CardLayout) userProcessContainer.getLayout();
         layout.next(userProcessContainer);
     }//GEN-LAST:event_btnViewPendingOrdersActionPerformed
 
-    private void btnViewOrderHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewOrderHistoryActionPerformed
-        ViewOrderHistoryPanel panel = new ViewOrderHistoryPanel(userProcessContainer, userAccount, organization, enterprise, system);
-        userProcessContainer.add("ViewOrderHistoryPanel", panel);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-    }//GEN-LAST:event_btnViewOrderHistoryActionPerformed
-
-    private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
-        OrderClerkProfilePanel panel = new OrderClerkProfilePanel(userProcessContainer, userAccount, organization, enterprise, system);
-        userProcessContainer.add("OrderClerkProfilePanel", panel);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-    }//GEN-LAST:event_btnEditProfileActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreatePurchaseOrder;
-    private javax.swing.JButton btnEditProfile;
-    private javax.swing.JButton btnViewOrderHistory;
     private javax.swing.JButton btnViewPendingOrders;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;

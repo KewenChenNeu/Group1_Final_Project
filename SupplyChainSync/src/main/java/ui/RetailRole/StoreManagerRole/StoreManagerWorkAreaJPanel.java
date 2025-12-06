@@ -11,8 +11,13 @@ import Business.Inventory.Inventory;
 import Business.Inventory.InventoryItem;
 import Business.Organization.Retail.StoreManagementOrganization;
 import Business.UserAccount.UserAccount;
+import Business.WorkQueue.RetailPurchaseOrderRequest;
+import Business.WorkQueue.WorkRequest;
 import java.awt.CardLayout;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -42,6 +47,7 @@ public class StoreManagerWorkAreaJPanel extends javax.swing.JPanel {
 
         populateInfo();
         updateSummary();
+        populatePendingOrdersTable();
     }
 
     private Inventory getRetailInventory() {
@@ -62,7 +68,6 @@ public class StoreManagerWorkAreaJPanel extends javax.swing.JPanel {
         int totalProducts = 0;
         int lowStockItems = 0;
         int outOfStockItems = 0;
-        int healthyStockItems = 0;
 
         if (inventory != null) {
             for (InventoryItem item : inventory.getProductInventory()) {
@@ -75,8 +80,6 @@ public class StoreManagerWorkAreaJPanel extends javax.swing.JPanel {
                         outOfStockItems++;
                     } else if (minLevel > 0 && available <= minLevel) {
                         lowStockItems++;
-                    } else {
-                        healthyStockItems++;
                     }
                 }
             }
@@ -90,6 +93,52 @@ public class StoreManagerWorkAreaJPanel extends javax.swing.JPanel {
         txtTotalStaff.setText(String.valueOf(totalStaff));
     }
 
+    private void populatePendingOrdersTable() {
+        DefaultTableModel model = (DefaultTableModel) tblPendingOrders.getModel();
+        model.setRowCount(0);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        // Get pending orders from organization's work queue
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof RetailPurchaseOrderRequest) {
+                RetailPurchaseOrderRequest order = (RetailPurchaseOrderRequest) request;
+                String status = order.getStatus();
+
+                // Show orders that need approval (Pending or Sent status)
+                if ("Pending".equalsIgnoreCase(status) || "Sent".equalsIgnoreCase(status)) {
+                    Object[] row = new Object[6];
+                    row[0] = order.getRequestId();
+                    row[1] = order.getProduct() != null ? order.getProduct().getProductName() : "N/A";
+                    row[2] = order.getQuantity();
+                    row[3] = order.getTotalPrice() > 0 ? String.format("$%.2f", order.getTotalPrice()) : "N/A";
+                    row[4] = order.getRequestDate() != null ? dateFormat.format(order.getRequestDate()) : "N/A";
+                    row[5] = status;
+                    model.addRow(row);
+                }
+            }
+        }
+    }
+
+    private RetailPurchaseOrderRequest getSelectedOrder() {
+        int selectedRow = tblPendingOrders.getSelectedRow();
+        if (selectedRow < 0) {
+            return null;
+        }
+
+        String orderId = (String) tblPendingOrders.getValueAt(selectedRow, 0);
+
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof RetailPurchaseOrderRequest) {
+                RetailPurchaseOrderRequest order = (RetailPurchaseOrderRequest) request;
+                if (orderId.equals(order.getRequestId())) {
+                    return order;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -101,72 +150,91 @@ public class StoreManagerWorkAreaJPanel extends javax.swing.JPanel {
 
         lblTitle = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        lblEnterprise = new javax.swing.JLabel();
-        lblOrganization = new javax.swing.JLabel();
-        lblUser = new javax.swing.JLabel();
-        txtEnterpriseName = new javax.swing.JTextField();
-        txtOrganizationName = new javax.swing.JTextField();
-        txtUserName = new javax.swing.JTextField();
         jSeparator2 = new javax.swing.JSeparator();
-        lblInventorySummary = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        lblEnterprise = new javax.swing.JLabel();
+        txtEnterpriseName = new javax.swing.JTextField();
+        lblOrganization = new javax.swing.JLabel();
+        txtOrganizationName = new javax.swing.JTextField();
+        lblUser = new javax.swing.JLabel();
+        txtUserName = new javax.swing.JTextField();
+        lblStoreSummary = new javax.swing.JLabel();
         lblTotalProducts = new javax.swing.JLabel();
-        lblLowStock = new javax.swing.JLabel();
-        lblOutOfStock = new javax.swing.JLabel();
-        lblTotalStaff = new javax.swing.JLabel();
         txtTotalProducts = new javax.swing.JTextField();
+        lblLowStock = new javax.swing.JLabel();
         txtLowStock = new javax.swing.JTextField();
+        lblOutOfStock = new javax.swing.JLabel();
         txtOutOfStock = new javax.swing.JTextField();
+        lblTotalStaff = new javax.swing.JLabel();
         txtTotalStaff = new javax.swing.JTextField();
+        lblPendingOrders = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblPendingOrders = new javax.swing.JTable();
         btnViewInventory = new javax.swing.JButton();
-        btnManageStaff = new javax.swing.JButton();
-        btnStoreProfile = new javax.swing.JButton();
-        btnEditProfile = new javax.swing.JButton();
+        btnApprove = new javax.swing.JButton();
+        btnReject = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
 
         lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         lblTitle.setText("Store Manager Work Area");
 
         lblEnterprise.setText("Enterprise:");
 
-        lblOrganization.setText("Organization:");
-
-        lblUser.setText("User:");
-
         txtEnterpriseName.setEditable(false);
+
+        lblOrganization.setText("Organization:");
 
         txtOrganizationName.setEditable(false);
 
+        lblUser.setText("User:");
+
         txtUserName.setEditable(false);
 
-        lblInventorySummary.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        lblInventorySummary.setText("Store Summary:");
+        lblStoreSummary.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        lblStoreSummary.setText("Store Summary:");
 
         lblTotalProducts.setText("Total Products:");
 
-        lblLowStock.setText("Low Stock Items:");
-
-        lblOutOfStock.setText("Out of Stock:");
-
-        lblTotalStaff.setText("Total Staff:");
-
         txtTotalProducts.setEditable(false);
-        txtTotalProducts.setBackground(new java.awt.Color(204, 229, 255));
-        txtTotalProducts.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         txtTotalProducts.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        lblLowStock.setText("Low Stock:");
 
         txtLowStock.setEditable(false);
         txtLowStock.setBackground(new java.awt.Color(255, 255, 204));
-        txtLowStock.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         txtLowStock.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        lblOutOfStock.setText("Out of Stock:");
 
         txtOutOfStock.setEditable(false);
         txtOutOfStock.setBackground(new java.awt.Color(255, 204, 204));
-        txtOutOfStock.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         txtOutOfStock.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
+        lblTotalStaff.setText("Total Staff:");
+
         txtTotalStaff.setEditable(false);
-        txtTotalStaff.setBackground(new java.awt.Color(204, 255, 204));
-        txtTotalStaff.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         txtTotalStaff.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        lblPendingOrders.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        lblPendingOrders.setText("Pending Orders for Approval:");
+
+        tblPendingOrders.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Order ID", "Product", "Quantity", "Total Price", "Date", "Status"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblPendingOrders);
 
         btnViewInventory.setText("View Store Inventory");
         btnViewInventory.addActionListener(new java.awt.event.ActionListener() {
@@ -175,24 +243,26 @@ public class StoreManagerWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnManageStaff.setText("Manage Store Staff");
-        btnManageStaff.addActionListener(new java.awt.event.ActionListener() {
+        btnApprove.setBackground(new java.awt.Color(204, 255, 204));
+        btnApprove.setText("Approve");
+        btnApprove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManageStaffActionPerformed(evt);
+                btnApproveActionPerformed(evt);
             }
         });
 
-        btnStoreProfile.setText("Store Profile");
-        btnStoreProfile.addActionListener(new java.awt.event.ActionListener() {
+        btnReject.setBackground(new java.awt.Color(255, 204, 204));
+        btnReject.setText("Reject");
+        btnReject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStoreProfileActionPerformed(evt);
+                btnRejectActionPerformed(evt);
             }
         });
 
-        btnEditProfile.setText("Edit My Profile");
-        btnEditProfile.addActionListener(new java.awt.event.ActionListener() {
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditProfileActionPerformed(evt);
+                btnRefreshActionPerformed(evt);
             }
         });
 
@@ -203,45 +273,56 @@ public class StoreManagerWorkAreaJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1)
+                    .addComponent(jSeparator2)
+                    .addComponent(jSeparator3)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblStoreSummary)
+                            .addComponent(lblPendingOrders)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblEnterprise)
-                                    .addComponent(lblOrganization)
-                                    .addComponent(lblUser))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtEnterpriseName, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                                    .addComponent(txtUserName)
-                                    .addComponent(txtOrganizationName)))
-                            .addComponent(lblInventorySummary))
-                        .addGap(146, 146, 146))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator2)
-                            .addComponent(jSeparator1))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblTotalProducts)
-                            .addComponent(lblLowStock)
-                            .addComponent(lblOutOfStock)
-                            .addComponent(lblTotalStaff))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtTotalProducts, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                            .addComponent(txtLowStock)
-                            .addComponent(txtOutOfStock)
-                            .addComponent(txtTotalStaff))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnViewInventory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnManageStaff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnStoreProfile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(130, 130, 130))))
+                                .addGap(20, 20, 20)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblEnterprise)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtEnterpriseName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(20, 20, 20)
+                                        .addComponent(lblOrganization)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtOrganizationName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(20, 20, 20)
+                                        .addComponent(lblUser)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblTotalProducts)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtTotalProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(20, 20, 20)
+                                        .addComponent(lblLowStock)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtLowStock, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(20, 20, 20)
+                                        .addComponent(lblOutOfStock)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtOutOfStock, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(20, 20, 20)
+                                        .addComponent(lblTotalStaff)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtTotalStaff, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnViewInventory, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnApprove, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnReject, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,46 +334,38 @@ public class StoreManagerWorkAreaJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEnterprise)
-                    .addComponent(txtEnterpriseName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtEnterpriseName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblOrganization)
-                    .addComponent(txtOrganizationName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtOrganizationName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblUser)
                     .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblInventorySummary)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblTotalProducts)
-                            .addComponent(txtTotalProducts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblLowStock)
-                            .addComponent(txtLowStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblOutOfStock)
-                            .addComponent(txtOutOfStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblTotalStaff)
-                            .addComponent(txtTotalStaff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnViewInventory, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(btnManageStaff)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnStoreProfile)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnEditProfile)))
-                .addContainerGap(200, Short.MAX_VALUE))
+                .addComponent(lblStoreSummary)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTotalProducts)
+                    .addComponent(txtTotalProducts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblLowStock)
+                    .addComponent(txtLowStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblOutOfStock)
+                    .addComponent(txtOutOfStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTotalStaff)
+                    .addComponent(txtTotalStaff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblPendingOrders)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnViewInventory)
+                    .addComponent(btnApprove)
+                    .addComponent(btnReject)
+                    .addComponent(btnRefresh))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -303,44 +376,79 @@ public class StoreManagerWorkAreaJPanel extends javax.swing.JPanel {
         layout.next(userProcessContainer);
     }//GEN-LAST:event_btnViewInventoryActionPerformed
 
-    private void btnManageStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageStaffActionPerformed
-        ManageStoreStaffPanel panel = new ManageStoreStaffPanel(userProcessContainer, userAccount, organization, enterprise, system);
-        userProcessContainer.add("ManageStoreStaffPanel", panel);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-    }//GEN-LAST:event_btnManageStaffActionPerformed
+    private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
+        RetailPurchaseOrderRequest order = getSelectedOrder();
+        if (order == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select an order from the table.",
+                    "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-    private void btnStoreProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStoreProfileActionPerformed
-        StoreProfilePanel panel = new StoreProfilePanel(userProcessContainer, userAccount, organization, enterprise, system);
-        userProcessContainer.add("StoreProfilePanel", panel);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-    }//GEN-LAST:event_btnStoreProfileActionPerformed
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Approve order " + order.getRequestId() + "?",
+                "Confirm Approval", JOptionPane.YES_NO_OPTION);
 
-    private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
-        ManagerProfilePanel panel = new ManagerProfilePanel(userProcessContainer, userAccount, organization, enterprise, system);
-        userProcessContainer.add("ManagerProfilePanel", panel);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-    }//GEN-LAST:event_btnEditProfileActionPerformed
+        if (confirm == JOptionPane.YES_OPTION) {
+            order.setStatus("Approved");
+            order.setReceiver(userAccount);
+            populatePendingOrdersTable();
+            JOptionPane.showMessageDialog(this,
+                    "Order approved successfully!",
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnApproveActionPerformed
+
+    private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
+        RetailPurchaseOrderRequest order = getSelectedOrder();
+        if (order == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select an order from the table.",
+                    "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String reason = JOptionPane.showInputDialog(this,
+                "Enter rejection reason:",
+                "Reject Order", JOptionPane.QUESTION_MESSAGE);
+
+        if (reason != null && !reason.trim().isEmpty()) {
+            order.setStatus("Rejected");
+            order.setMessage("Rejected: " + reason);
+            order.setReceiver(userAccount);
+            populatePendingOrdersTable();
+            JOptionPane.showMessageDialog(this,
+                    "Order rejected.",
+                    "Rejected", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnRejectActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        updateSummary();
+        populatePendingOrdersTable();
+    }//GEN-LAST:event_btnRefreshActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEditProfile;
-    private javax.swing.JButton btnManageStaff;
-    private javax.swing.JButton btnStoreProfile;
+    private javax.swing.JButton btnApprove;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnReject;
     private javax.swing.JButton btnViewInventory;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JLabel lblEnterprise;
-    private javax.swing.JLabel lblInventorySummary;
     private javax.swing.JLabel lblLowStock;
     private javax.swing.JLabel lblOrganization;
     private javax.swing.JLabel lblOutOfStock;
+    private javax.swing.JLabel lblPendingOrders;
+    private javax.swing.JLabel lblStoreSummary;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblTotalProducts;
     private javax.swing.JLabel lblTotalStaff;
     private javax.swing.JLabel lblUser;
+    private javax.swing.JTable tblPendingOrders;
     private javax.swing.JTextField txtEnterpriseName;
     private javax.swing.JTextField txtLowStock;
     private javax.swing.JTextField txtOrganizationName;

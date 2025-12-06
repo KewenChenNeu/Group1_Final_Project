@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author zhifei
  */
-public class ViewPendingOrdersPanel extends javax.swing.JPanel {
+public class ViewOrdersPanel extends javax.swing.JPanel {
 
     private JPanel userProcessContainer;
     private UserAccount userAccount;
@@ -33,9 +33,9 @@ public class ViewPendingOrdersPanel extends javax.swing.JPanel {
     private EcoSystem system;
 
     /**
-     * Creates new form ViewPendingOrdersPanel
+     * Creates new form ViewOrdersPanel
      */
-    public ViewPendingOrdersPanel(JPanel userProcessContainer, UserAccount account, StoreManagementOrganization storeManagementOrganization, Enterprise enterprise, EcoSystem system) {
+    public ViewOrdersPanel(JPanel userProcessContainer, UserAccount account, StoreManagementOrganization storeManagementOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
         this.userProcessContainer = userProcessContainer;
         this.userAccount = account;
@@ -43,10 +43,10 @@ public class ViewPendingOrdersPanel extends javax.swing.JPanel {
         this.enterprise = enterprise;
         this.system = system;
 
-        populatePendingOrdersTable();
+        populateOrdersTable();
     }
 
-    private void populatePendingOrdersTable() {
+    private void populateOrdersTable() {
         DefaultTableModel model = (DefaultTableModel) tblPendingOrders.getModel();
         model.setRowCount(0);
 
@@ -359,7 +359,7 @@ public class ViewPendingOrdersPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        populatePendingOrdersTable();
+        populateOrdersTable();
         JOptionPane.showMessageDialog(this, "Orders refreshed.", "Refresh", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnRefreshActionPerformed
 
@@ -434,7 +434,7 @@ public class ViewPendingOrdersPanel extends javax.swing.JPanel {
         if (confirm == JOptionPane.YES_OPTION) {
             order.setStatus("Cancelled");
 
-            populatePendingOrdersTable();
+            populateOrdersTable();
 
             JOptionPane.showMessageDialog(this, "Order cancelled successfully.",
                 "Success", JOptionPane.INFORMATION_MESSAGE);
