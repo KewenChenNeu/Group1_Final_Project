@@ -25,6 +25,8 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
     private RMInventoryOrganization organization;
     private Enterprise enterprise;
     private EcoSystem system;
+    
+    private Material selectedMaterial;
 
     /**
      * Creates new form RMInventoryManagerWorkAreaJPanel
@@ -122,6 +124,11 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
         });
 
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnRefresh.setText("Refresh");
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
@@ -131,6 +138,11 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
         });
 
         btnEdit.setText("Edit");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -264,6 +276,66 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
         layout.previous(userProcessContainer);
         
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblInventory.getSelectedRow();
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(this, "Please select a material from the table.");
+        return;
+    }
+
+    String materialName = (String) tblInventory.getValueAt(selectedRow, 1);
+    selectedMaterial = organization.findMaterialByName(materialName);
+
+    if (selectedMaterial == null) {
+        JOptionPane.showMessageDialog(this, "Selected material not found in inventory.");
+        return;
+    }
+
+    txtMaterialName.setText(selectedMaterial.getMaterialName());
+    txtUnits.setText(selectedMaterial.getUnit());
+    txtQuantity.setText(String.valueOf(selectedMaterial.getQuantity()));
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+        if (selectedMaterial == null) {
+        JOptionPane.showMessageDialog(this, "Please select a material and click Edit before saving.");
+        return;
+    }
+
+    String name = txtMaterialName.getText().trim();
+    String unit = txtUnits.getText().trim();
+    String qtyStr = txtQuantity.getText().trim();
+
+    if (name.isEmpty() || unit.isEmpty() || qtyStr.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter material name, quantity, and unit.");
+        return;
+    }
+
+    int qty;
+    try {
+        qty = Integer.parseInt(qtyStr);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Quantity must be a whole number.");
+        return;
+    }
+
+    if (qty < 0) {
+        JOptionPane.showMessageDialog(this, "Quantity cannot be negative.");
+        return;
+    }
+
+    selectedMaterial.setMaterialName(name);
+    selectedMaterial.setUnit(unit);
+    selectedMaterial.setQuantity(qty);
+
+    JOptionPane.showMessageDialog(this, "Material updated.");
+    selectedMaterial = null;
+    clearFields();
+    populateTable();
+    }//GEN-LAST:event_btnSaveActionPerformed
 
     private void clearFields() {
         txtMaterialName.setText("");
