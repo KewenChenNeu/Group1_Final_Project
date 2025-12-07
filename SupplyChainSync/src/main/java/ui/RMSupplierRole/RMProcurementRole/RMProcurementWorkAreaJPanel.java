@@ -9,19 +9,60 @@ import Business.Enterprise.Enterprise;
 import Business.Organization.RawMaterialSupplier.RMProcurementOrganization;
 import Business.UserAccount.UserAccount;
 import javax.swing.JPanel;
-
+import Business.WorkQueue.WorkRequest;
+import Business.WorkQueue.RawMaterialRestockRequest;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
 /**
  *
  * @author chris
  */
 public class RMProcurementWorkAreaJPanel extends javax.swing.JPanel {
+    
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private RMProcurementOrganization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;
 
     /**
      * Creates new form RMProcurementWorkAreaJPanel
      */
     public RMProcurementWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, RMProcurementOrganization rmProcurementOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.organization = rmProcurementOrganization;
+        this.enterprise = enterprise;
+        this.system = system;
+
+    populateTable();
     }
+    
+    private void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) tblRequests.getModel();
+    model.setRowCount(0);
+
+    if (organization == null || organization.getWorkQueue() == null) {
+        return;
+    }
+
+    for (WorkRequest w : organization.getWorkQueue().getWorkRequestList()) {
+        if (w instanceof RawMaterialRestockRequest) {
+            RawMaterialRestockRequest req = (RawMaterialRestockRequest) w;
+
+            Object[] row = new Object[5];
+            row[0] = req;                      
+            row[1] = req.getMaterialName();
+            row[2] = req.getQuantity();
+            row[3] = req.getUnit();
+            row[4] = req.getStatus();
+
+            model.addRow(row);
+        }
+      }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -38,6 +79,7 @@ public class RMProcurementWorkAreaJPanel extends javax.swing.JPanel {
         tblRequests = new javax.swing.JTable();
         btnApprove = new javax.swing.JButton();
         lblTableTitle = new javax.swing.JLabel();
+        btnBack = new javax.swing.JButton();
 
         lblTitle.setText("Raw Material Procurement Role");
 
@@ -60,6 +102,8 @@ public class RMProcurementWorkAreaJPanel extends javax.swing.JPanel {
 
         lblTableTitle.setText("Procurement Requests");
 
+        btnBack.setText("<<< Back");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -69,14 +113,16 @@ public class RMProcurementWorkAreaJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblTableTitle))
+                        .addComponent(lblTableTitle)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnRefresh)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnApprove)))
+                        .addComponent(btnApprove))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnBack)))
                 .addContainerGap())
         );
 
@@ -86,7 +132,9 @@ public class RMProcurementWorkAreaJPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBack))
                 .addGap(38, 38, 38)
                 .addComponent(lblTableTitle)
                 .addGap(18, 18, 18)
@@ -102,10 +150,13 @@ public class RMProcurementWorkAreaJPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApprove;
+    private javax.swing.JButton btnBack;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTableTitle;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JTable tblRequests;
     // End of variables declaration//GEN-END:variables
+
+    
 }
