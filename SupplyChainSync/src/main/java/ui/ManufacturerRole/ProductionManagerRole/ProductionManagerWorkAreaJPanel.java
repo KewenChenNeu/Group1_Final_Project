@@ -23,19 +23,19 @@ public class ProductionManagerWorkAreaJPanel extends javax.swing.JPanel {
      */
     
     JPanel userProcessContainer;
-    UserAccount accoun;
+    UserAccount account;
     ProductionManagementOrganization productionManagementOrganization;
     Enterprise enterprise;
     EcoSystem system;
     public ProductionManagerWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, ProductionManagementOrganization productionManagementOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
         this.userProcessContainer = userProcessContainer;
-        this.accoun = account;
+        this.account = account;
         this.productionManagementOrganization = productionManagementOrganization;
         this.enterprise = enterprise;
         this.system = system;
         initComponents();
-        lblUserName.setText(this.accoun.getEmployee().getName());
+        lblUserName.setText(this.account.getEmployee().getName());
     }
 
     /**
@@ -117,7 +117,7 @@ public class ProductionManagerWorkAreaJPanel extends javax.swing.JPanel {
 
     private void btnManageShippingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageShippingActionPerformed
         // TODO add your handling code here:
-        ManufacturerProductManageShippingPanel mpmsp = new ManufacturerProductManageShippingPanel(userProcessContainer, productionManagementOrganization, enterprise, system);
+        ManufacturerProductManageShippingPanel mpmsp = new ManufacturerProductManageShippingPanel(userProcessContainer, account, productionManagementOrganization, enterprise, system);
         userProcessContainer.add ("ProductInventoryJPanel", mpmsp);
         CardLayout layout = (CardLayout) userProcessContainer.getLayout ();
         layout.next (userProcessContainer);

@@ -4,45 +4,418 @@
  */
 package ui.ManufacturerRole.ProductionManagerRole;
 
-import ui.DistributorRole.WholesaleSalesRole.*;
 import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
 import Business.Enterprise.ShippingEnterprise;
 import Business.Network.Network;
-import Business.Organization.Distributor.WholesaleSalesOrganization;
 import Business.Organization.Manufacturer.ProductionManagementOrganization;
 import Business.Organization.Organization;
+import Business.Product.Product;
 import Business.UserAccount.UserAccount;
-import Business.WorkQueue.RetailPurchaseOrderRequest;
-import Business.WorkQueue.WholesalesShippingRequest;
+import Business.WorkQueue.ProductShippingRequest;
+import Business.WorkQueue.WholesalePurchaseRequest;
 import Business.WorkQueue.WorkRequest;
-import java.awt.CardLayout;
-import java.awt.Component;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author jinkun
- */
 public class ManufacturerProductManageShippingPanel extends javax.swing.JPanel {
+
+    private JPanel userProcessContainer;
+    private ProductionManagementOrganization productionManagementOrganization;
+    private Enterprise enterprise;
+    private EcoSystem system;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     
-    /**
-     * Creates new form ManageShippingPanel
-     */
-    JPanel userProcessContainer;
-    public ManufacturerProductManageShippingPanel(JPanel userProcessContainer, ProductionManagementOrganization productionManagementOrganization, Enterprise enterprise, EcoSystem system) {
-        initComponents();
+    private List<WholesalePurchaseRequest> approvedOrders;
+    private List<ProductShippingRequest> shippingRequests;
+    private ArrayList<ShippingEnterprise> shippingEnterprises;
+    private UserAccount account;
+    
+    public ManufacturerProductManageShippingPanel(
+            JPanel userProcessContainer,
+            UserAccount account,
+            ProductionManagementOrganization productionManagementOrganization,
+            Enterprise enterprise,
+            EcoSystem system) {
+        
         this.userProcessContainer = userProcessContainer;
+        this.productionManagementOrganization = productionManagementOrganization;
+        this.enterprise = enterprise;
+        this.system = system;
+        this.approvedOrders = new ArrayList<>();
+        this.shippingRequests = new ArrayList<>();
+        this.shippingEnterprises = new ArrayList<>();
+        this.account = account;
+        
+        initComponents();
+        initializeCarrierComboBox();
+        setupTableSelectionListeners();
+        populateApprovedOrdersTable();
+        populateShippingRequestsTable();
+    }
+    
+    
+    private void initializeCarrierComboBox() {
+        cmbCarrier.removeAllItems();
+        shippingEnterprises.clear();
+        
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
+                if (ent instanceof ShippingEnterprise) {
+                    ShippingEnterprise shippingEnt = (ShippingEnterprise) ent;
+                    cmbCarrier.addItem(shippingEnt.getName());
+                    shippingEnterprises.add(shippingEnt);
+                }
+            }
+        }
+        
+        if (shippingEnterprises.isEmpty()) {
+            cmbCarrier.addItem("No Shipping Company Available");
+        }
+    }
+
+    private void setupTableSelectionListeners() {
+        tblApprovedOrders.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = tblApprovedOrders.getSelectedRow();
+                    btnCreateShippingRequest.setEnabled(selectedRow >= 0);
+                }
+            }
+        });
+    }
+    
+    private void populateApprovedOrdersTable() {
+        DefaultTableModel model = (DefaultTableModel) tblApprovedOrders.getModel();
+        model.setRowCount(0);
+        approvedOrders.clear();
+        
+        List<WholesalePurchaseRequest> approved = findApprovedOrders();
+        
+        for (WholesalePurchaseRequest order : approved) {
+            Object[] row = new Object[5];
+            row[0] = order.getRequestId();
+            row[1] = getDistributorName(order);
+            row[2] = order.getProductName();
+            row[3] = order.getQuantity();
+            row[4] = order.getRequestDate() != null ? 
+                     dateFormat.format(order.getRequestDate()) : "N/A";
+            
+            model.addRow(row);
+            approvedOrders.add(order);
+        }
+        
+        System.out.println("Found " + approved.size() + " approved orders for manufacturer");
+    }
+
+    private void populateShippingRequestsTable() {
+        DefaultTableModel model = (DefaultTableModel) tblShippingStatus.getModel();
+        model.setRowCount(0);
+        shippingRequests.clear();
+        
+        List<ProductShippingRequest> requests = findShippingRequests();
+        
+        for (ProductShippingRequest request : requests) {
+            Object[] row = new Object[6];
+            row[0] = request.getRequestId();
+            row[1] = request.getDestinationStoreName() != null ? 
+                     request.getDestinationStoreName() : "Unknown";
+            row[2] = request.getProductName();
+            row[3] = request.getQuantity();
+            row[4] = request.getRequestDate() != null ? 
+                     dateFormat.format(request.getRequestDate()) : "N/A";
+            row[5] = request.getShippingStatus() != null ? 
+                     request.getShippingStatus() : request.getStatus();
+            
+            model.addRow(row);
+            shippingRequests.add(request);
+        }
+        
+        System.out.println("Found " + requests.size() + " shipping requests from manufacturer");
     }
     
 
+    private List<WholesalePurchaseRequest> findApprovedOrders() {
+        List<WholesalePurchaseRequest> approved = new ArrayList<>();
+        
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
+                
+                for (WorkRequest wr : ent.getWorkQueue().getWorkRequestList()) {
+                    if (wr instanceof WholesalePurchaseRequest) {
+                        WholesalePurchaseRequest wpr = (WholesalePurchaseRequest) wr;
+                        if (isApprovedOrderForThisManufacturer(wpr) && !approved.contains(wpr)) {
+                            approved.add(wpr);
+                        }
+                    }
+                }
+                
+                for (Organization org : ent.getOrganizationDirectory().getOrganizationList()) {
+                    for (WorkRequest wr : org.getWorkQueue().getWorkRequestList()) {
+                        if (wr instanceof WholesalePurchaseRequest) {
+                            WholesalePurchaseRequest wpr = (WholesalePurchaseRequest) wr;
+                            if (isApprovedOrderForThisManufacturer(wpr) && !approved.contains(wpr)) {
+                                approved.add(wpr);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        for (WorkRequest wr : productionManagementOrganization.getWorkQueue().getWorkRequestList()) {
+            if (wr instanceof WholesalePurchaseRequest) {
+                WholesalePurchaseRequest wpr = (WholesalePurchaseRequest) wr;
+                if (WorkRequest.STATUS_APPROVED.equals(wpr.getStatus()) && !approved.contains(wpr)) {
+                    approved.add(wpr);
+                }
+            }
+        }
+        
+        return approved;
+    }
     
+
+    private boolean isApprovedOrderForThisManufacturer(WholesalePurchaseRequest request) {
+        if (!WorkRequest.STATUS_APPROVED.equals(request.getStatus())) {
+            return false;
+        }
+        
+
+        if (request.getTargetEnterprise() != null && 
+            request.getTargetEnterprise().equals(enterprise)) {
+            return true;
+        }
+        
+
+        if (request.getTargetOrganization() != null && 
+            request.getTargetOrganization().equals(productionManagementOrganization)) {
+            return true;
+        }
+        
+
+        if (productionManagementOrganization.getWorkQueue().getWorkRequestList().contains(request)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+  
+    private List<ProductShippingRequest> findShippingRequests() {
+        List<ProductShippingRequest> requests = new ArrayList<>();
+        
+
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
+                
+
+                for (WorkRequest wr : ent.getWorkQueue().getWorkRequestList()) {
+                    if (wr instanceof ProductShippingRequest) {
+                        ProductShippingRequest psr = (ProductShippingRequest) wr;
+                        if (isShippingRequestFromThisManufacturer(psr) && !requests.contains(psr)) {
+                            requests.add(psr);
+                        }
+                    }
+                }
+                
+
+                for (Organization org : ent.getOrganizationDirectory().getOrganizationList()) {
+                    for (WorkRequest wr : org.getWorkQueue().getWorkRequestList()) {
+                        if (wr instanceof ProductShippingRequest) {
+                            ProductShippingRequest psr = (ProductShippingRequest) wr;
+                            if (isShippingRequestFromThisManufacturer(psr) && !requests.contains(psr)) {
+                                requests.add(psr);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return requests;
+    }
+    
+
+    private boolean isShippingRequestFromThisManufacturer(ProductShippingRequest request) {
+
+        if (request.getSourceEnterprise() != null && 
+            request.getSourceEnterprise().equals(enterprise)) {
+            return true;
+        }
+        
+
+        if (request.getSourceOrganization() != null &&
+            request.getSourceOrganization().equals(productionManagementOrganization)) {
+            return true;
+        }
+        
+        if (request.getSender() != null) {
+            for (var userAccount : productionManagementOrganization.getUserAccountDirectory().getUserAccountList()) {
+                if (userAccount.equals(request.getSender())) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+ 
+    private String getDistributorName(WholesalePurchaseRequest request) {
+        if (request.getSourceEnterprise() != null) {
+            return request.getSourceEnterprise().getName();
+        }
+        if (request.getSender() != null && request.getSender().getEmployee() != null) {
+            return request.getSender().getEmployee().getName();
+        }
+        return "Unknown Distributor";
+    }
+    
+    
+    private String getDistributerName(WholesalePurchaseRequest request) {
+        if (request.getSender() != null) {
+            if (request.getSender().getEmployee() != null && 
+                request.getSender().getEmployee().getName() != null) {
+                return request.getSender().getEmployee().getName();
+            }
+            return request.getSender().getUsername();
+        }
+        return "Unknown Retailer";
+    }
+    
+    
+    private String generateTrackingNumber() {
+        return "TRK" + System.currentTimeMillis() % 1000000000;
+    }
+    
+    private Date calculateEstimatedDelivery() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, 5);
+        return cal.getTime();
+    }
+
+    
+
+    private void createShippingRequest() {
+        int selectedRow = tblApprovedOrders.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this,
+                "Please select an approved order to create shipping request.",
+                "Warning",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        WholesalePurchaseRequest selectedOrder = approvedOrders.get(selectedRow);
+        int carrierIndex = cmbCarrier.getSelectedIndex();
+        if (carrierIndex < 0 || shippingEnterprises.isEmpty() || carrierIndex >= shippingEnterprises.size()) {
+            JOptionPane.showMessageDialog(this, 
+                "Please select a valid shipping company.", 
+                "Invalid Carrier", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        ShippingEnterprise selectedShippingEnterprise = shippingEnterprises.get(carrierIndex);
+        String notes = fieldNote.getText().trim();
+        
+        // Find ShippingEnterprise Organization
+        Organization receivingOrg = null;
+        for (Organization org : selectedShippingEnterprise.getOrganizationDirectory().getOrganizationList()) {
+            if (org.getName().contains("Management")) {
+                receivingOrg = org;
+                break;
+            }
+        }
+        if (receivingOrg == null && !selectedShippingEnterprise.getOrganizationDirectory().getOrganizationList().isEmpty()) {
+            receivingOrg = selectedShippingEnterprise.getOrganizationDirectory().getOrganizationList().get(0);
+        }
+        
+        if (receivingOrg == null) {
+            JOptionPane.showMessageDialog(this, 
+                "Error: Selected shipping company has no organization.\nPlease contact system administrator.", 
+                "Configuration Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // create WholesalesShippingRequest
+        ProductShippingRequest shippingRequest = new ProductShippingRequest();
+        
+        // product information
+        shippingRequest.setProduct(selectedOrder.getProduct());
+        shippingRequest.setProductCode(selectedOrder.getProductCode());
+        shippingRequest.setProductName(selectedOrder.getProductName());
+        shippingRequest.setQuantity(selectedOrder.getQuantity());
+        if (selectedOrder.getUnit() != null) {
+            shippingRequest.setUnit(selectedOrder.getUnit());
+        }
+        
+        // retail information
+        shippingRequest.setOriginAddress(enterprise.getName() + " Distribution Center");
+        shippingRequest.setDestinationAddress(getDistributerName(selectedOrder));
+        
+        
+        shippingRequest.setCarrierName(selectedShippingEnterprise.getName());
+        shippingRequest.setTrackingNumber(generateTrackingNumber());
+        shippingRequest.setEstimatedDeliveryDate(calculateEstimatedDelivery());
+        shippingRequest.setShippingStatus(ProductShippingRequest.SHIP_STATUS_PENDING);
+        
+        shippingRequest.setSender(account);
+        shippingRequest.setStatus("Pending");
+        shippingRequest.setMessage(notes.isEmpty() ? "Shipping request for retail order" : notes);
+        
+//        shippingRequest.setDestinationAddress("sasd");
+//        shippingRequest.setOriginAddress("1231");
+        
+        // add to Shipping Organization WorkQueue
+        receivingOrg.getWorkQueue().getWorkRequestList().add(shippingRequest);
+        
+        selectedOrder.setStatus("Shipping");
+
+        
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        JOptionPane.showMessageDialog(this, 
+            "Shipping Request created successfully!\n\n" +
+            "Tracking #: " + shippingRequest.getTrackingNumber() + "\n" +
+            "Product: " + shippingRequest.getProductName() + "\n" +
+            "Quantity: " + shippingRequest.getQuantity() + "\n" +
+            "Carrier: " + selectedShippingEnterprise.getName() + "\n" +
+            "Est. Delivery: " + dateFormat.format(shippingRequest.getEstimatedDeliveryDate()), 
+            "Success", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        fieldNote.setText("");
+        
+
+        populateApprovedOrdersTable();
+        populateShippingRequestsTable();
+        fieldNote.setText("");
+//       
+    }
+    
+
+    private Enterprise findShippingEnterprise() {
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
+                if (ent.getEnterpriseType() == Enterprise.EnterpriseType.Shipping) {
+                    return ent;
+                }
+            }
+        }
+        return null;
+    }
+
    
 
     /**
@@ -88,7 +461,7 @@ public class ManufacturerProductManageShippingPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Request ID", "Retailer", "Product", "Quantity", "Approved Date"
+                "Request ID", "Distributor", "Product", "Quantity", "Approved Date"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -148,35 +521,32 @@ public class ManufacturerProductManageShippingPanel extends javax.swing.JPanel {
                         .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnBack))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(lblApprovedOrders)
-                        .addGap(478, 478, 478))
                     .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(110, 110, 110)
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(cmbCarrier, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(484, 484, 484))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblShippingRequestStatus)
-                                .addComponent(lblNotes))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(fieldNote, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
-                            .addComponent(btnCreateShippingRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(87, 87, 87))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(lblShippingOptions)
-                            .addGap(689, 689, 689))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jScrollPane2)
-                            .addContainerGap()))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnCreateShippingRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(87, 87, 87))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addComponent(lblApprovedOrders))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(110, 110, 110)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cmbCarrier, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblShippingRequestStatus)
+                                    .addComponent(lblNotes))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(fieldNote, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblShippingOptions))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,6 +586,7 @@ public class ManufacturerProductManageShippingPanel extends javax.swing.JPanel {
 
     private void btnCreateShippingRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateShippingRequestActionPerformed
         // TODO add your handling code here:
+        createShippingRequest();
     }//GEN-LAST:event_btnCreateShippingRequestActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed

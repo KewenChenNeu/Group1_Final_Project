@@ -6,20 +6,293 @@ package ui.ManufacturerRole.ProductionManagerRole;
 
 import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
+import Business.Network.Network;
 import Business.Organization.Manufacturer.ProductionManagementOrganization;
+import Business.WorkQueue.WholesalePurchaseRequest;
+import Business.WorkQueue.WorkRequest;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author jinkun
- * 
- */
 public class ViewDistributorOrdersPanel extends javax.swing.JPanel {
 
-    JPanel userProcessContainer;
-    public ViewDistributorOrdersPanel(JPanel userProcessContainer, ProductionManagementOrganization productionManagementOrganization, Enterprise enterprise, EcoSystem system) {
+    private JPanel userProcessContainer;
+    private ProductionManagementOrganization productionManagementOrganization;
+    private Enterprise enterprise;
+    private EcoSystem system;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    
+    // 存储当前显示的请求列表，用于根据行索引获取对象
+    private List<WholesalePurchaseRequest> currentRequests;
+    
+    public ViewDistributorOrdersPanel(
+            JPanel userProcessContainer, 
+            ProductionManagementOrganization productionManagementOrganization, 
+            Enterprise enterprise, 
+            EcoSystem system) {
+        
         this.userProcessContainer = userProcessContainer;
+        this.productionManagementOrganization = productionManagementOrganization;
+        this.enterprise = enterprise;
+        this.system = system;
+        this.currentRequests = new ArrayList<>();
+        
         initComponents();
+        setupTableSelectionListener();
+        populateRequestsTable();
+        clearDetailFields();
+    }
+    
+    private void setupTableSelectionListener() {
+        tblRequests.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = tblRequests.getSelectedRow();
+                    if (selectedRow >= 0) {
+                        displayRequestDetails(selectedRow);
+                    }
+                }
+            }
+        });
+    }
+    
+   
+    private void populateRequestsTable() {
+        DefaultTableModel model = (DefaultTableModel) tblRequests.getModel();
+        model.setRowCount(0);
+        currentRequests.clear();
+        
+        List<WholesalePurchaseRequest> requests = findWholesalePurchaseRequests();
+        
+        for (WholesalePurchaseRequest request : requests) {
+            Object[] row = new Object[6];
+            row[0] = request.getRequestId();
+            row[1] = getDistributorName(request);
+            row[2] = request.getProductName();
+            row[3] = request.getQuantity() + " " + request.getUnit();
+            row[4] = request.getRequestDate() != null ? 
+                     dateFormat.format(request.getRequestDate()) : "N/A";
+            row[5] = request.getStatus();
+            
+            model.addRow(row);
+            currentRequests.add(request);
+        }
+        
+        if (requests.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "No wholesale purchase requests found from distributors.", 
+                "Info", 
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    
+    private List<WholesalePurchaseRequest> findWholesalePurchaseRequests() {
+        List<WholesalePurchaseRequest> requests = new ArrayList<>();
+        
+        for (Network network : system.getNetworkList()) {
+
+            for (Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
+                
+                for (WorkRequest wr : ent.getWorkQueue().getWorkRequestList()) {
+                    if (wr instanceof WholesalePurchaseRequest) {
+                        WholesalePurchaseRequest wpr = (WholesalePurchaseRequest) wr;
+                        if (isRequestForThisManufacturer(wpr)) {
+                            requests.add(wpr);
+                        }
+                    }
+                }
+                
+                for (var org : ent.getOrganizationDirectory().getOrganizationList()) {
+                    for (WorkRequest wr : org.getWorkQueue().getWorkRequestList()) {
+                        if (wr instanceof WholesalePurchaseRequest) {
+                            WholesalePurchaseRequest wpr = (WholesalePurchaseRequest) wr;
+                            if (isRequestForThisManufacturer(wpr)) {
+                                requests.add(wpr);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        for (WorkRequest wr : productionManagementOrganization.getWorkQueue().getWorkRequestList()) {
+            if (wr instanceof WholesalePurchaseRequest) {
+                WholesalePurchaseRequest wpr = (WholesalePurchaseRequest) wr;
+                if (!requests.contains(wpr)) {
+                    requests.add(wpr);
+                }
+            }
+        }
+        
+        return requests;
+    }
+    
+
+    private boolean isRequestForThisManufacturer(WholesalePurchaseRequest request) {
+        if (request.getTargetEnterprise() != null && 
+            request.getTargetEnterprise().equals(enterprise)) {
+            return true;
+        }
+        
+
+        if (request.getTargetOrganization() != null && 
+            request.getTargetOrganization().equals(productionManagementOrganization)) {
+            return true;
+        }
+        
+        if (productionManagementOrganization.getWorkQueue().getWorkRequestList().contains(request)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+
+    private String getDistributorName(WholesalePurchaseRequest request) {
+        if (request.getSourceEnterprise() != null) {
+            return request.getSourceEnterprise().getName();
+        }
+        if (request.getSender() != null && request.getSender().getEmployee() != null) {
+            return request.getSender().getEmployee().getName();
+        }
+        return "Unknown Distributor";
+    }
+    
+
+    private void displayRequestDetails(int rowIndex) {
+        if (rowIndex < 0 || rowIndex >= currentRequests.size()) {
+            return;
+        }
+        
+        WholesalePurchaseRequest request = currentRequests.get(rowIndex);
+        
+        fieldId.setText(String.valueOf(request.getRequestId()));
+        fieldRetailer.setText(getDistributorName(request));
+        fieldProduct.setText(request.getProductName() + " (" + request.getProductCode() + ")");
+        fieldQuantity.setText(request.getQuantity() + " " + request.getUnit());
+        fieldDate.setText(request.getRequestDate() != null ? 
+                         dateFormat.format(request.getRequestDate()) : "N/A");
+        fieldMessage.setText(request.getMessage() != null ? request.getMessage() : "");
+        
+
+        boolean isPending = WorkRequest.STATUS_PENDING.equals(request.getStatus());
+        btnApprove.setEnabled(isPending);
+        btnReject.setEnabled(isPending);
+    }
+    
+  
+    private void clearDetailFields() {
+        fieldId.setText("");
+        fieldRetailer.setText("");
+        fieldProduct.setText("");
+        fieldQuantity.setText("");
+        fieldDate.setText("");
+        fieldMessage.setText("");
+        btnApprove.setEnabled(false);
+        btnReject.setEnabled(false);
+    }
+    
+ 
+    private void approveRequest() {
+        int selectedRow = tblRequests.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, 
+                "Please select a request to approve.", 
+                "Warning", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        WholesalePurchaseRequest request = currentRequests.get(selectedRow);
+        
+        if (!WorkRequest.STATUS_PENDING.equals(request.getStatus())) {
+            JOptionPane.showMessageDialog(this, 
+                "This request has already been processed (Status: " + request.getStatus() + ").", 
+                "Warning", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Approve wholesale purchase request?\n\n" +
+            "Product: " + request.getProductName() + "\n" +
+            "Quantity: " + request.getQuantity() + " " + request.getUnit() + "\n" +
+            "Distributor: " + getDistributorName(request),
+            "Confirm Approval", 
+            JOptionPane.YES_NO_OPTION);
+        
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+        
+        request.approve();
+        request.setNotes("Approved by Production Manager");
+        
+        JOptionPane.showMessageDialog(this, 
+            "Request approved successfully!\n" +
+            "Request ID: " + request.getRequestId() + "\n" +
+            "You can now create a shipping request for this order.", 
+            "Success", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        populateRequestsTable();
+        clearDetailFields();
+    }
+    
+
+    private void rejectRequest() {
+        int selectedRow = tblRequests.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, 
+                "Please select a request to reject.", 
+                "Warning", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        WholesalePurchaseRequest request = currentRequests.get(selectedRow);
+        
+        if (!WorkRequest.STATUS_PENDING.equals(request.getStatus())) {
+            JOptionPane.showMessageDialog(this, 
+                "This request has already been processed (Status: " + request.getStatus() + ").", 
+                "Warning", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // 询问拒绝原因
+        String reason = JOptionPane.showInputDialog(this, 
+            "Please provide a reason for rejection:", 
+            "Rejection Reason", 
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (reason == null || reason.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Rejection cancelled. A reason is required.", 
+                "Info", 
+                JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
+        // 拒绝请求
+        request.reject();
+        request.setNotes("Rejected: " + reason);
+        
+        JOptionPane.showMessageDialog(this, 
+            "Request rejected successfully.\n" +
+            "Request ID: " + request.getRequestId() + "\n" +
+            "Reason: " + reason, 
+            "Success", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        populateRequestsTable();
+        clearDetailFields();
     }
     
            
@@ -218,11 +491,13 @@ public class ViewDistributorOrdersPanel extends javax.swing.JPanel {
 
     private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
         // TODO add your handling code here:
+        approveRequest();
        
     }//GEN-LAST:event_btnApproveActionPerformed
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
         // TODO add your handling code here:
+        rejectRequest();
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
