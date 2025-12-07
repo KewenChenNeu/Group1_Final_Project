@@ -84,6 +84,11 @@ public class RMProcurementWorkAreaJPanel extends javax.swing.JPanel {
         lblTitle.setText("Raw Material Procurement Role");
 
         btnRefresh.setText("Refresh Table");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
 
         tblRequests.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -99,10 +104,20 @@ public class RMProcurementWorkAreaJPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tblRequests);
 
         btnApprove.setText("Approve & Ship");
+        btnApprove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApproveActionPerformed(evt);
+            }
+        });
 
         lblTableTitle.setText("Procurement Requests");
 
         btnBack.setText("<<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -146,6 +161,41 @@ public class RMProcurementWorkAreaJPanel extends javax.swing.JPanel {
                 .addContainerGap(25, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        populateTable();
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblRequests.getSelectedRow();
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(this, "Please select a request first.");
+        return;
+    }
+
+    RawMaterialRestockRequest req =
+            (RawMaterialRestockRequest) tblRequests.getValueAt(selectedRow, 0);
+
+    if (!"Pending".equalsIgnoreCase(req.getStatus())) {
+        JOptionPane.showMessageDialog(this, "This request is already processed.");
+        return;
+    }
+
+    req.setStatus("Approved");
+
+    JOptionPane.showMessageDialog(this, "Request approved.");
+    populateTable();
+                       
+    }//GEN-LAST:event_btnApproveActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        userProcessContainer.remove(this);
+        java.awt.CardLayout layout = (java.awt.CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
+    }//GEN-LAST:event_btnBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
