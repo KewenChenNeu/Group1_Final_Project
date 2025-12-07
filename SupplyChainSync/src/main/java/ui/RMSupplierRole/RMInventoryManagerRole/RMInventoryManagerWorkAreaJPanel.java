@@ -87,6 +87,11 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
         jLabel1.setText("Raw Material Inventory Manager Role");
 
         btnBack.setText("<<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Current Inventory");
 
@@ -110,6 +115,11 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
         lblUnit.setText("Unit:");
 
         btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         btnSave.setText("Save");
 
@@ -205,6 +215,61 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
         populateTable();
     }//GEN-LAST:event_btnRefreshActionPerformed
 
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+        String name = txtMaterialName.getText().trim();
+        String unit = txtUnits.getText().trim();
+        String qtyStr = txtQuantity.getText().trim();
+
+        if (name.isEmpty() || unit.isEmpty() || qtyStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter material name, quantity, and unit.");
+            return;
+        }
+
+        int qty;
+        try {
+            qty = Integer.parseInt(qtyStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Quantity must be a whole number.");
+            return;
+        }
+
+        if (qty <= 0) {
+            JOptionPane.showMessageDialog(this, "Quantity must be greater than zero.");
+            return;
+        }
+        
+        Material existing = organization.findMaterialByName(name);
+        if (existing == null) {
+            String code = "RM-" + (organization.getInventoryList().size() + 1);
+            Material newMat = new Material(code, name, 0.0, unit);
+            newMat.setQuantity(qty);
+            organization.getInventoryList().add(newMat);
+        } else {
+            existing.setQuantity(existing.getQuantity() + qty);
+            if (existing.getUnit() == null || existing.getUnit().isEmpty()) {
+                existing.setUnit(unit);
+            }
+        }
+
+        JOptionPane.showMessageDialog(this, "Inventory updated.");
+        clearFields();
+        populateTable();                   
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
+        
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void clearFields() {
+        txtMaterialName.setText("");
+        txtUnits.setText("");
+        txtQuantity.setText("");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
