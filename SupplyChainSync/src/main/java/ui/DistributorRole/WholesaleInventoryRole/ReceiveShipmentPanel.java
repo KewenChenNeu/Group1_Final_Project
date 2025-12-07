@@ -747,6 +747,11 @@ public class ReceiveShipmentPanel extends javax.swing.JPanel {
         lblFilter.setText("Filter:");
 
         cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbStatusActionPerformed(evt);
+            }
+        });
 
         lblDateRange.setText("Date Range: From");
 
@@ -946,6 +951,10 @@ public class ReceiveShipmentPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         refreshData();
     }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbStatusActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
