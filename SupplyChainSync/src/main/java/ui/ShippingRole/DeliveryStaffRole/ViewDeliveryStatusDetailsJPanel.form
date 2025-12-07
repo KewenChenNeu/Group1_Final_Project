@@ -29,36 +29,39 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="lblTo" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblStatus" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblRequestId" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                              <Component id="lblFrom" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblItem" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="btnBack" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtRequestId" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtItem" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtFrom" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtTo" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtStatus" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="lblTo" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblStatus" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblRequestId" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                                      <Component id="lblFrom" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblItem" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="btnBack" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="txtRequestId" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtItem" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtFrom" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtTo" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtStatus" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="lblTitle" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="lblTitle" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
+                      <Component id="btnConfirmation" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="211" max="32767" attributes="0"/>
-              <Component id="btnConfirmation" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="151" max="-2" attributes="0"/>
+              <EmptySpace pref="222" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
