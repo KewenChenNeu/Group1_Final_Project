@@ -59,6 +59,7 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
         jLayeredPane1 = new javax.swing.JLayeredPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
+        jSeparator1 = new javax.swing.JSeparator();
         lblTitle = new javax.swing.JLabel();
         jScrollPaneRequests = new javax.swing.JScrollPane();
         tblRequests = new javax.swing.JTable();
@@ -252,6 +253,7 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneRequests;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JPanel panelButtons;
     private javax.swing.JTable tblRequests;

@@ -273,9 +273,13 @@ public class DeliveryStaffRoleWorkAreaJPanel extends javax.swing.JPanel {
             ((WholesalesShippingRequest) wr).markDelivered();
         }
 
-        JOptionPane.showMessageDialog(this, "Delivery marked as completed.");
+        String confirmationText = "Delivered on " + new Date()
+                + " by " + (userAccount != null ? userAccount.getUsername() : "DeliveryStaff");
+        wr.setMessage(confirmationText);
 
+        JOptionPane.showMessageDialog(this, "Delivery marked as completed and confirmation sent to retail.");
         populateTable();
+
     }//GEN-LAST:event_btnCompleteActionPerformed
 
 
