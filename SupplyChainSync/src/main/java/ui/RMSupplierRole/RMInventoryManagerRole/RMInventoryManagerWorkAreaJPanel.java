@@ -45,19 +45,22 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
     
     private void populateTable() {
         DefaultTableModel model = (DefaultTableModel) tblInventory.getModel();
-        model.setRowCount(0);
+    model.setRowCount(0);
 
-        if (organization == null || organization.getInventoryList() == null) {
-            return;
-        }
+    if (organization == null) {
+        System.out.println("populateTable: organization is null");
+        return;
+    }
 
-        for (Material m : organization.getInventoryList()) {
-            Object[] row = new Object[4];
-            row[0] = m.getMaterialCode();
-            row[1] = m.getMaterialName();
-            row[2] = m.getQuantity();
-            row[3] = m.getUnit();
-            model.addRow(row);
+    System.out.println("populateTable: inventory size = " + organization.getInventoryList().size());
+
+    for (Material m : organization.getInventoryList()) {
+        Object[] row = new Object[4];
+        row[0] = m.getMaterialCode();
+        row[1] = m.getMaterialName();
+        row[2] = m.getQuantity();
+        row[3] = m.getUnit();
+        model.addRow(row);
         }
     }
 
@@ -151,44 +154,41 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(313, 313, 313)
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(313, 313, 313)
-                                .addComponent(jLabel2))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnSave)
+                                    .addComponent(btnAdd))
+                                .addGap(146, 146, 146)
+                                .addComponent(btnEdit))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(lblMaterialName)
                                     .addComponent(lblQuantity))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(txtMaterialName, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(132, 132, 132)
+                                        .addGap(82, 82, 82)
                                         .addComponent(lblUnit)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txtUnits, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 69, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnBack))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnRefresh)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnEdit)))))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnAdd)
-                    .addComponent(btnSave))
-                .addGap(335, 335, 335))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtUnits, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnBack))
+                                .addComponent(btnRefresh)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,18 +207,21 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
                     .addComponent(txtMaterialName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblUnit)
                     .addComponent(txtUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblQuantity)
-                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(btnSave)
-                .addGap(55, 55, 55)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAdd)
-                    .addComponent(btnRefresh)
-                    .addComponent(btnEdit))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblQuantity)
+                            .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                        .addComponent(btnAdd)
+                        .addGap(47, 47, 47)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnRefresh)
+                            .addComponent(btnSave))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnEdit))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -230,43 +233,64 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
         String name = txtMaterialName.getText().trim();
-        String unit = txtUnits.getText().trim();
-        String qtyStr = txtQuantity.getText().trim();
+    String unit = txtUnits.getText().trim();
+    String qtyStr = txtQuantity.getText().trim();
 
-        if (name.isEmpty() || unit.isEmpty() || qtyStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter material name, quantity, and unit.");
-            return;
-        }
+    if (name.isEmpty() || unit.isEmpty() || qtyStr.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter material name, quantity, and unit.");
+        return;
+    }
 
-        int qty;
-        try {
-            qty = Integer.parseInt(qtyStr);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Quantity must be a whole number.");
-            return;
-        }
+    int qty;
+    try {
+        qty = Integer.parseInt(qtyStr);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Quantity must be a whole number.");
+        return;
+    }
 
-        if (qty <= 0) {
-            JOptionPane.showMessageDialog(this, "Quantity must be greater than zero.");
-            return;
-        }
-        
-        Material existing = organization.findMaterialByName(name);
-        if (existing == null) {
-            String code = "RM-" + (organization.getInventoryList().size() + 1);
-            Material newMat = new Material(code, name, 0.0, unit);
-            newMat.setQuantity(qty);
-            organization.getInventoryList().add(newMat);
-        } else {
-            existing.setQuantity(existing.getQuantity() + qty);
-            if (existing.getUnit() == null || existing.getUnit().isEmpty()) {
-                existing.setUnit(unit);
-            }
-        }
+    if (qty <= 0) {
+        JOptionPane.showMessageDialog(this, "Quantity must be greater than zero.");
+        return;
+    }
 
-        JOptionPane.showMessageDialog(this, "Inventory updated.");
-        clearFields();
-        populateTable();                   
+
+    Material existing = organization.findMaterialByName(name);
+    Material newMat = null;
+
+    if (existing == null) {
+        String code = "RM-" + (organization.getInventoryList().size() + 1);
+        newMat = new Material(code, name, 0.0, unit);
+        newMat.setQuantity(qty);
+        organization.getInventoryList().add(newMat);
+        System.out.println("Added NEW material: " + newMat.getMaterialCode() + " / " + newMat.getMaterialName());
+    } else {
+        existing.setQuantity(existing.getQuantity() + qty);
+        if (existing.getUnit() == null || existing.getUnit().isEmpty()) {
+            existing.setUnit(unit);
+        }
+        newMat = existing;
+        System.out.println("UPDATED existing material: " + existing.getMaterialCode() + " / " + existing.getMaterialName());
+    }
+
+    // ----- directly add/update the table model as well -----
+    DefaultTableModel model = (DefaultTableModel) tblInventory.getModel();
+    
+    // simple approach: repopulate whole table from list
+    model.setRowCount(0);
+    for (Material m : organization.getInventoryList()) {
+        Object[] row = new Object[4];
+        row[0] = m.getMaterialCode();
+        row[1] = m.getMaterialName();
+        row[2] = m.getQuantity();
+        row[3] = m.getUnit();
+        model.addRow(row);
+    }
+
+    System.out.println("Inventory size after add = " + organization.getInventoryList().size());
+
+    JOptionPane.showMessageDialog(this, "Inventory updated.");
+    clearFields();                   
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
