@@ -32,6 +32,7 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
         this.accoun = account;
         this.inventoryOrganization = inventoryOrganization;
         this.enterprise = enterprise;
+        this.system = system;
         initComponents();
         lblUserName.setText(this.accoun.getEmployee().getName());
     }
@@ -51,7 +52,7 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
         btnProducts = new javax.swing.JButton();
         btnRawMaterials = new javax.swing.JButton();
         btnManageResReq = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        btnManageShipment = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jLabel1.setText("Manufacturer - Inventory Manager  ");
@@ -79,10 +80,10 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
-        jButton6.setText("Shipment");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        btnManageShipment.setText("Manage Shipment");
+        btnManageShipment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                btnManageShipmentActionPerformed(evt);
             }
         });
 
@@ -96,7 +97,7 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnManageResReq, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnManageShipment, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -126,7 +127,7 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
                     .addComponent(btnRawMaterials))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
+                    .addComponent(btnManageShipment)
                     .addComponent(btnManageResReq))
                 .addContainerGap(255, Short.MAX_VALUE))
         );
@@ -161,16 +162,20 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
         layout.next (userProcessContainer);
     }//GEN-LAST:event_btnManageResReqActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void btnManageShipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageShipmentActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+        ManageShipmentJPanel msjp = new ManageShipmentJPanel(userProcessContainer, accoun, inventoryOrganization, enterprise, system);
+        userProcessContainer.add ("CustomerWorkAreaJPanel", msjp);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout ();
+        layout.next (userProcessContainer);
+    }//GEN-LAST:event_btnManageShipmentActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnManageResReq;
+    private javax.swing.JButton btnManageShipment;
     private javax.swing.JButton btnProducts;
     private javax.swing.JButton btnRawMaterials;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblUserName;
