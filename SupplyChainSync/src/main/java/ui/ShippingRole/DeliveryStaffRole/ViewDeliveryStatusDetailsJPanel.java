@@ -62,7 +62,6 @@ public class ViewDeliveryStatusDetailsJPanel extends javax.swing.JPanel {
         txtFrom = new javax.swing.JTextField();
         txtTo = new javax.swing.JTextField();
         txtStatus = new javax.swing.JTextField();
-        btnConfirmation = new javax.swing.JButton();
 
         jCheckBox1.setText("jCheckBox1");
 
@@ -98,43 +97,32 @@ public class ViewDeliveryStatusDetailsJPanel extends javax.swing.JPanel {
 
         txtStatus.setEditable(false);
 
-        btnConfirmation.setText("Send Confirmation");
-        btnConfirmation.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConfirmationActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblTo)
+                            .addComponent(lblStatus)
+                            .addComponent(lblRequestId)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblTo)
-                                    .addComponent(lblStatus)
-                                    .addComponent(lblRequestId)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(lblFrom)
-                                        .addComponent(lblItem))
-                                    .addComponent(btnBack))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtRequestId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(lblTitle)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(140, 140, 140)
-                        .addComponent(btnConfirmation)))
-                .addContainerGap(222, Short.MAX_VALUE))
+                                .addComponent(lblItem)
+                                .addGap(4, 4, 4))
+                            .addComponent(btnBack)
+                            .addComponent(lblFrom))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtRequestId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lblTitle))
+                .addContainerGap(273, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,20 +130,18 @@ public class ViewDeliveryStatusDetailsJPanel extends javax.swing.JPanel {
                 .addGap(24, 24, 24)
                 .addComponent(lblTitle)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblRequestId)
-                            .addComponent(txtRequestId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblItem)
-                            .addComponent(txtItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(41, 41, 41))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblFrom)
-                        .addComponent(txtFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblRequestId)
+                    .addComponent(txtRequestId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblItem)
+                    .addComponent(txtItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFrom))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTo)
                     .addComponent(txtTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -163,9 +149,7 @@ public class ViewDeliveryStatusDetailsJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblStatus)
                     .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addComponent(btnConfirmation)
-                .addGap(28, 28, 28)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addComponent(btnBack)
                 .addGap(32, 32, 32))
         );
@@ -177,53 +161,6 @@ public class ViewDeliveryStatusDetailsJPanel extends javax.swing.JPanel {
         CardLayout layout = (CardLayout) userProcessContainer.getLayout();
         layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
-
-    private void btnConfirmationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmationActionPerformed
-        // TODO add your handling code here:
-        if (!WorkRequest.STATUS_DELIVERED.equals(request.getStatus())) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "Please complete the delivery before sending confirmation.");
-            return;
-        }
-
-        if (request instanceof ProductShippingRequest) {
-            ProductShippingRequest psr = (ProductShippingRequest) request;
-
-            DeliveryConfirmationRequest dcr = new DeliveryConfirmationRequest(psr);
-            dcr.setSender(userAccount);
-            dcr.setSourceEnterprise(shippingEnterprise);
-            dcr.setTargetEnterprise(psr.getTargetEnterprise());
-            dcr.setStatus(WorkRequest.STATUS_AWAITING_CONFIRMATION);
-
-            if (psr.getTargetOrganization() != null) {
-                dcr.setTargetOrganization(psr.getTargetOrganization());
-                psr.getTargetOrganization().getWorkQueue().addWorkRequest(dcr);
-            }
-
-        } else if (request instanceof MaterialShippingRequest) {
-            MaterialShippingRequest msr = (MaterialShippingRequest) request;
-
-            MaterialDeliveryConfirmationRequest mdcr
-                    = new MaterialDeliveryConfirmationRequest(msr);
-            mdcr.setSender(userAccount);
-            mdcr.setSourceEnterprise(shippingEnterprise);
-            mdcr.setTargetEnterprise(msr.getTargetEnterprise());
-            mdcr.setStatus(WorkRequest.STATUS_AWAITING_CONFIRMATION);
-
-            if (msr.getTargetOrganization() != null) {
-                mdcr.setTargetOrganization(msr.getTargetOrganization());
-                msr.getTargetOrganization().getWorkQueue().addWorkRequest(mdcr);
-            }
-
-        } else if (request instanceof WholesalesShippingRequest) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "No separate confirmation request is created for wholesale deliveries.");
-            return;
-        }
-
-        javax.swing.JOptionPane.showMessageDialog(this,
-                "Delivery confirmation has been sent to the target organization.");
-    }//GEN-LAST:event_btnConfirmationActionPerformed
 
     private void populateDetails() {
         txtRequestId.setText(String.valueOf(request.getRequestId()));
@@ -270,7 +207,6 @@ public class ViewDeliveryStatusDetailsJPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnConfirmation;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel lblFrom;
     private javax.swing.JLabel lblItem;

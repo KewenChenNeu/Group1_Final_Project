@@ -146,7 +146,7 @@ public class DeliveryStaffRoleWorkAreaJPanel extends javax.swing.JPanel {
 
         lblFilter.setText("Filter by Status:");
 
-        cmbFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Pending", "In Progress", "Shipped", "Delivered", " ", " " }));
+        cmbFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Pending", "In Transit", "Delivered", " ", " " }));
         cmbFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbFilterActionPerformed(evt);
