@@ -12,12 +12,11 @@ import Business.WorkQueue.WorkRequest;
 import Business.WorkQueue.ProductShippingRequest;
 import Business.WorkQueue.MaterialShippingRequest;
 import Business.WorkQueue.WholesalesShippingRequest;
-import Business.WorkQueue.DeliveryConfirmationRequest;
-import Business.WorkQueue.MaterialDeliveryConfirmationRequest;
 import java.util.Date;
 import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.awt.CardLayout;
 
 /**
  *
@@ -61,14 +60,16 @@ public class DeliveryStaffRoleWorkAreaJPanel extends javax.swing.JPanel {
         tblDeliveries = new javax.swing.JTable();
         panelButtons = new javax.swing.JPanel();
         btnRefresh = new javax.swing.JButton();
-        btnAssign = new javax.swing.JButton();
         btnStartDelivery = new javax.swing.JButton();
-        btnMarkDelivered = new javax.swing.JButton();
+        btnViewDetails = new javax.swing.JButton();
+        btnComplete = new javax.swing.JButton();
+        lblFilter = new javax.swing.JLabel();
+        cmbFilter = new javax.swing.JComboBox<>();
 
         setBackground(new java.awt.Color(0, 153, 255));
 
         lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        lblTitle.setText("Delivery Staff ");
+        lblTitle.setText("Deliveries:");
 
         tblDeliveries.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -95,13 +96,6 @@ public class DeliveryStaffRoleWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnAssign.setText("Assign to Me");
-        btnAssign.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAssignActionPerformed(evt);
-            }
-        });
-
         btnStartDelivery.setText("Start Delivery");
         btnStartDelivery.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -109,10 +103,17 @@ public class DeliveryStaffRoleWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnMarkDelivered.setText("Mark Delivered and Confirm");
-        btnMarkDelivered.addActionListener(new java.awt.event.ActionListener() {
+        btnViewDetails.setText("Status Details");
+        btnViewDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMarkDeliveredActionPerformed(evt);
+                btnViewDetailsActionPerformed(evt);
+            }
+        });
+
+        btnComplete.setText("Complete Delivery");
+        btnComplete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCompleteActionPerformed(evt);
             }
         });
 
@@ -121,55 +122,75 @@ public class DeliveryStaffRoleWorkAreaJPanel extends javax.swing.JPanel {
         panelButtonsLayout.setHorizontalGroup(
             panelButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelButtonsLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addComponent(btnRefresh)
-                .addGap(35, 35, 35)
-                .addComponent(btnAssign)
-                .addGap(27, 27, 27)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnStartDelivery)
-                .addGap(18, 18, 18)
-                .addComponent(btnMarkDelivered)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnViewDetails)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnComplete)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelButtonsLayout.setVerticalGroup(
             panelButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelButtonsLayout.createSequentialGroup()
-                .addGap(27, 27, 27)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelButtonsLayout.createSequentialGroup()
+                .addContainerGap(18, Short.MAX_VALUE)
                 .addGroup(panelButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRefresh)
-                    .addComponent(btnAssign)
                     .addComponent(btnStartDelivery)
-                    .addComponent(btnMarkDelivered))
-                .addContainerGap(50, Short.MAX_VALUE))
+                    .addComponent(btnViewDetails)
+                    .addComponent(btnComplete))
+                .addGap(15, 15, 15))
         );
+
+        lblFilter.setText("Filter by Status:");
+
+        cmbFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Pending", "In Progress", "Shipped", "Delivered", " ", " " }));
+        cmbFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbFilterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPaneDeliveries, javax.swing.GroupLayout.PREFERRED_SIZE, 729, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 21, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPaneDeliveries)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(74, 74, 74)
-                        .addComponent(panelButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(280, 280, 280)
-                        .addComponent(lblTitle)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(380, 380, 380)
+                                .addComponent(lblTitle))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(101, 101, 101)
+                                .addComponent(lblFilter)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cmbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(175, 175, 175)
+                .addComponent(panelButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(349, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(13, 13, 13)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblFilter)
+                    .addComponent(cmbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPaneDeliveries, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(panelButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -177,23 +198,6 @@ public class DeliveryStaffRoleWorkAreaJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         populateTable();
     }//GEN-LAST:event_btnRefreshActionPerformed
-
-    private void btnAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignActionPerformed
-        // TODO add your handling code here:
-        WorkRequest wr = getSelectedRequest();
-        if (wr == null) {
-            return;
-        }
-
-        wr.setReceiver(userAccount);
-        wr.setStatus(WorkRequest.STATUS_IN_PROGRESS);
-
-        if (!userAccount.getWorkQueue().getWorkRequestList().contains(wr)) {
-            userAccount.getWorkQueue().addWorkRequest(wr);
-        }
-
-        populateTable();
-    }//GEN-LAST:event_btnAssignActionPerformed
 
     private void btnStartDeliveryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartDeliveryActionPerformed
         // TODO add your handling code here:
@@ -222,60 +226,67 @@ public class DeliveryStaffRoleWorkAreaJPanel extends javax.swing.JPanel {
         populateTable();
     }//GEN-LAST:event_btnStartDeliveryActionPerformed
 
-    private void btnMarkDeliveredActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMarkDeliveredActionPerformed
+    private void btnViewDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewDetailsActionPerformed
         // TODO add your handling code here:
         WorkRequest wr = getSelectedRequest();
         if (wr == null) {
             return;
         }
 
+        ViewDeliveryStatusDetailsJPanel panel
+                = new ViewDeliveryStatusDetailsJPanel(
+                        userProcessContainer,
+                        userAccount,
+                        shippingEnterprise,
+                        wr
+                );
+
+        userProcessContainer.add("DeliveryStatusDetailsJPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnViewDetailsActionPerformed
+
+    private void cmbFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFilterActionPerformed
+        // TODO add your handling code here:
+        populateTable();
+    }//GEN-LAST:event_cmbFilterActionPerformed
+
+    private void btnCompleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompleteActionPerformed
+        // TODO add your handling code here:
+        WorkRequest wr = getSelectedRequest();
+        if (wr == null) {
+            return;
+        }
+
+        String status = wr.getStatus();
+        if (!WorkRequest.STATUS_IN_PROGRESS.equals(status)
+                && !WorkRequest.STATUS_SHIPPED.equals(status)) {
+            JOptionPane.showMessageDialog(this,
+                    "You can only complete deliveries that are In Progress or Shipped.");
+            return;
+        }
+
         wr.setStatus(WorkRequest.STATUS_DELIVERED);
         wr.setResolveDate(new Date());
 
-        if (wr instanceof ProductShippingRequest) {
-            ProductShippingRequest psr = (ProductShippingRequest) wr;
-
-            DeliveryConfirmationRequest dcr = new DeliveryConfirmationRequest(psr);
-            dcr.setSender(userAccount);
-            dcr.setSourceEnterprise(shippingEnterprise);
-            dcr.setTargetEnterprise(psr.getTargetEnterprise());
-            dcr.setStatus(WorkRequest.STATUS_AWAITING_CONFIRMATION);
-
-            if (psr.getTargetOrganization() != null) {
-                dcr.setTargetOrganization(psr.getTargetOrganization());
-                psr.getTargetOrganization().getWorkQueue().addWorkRequest(dcr);
-            }
-
-        } else if (wr instanceof MaterialShippingRequest) {
-            MaterialShippingRequest msr = (MaterialShippingRequest) wr;
-
-            MaterialDeliveryConfirmationRequest mdcr = new MaterialDeliveryConfirmationRequest(msr);
-            mdcr.setSender(userAccount);
-            mdcr.setSourceEnterprise(shippingEnterprise);
-            mdcr.setTargetEnterprise(msr.getTargetEnterprise());
-            mdcr.setStatus(WorkRequest.STATUS_AWAITING_CONFIRMATION);
-
-            if (msr.getTargetOrganization() != null) {
-                mdcr.setTargetOrganization(msr.getTargetOrganization());
-                msr.getTargetOrganization().getWorkQueue().addWorkRequest(mdcr);
-            }
-
-        } else if (wr instanceof WholesalesShippingRequest) {
+        if (wr instanceof WholesalesShippingRequest) {
             ((WholesalesShippingRequest) wr).markDelivered();
         }
 
-        JOptionPane.showMessageDialog(this,
-                "Marked delivered and created confirmation request (if applicable).");
+        JOptionPane.showMessageDialog(this, "Delivery marked as completed.");
+
         populateTable();
-    }//GEN-LAST:event_btnMarkDeliveredActionPerformed
+    }//GEN-LAST:event_btnCompleteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAssign;
-    private javax.swing.JButton btnMarkDelivered;
+    private javax.swing.JButton btnComplete;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnStartDelivery;
+    private javax.swing.JButton btnViewDetails;
+    private javax.swing.JComboBox<String> cmbFilter;
     private javax.swing.JScrollPane jScrollPaneDeliveries;
+    private javax.swing.JLabel lblFilter;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JPanel panelButtons;
     private javax.swing.JTable tblDeliveries;
@@ -285,6 +296,11 @@ public class DeliveryStaffRoleWorkAreaJPanel extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) tblDeliveries.getModel();
         model.setRowCount(0);
 
+        String filter = "All";
+        if (cmbFilter != null && cmbFilter.getSelectedItem() != null) {
+            filter = cmbFilter.getSelectedItem().toString();
+        }
+
         for (WorkRequest wr : operationOrg.getWorkQueue().getWorkRequestList()) {
             if (wr instanceof ProductShippingRequest
                     || wr instanceof MaterialShippingRequest
@@ -293,13 +309,15 @@ public class DeliveryStaffRoleWorkAreaJPanel extends javax.swing.JPanel {
                 Object[] row = new Object[7];
                 row[0] = wr;
 
+                String statusForRow;
+
                 if (wr instanceof ProductShippingRequest) {
                     ProductShippingRequest psr = (ProductShippingRequest) wr;
                     row[1] = "Product";
                     row[2] = psr.getProductName();
                     row[3] = psr.getQuantity() + " " + psr.getUnit();
                     row[4] = psr.getDestinationStoreName();
-                    row[5] = psr.getStatus();
+                    statusForRow = psr.getStatus();
                     row[6] = psr.getReceiver() == null
                             ? "Unassigned"
                             : psr.getReceiver().getUsername();
@@ -312,23 +330,30 @@ public class DeliveryStaffRoleWorkAreaJPanel extends javax.swing.JPanel {
                     row[4] = (msr.getTargetEnterprise() == null)
                             ? "-"
                             : msr.getTargetEnterprise().getName();
-                    row[5] = msr.getStatus();
+                    statusForRow = msr.getStatus();
                     row[6] = msr.getReceiver() == null
                             ? "Unassigned"
                             : msr.getReceiver().getUsername();
 
-                } else if (wr instanceof WholesalesShippingRequest) {
+                } else {
                     WholesalesShippingRequest wsr = (WholesalesShippingRequest) wr;
                     row[1] = "Wholesale";
                     row[2] = wsr.getProductName();
                     row[3] = wsr.getQuantity() + " " + wsr.getUnit();
                     row[4] = wsr.getDestinationAddress();
-                    row[5] = wsr.getShippingStatus();
+                    statusForRow = wsr.getShippingStatus();
                     row[6] = wsr.getReceiver() == null
                             ? "Unassigned"
                             : wsr.getReceiver().getUsername();
                 }
 
+                if (!"All".equals(filter)) {
+                    if (statusForRow == null || !statusForRow.equals(filter)) {
+                        continue;
+                    }
+                }
+
+                row[5] = statusForRow;
                 model.addRow(row);
             }
         }
