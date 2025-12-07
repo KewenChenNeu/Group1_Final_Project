@@ -102,6 +102,8 @@ public class ConfigureASystem {
         // ============================
         createDistributorTestDataWithFaker(distributor, manufacturer, shipping, retail);
         
+        createManufacturerTestDataWithFaker(manufacturer, rmSupplier, shipping, retail);
+        
         return system;
     }
     
@@ -750,6 +752,94 @@ public class ConfigureASystem {
             }
             
             distSalesOrg.getWorkQueue().addWorkRequest(request);
+        }
+    }
+
+    private static void createManufacturerTestDataWithFaker(ManufacturerEnterprise manufacturer, RawMaterialSupplierEnterprise rmSupplier, ShippingEnterprise shipping, RetailEnterprise retail) {
+        Organization productionOrg = manufacturer.getOrganizationDirectory().getOrganizationList().get(0);
+        Organization inventoryOrg = manufacturer.getOrganizationDirectory().getOrganizationList().get(1);
+        UserAccount distInvUser = inventoryOrg.getUserAccountDirectory().getUserAccountList().get(0);
+        UserAccount distInvUser1 = inventoryOrg.getUserAccountDirectory().getUserAccountList().get(1);
+        createMaterialShippingRequests(inventoryOrg, distInvUser1);
+    }
+    
+    private static void createMaterialShippingRequests(Organization manufactureInventoryOrg, UserAccount receiverUser) {
+
+        // Sample materials (code, name, unit)
+        String[][] materials = {
+            {"RM-001", "Steel Rods", "kg"},
+            {"RM-002", "Aluminum Sheets", "sheets"},
+            {"RM-003", "Copper Wire Coils", "rolls"},
+            {"RM-004", "Plastic Pellets", "bags"},
+            {"RM-005", "Rubber Components", "boxes"},
+            {"RM-006", "Glass Panels", "panels"},
+            {"RM-007", "Paint Chemicals", "drums"}
+        };
+
+        // Carriers
+        String[] carriers = {
+            "Global Freight Co.", "SkyLine Logistics", "RapidTransport", "EcoFreight Shipping"
+        };
+
+        // Shipping statuses for testing
+        String[][] statusConfigs = {
+            {MaterialShippingRequest.SHIP_STATUS_PENDING, WorkRequest.STATUS_PENDING},
+            {MaterialShippingRequest.SHIP_STATUS_PENDING, WorkRequest.STATUS_PENDING},
+            {MaterialShippingRequest.SHIP_STATUS_PICKED_UP, WorkRequest.STATUS_IN_PROGRESS},
+            {MaterialShippingRequest.SHIP_STATUS_IN_TRANSIT, WorkRequest.STATUS_IN_PROGRESS},
+            {MaterialShippingRequest.SHIP_STATUS_IN_TRANSIT, WorkRequest.STATUS_IN_PROGRESS},
+            {MaterialShippingRequest.SHIP_STATUS_DELIVERED, WorkRequest.STATUS_DELIVERED},
+            {MaterialShippingRequest.SHIP_STATUS_DELIVERED, WorkRequest.STATUS_DELIVERED},
+            {MaterialShippingRequest.SHIP_STATUS_DELIVERED, WorkRequest.STATUS_DELIVERED}
+        };
+
+        for (int i = 0; i < 15; i++) {
+            String[] material = materials[random.nextInt(materials.length)];
+            String[] statusConfig = statusConfigs[i % statusConfigs.length];
+            String carrier = carriers[random.nextInt(carriers.length)];
+
+            MaterialShippingRequest request = new MaterialShippingRequest();
+//            request.setRequestId(1000 + i);
+
+            // Material info
+            request.setMaterialCode(material[0]);
+            request.setMaterialName(material[1]);
+            request.setUnit(material[2]);
+            request.setQuantity(100 + random.nextInt(900));  // 100 - 1000 units
+
+            // Addresses
+            request.setOriginAddress("Supplier Warehouse, " + faker.address().streetAddress());
+            request.setDestinationAddress("Manufacturing Plant, " + faker.address().streetAddress());
+
+            // Shipping details
+            request.setCarrierName(carrier);
+            request.setTrackingNumber("SHIP-" + String.format("%04d", i + 1));
+            request.setShippingCost(500 + random.nextDouble() * 4500); // $500 - $5000
+            request.setShippingStatus(statusConfig[0]);
+            request.setStatus(statusConfig[1]);
+            request.setMessage(faker.lorem().sentence());
+
+            // Request date in past 10 days
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, -random.nextInt(10));
+            request.setRequestDate(cal.getTime());
+
+            // If in-transit: estimated arrival
+            if (statusConfig[0].equals(MaterialShippingRequest.SHIP_STATUS_IN_TRANSIT)) {
+                Calendar est = Calendar.getInstance();
+                est.add(Calendar.DAY_OF_MONTH, 1 + random.nextInt(5));
+                request.setEstimatedDeliveryDate(est.getTime());
+            }
+
+            // If delivered, set receiver + actual delivery date
+            if (statusConfig[0].equals(MaterialShippingRequest.SHIP_STATUS_DELIVERED)) {
+                request.setReceiver(receiverUser);
+                Calendar delivered = Calendar.getInstance();
+                delivered.add(Calendar.DAY_OF_MONTH, -random.nextInt(3));
+                request.setActualDeliveryDate(delivered.getTime());
+            }
+
+            manufactureInventoryOrg.getWorkQueue().addWorkRequest(request);
         }
     }
 }
