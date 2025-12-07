@@ -143,6 +143,9 @@ public class ConfigureASystem {
         
         Employee invStaff = inventoryOrg.getEmployeeDirectory().createEmployee(faker.name().fullName());
         inventoryOrg.getUserAccountDirectory().createUserAccount("mfg_inv2", "password", invStaff, new InventoryManagerRole());
+        
+        Employee invStaff2 = inventoryOrg.getEmployeeDirectory().createEmployee("Lisa Wilson");
+        inventoryOrg.getUserAccountDirectory().createUserAccount("mi", "", invStaff2, new InventoryManagerRole());
     }
     
     /**
@@ -277,6 +280,29 @@ public class ConfigureASystem {
         mfgInventory.addProduct(applianceKitB, 300, 30, 600, "Production Line B");
         mfgInventory.addProduct(officeSupply, 3000, 300, 6000, "Production Line C");
         mfgInventory.addProduct(industrialTool, 150, 20, 300, "Production Line D");
+        
+        MaterialCatalog mfgMaterialCatalog = manufacturer.getMaterialCatalog();
+        
+        Material mfgSteelSheets = mfgMaterialCatalog.createMaterial("RM-001", "Steel Sheets", 2.50, "kg");
+        mfgSteelSheets.setCategory("Metals");
+        mfgSteelSheets.setDescription("High-quality steel sheets for manufacturing");
+        
+        Material mfgCopperWire = mfgMaterialCatalog.createMaterial("RM-002", "Copper Wire", 5.00, "meters");
+        mfgCopperWire.setCategory("Metals");
+        mfgCopperWire.setDescription("Pure copper wire for electrical components");
+        
+        Material mfgPlasticPellets = mfgMaterialCatalog.createMaterial("RM-003", "Plastic Pellets", 1.20, "kg");
+        mfgPlasticPellets.setCategory("Plastics");
+        mfgPlasticPellets.setDescription("Industrial grade plastic pellets");
+        
+        Material mfgAluminumBars = mfgMaterialCatalog.createMaterial("RM-004", "Aluminum Bars", 3.75, "kg");
+        mfgAluminumBars.setCategory("Metals");
+        mfgAluminumBars.setDescription("Lightweight aluminum bars");
+        
+        mfgInventory.addMaterial(mfgSteelSheets, 10000, 1000, 20000, "Warehouse A");
+        mfgInventory.addMaterial(mfgCopperWire, 5000, 500, 10000, "Warehouse B");
+        mfgInventory.addMaterial(mfgPlasticPellets, 8000, 800, 15000, "Warehouse A");
+        mfgInventory.addMaterial(mfgAluminumBars, 6000, 600, 12000, "Warehouse C");
         
         // ============================
         // Distributor - Products Catalog & Inventory (Enhanced)

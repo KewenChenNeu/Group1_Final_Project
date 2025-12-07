@@ -20,7 +20,7 @@
               <EmptySpace min="-2" pref="246" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="jButton5" min="-2" pref="183" max="-2" attributes="0"/>
+                      <Component id="btnManageResReq" min="-2" pref="183" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jButton6" min="-2" pref="178" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -36,10 +36,10 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="btnRawMaterials" min="-2" pref="183" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="btnFinishedGoods" min="-2" pref="178" max="-2" attributes="0"/>
+                              <Component id="btnProducts" min="-2" pref="178" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="183" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -57,13 +57,13 @@
               </Group>
               <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnFinishedGoods" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnProducts" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnRawMaterials" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButton6" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton5" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnManageResReq" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="255" max="32767" attributes="0"/>
           </Group>
@@ -86,12 +86,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblUserName">
     </Component>
-    <Component class="javax.swing.JButton" name="btnFinishedGoods">
+    <Component class="javax.swing.JButton" name="btnProducts">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Finished Goods"/>
+        <Property name="text" type="java.lang.String" value="Products"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFinishedGoodsActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnProductsActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnRawMaterials">
@@ -102,12 +102,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRawMaterialsActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton5">
+    <Component class="javax.swing.JButton" name="btnManageResReq">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Restock Request"/>
+        <Property name="text" type="java.lang.String" value="Manage Restock Request"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton5ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnManageResReqActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton6">
