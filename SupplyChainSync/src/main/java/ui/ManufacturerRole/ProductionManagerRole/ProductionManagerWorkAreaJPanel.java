@@ -52,6 +52,7 @@ public class ProductionManagerWorkAreaJPanel extends javax.swing.JPanel {
         btnViewDistributorOrders = new javax.swing.JButton();
         btnManageShipping = new javax.swing.JButton();
         lblUserName = new javax.swing.JLabel();
+        btnProfile = new javax.swing.JButton();
 
         jLabel2.setText("Welcome,");
 
@@ -72,6 +73,13 @@ public class ProductionManagerWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
+        btnProfile.setText("Profile");
+        btnProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProfileActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -79,6 +87,7 @@ public class ProductionManagerWorkAreaJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(190, 190, 190)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
@@ -103,7 +112,9 @@ public class ProductionManagerWorkAreaJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnManageShipping)
                     .addComponent(btnViewDistributorOrders))
-                .addContainerGap(296, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnProfile)
+                .addContainerGap(255, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -123,9 +134,18 @@ public class ProductionManagerWorkAreaJPanel extends javax.swing.JPanel {
         layout.next (userProcessContainer);
     }//GEN-LAST:event_btnManageShippingActionPerformed
 
+    private void btnProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProfileActionPerformed
+        // TODO add your handling code here:
+        ProductManagerEditProfilePanel profilePanel = new ProductManagerEditProfilePanel(userProcessContainer, account, productionManagementOrganization, enterprise, system);
+        userProcessContainer.add ("ProductInventoryJPanel", profilePanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout ();
+        layout.next (userProcessContainer);
+    }//GEN-LAST:event_btnProfileActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnManageShipping;
+    private javax.swing.JButton btnProfile;
     private javax.swing.JButton btnViewDistributorOrders;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

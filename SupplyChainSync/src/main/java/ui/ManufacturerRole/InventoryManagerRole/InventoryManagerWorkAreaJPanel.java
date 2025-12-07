@@ -22,19 +22,19 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
      * Creates new form InventoryManagerWorkAreaJPanel
      */
     JPanel userProcessContainer;
-    UserAccount accoun;
+    UserAccount account;
     InventoryOrganization inventoryOrganization;
     Enterprise enterprise;
     EcoSystem system;
     
     public InventoryManagerWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, InventoryOrganization inventoryOrganization, Enterprise enterprise, EcoSystem system) {
         this.userProcessContainer = userProcessContainer;
-        this.accoun = account;
+        this.account = account;
         this.inventoryOrganization = inventoryOrganization;
         this.enterprise = enterprise;
         this.system = system;
         initComponents();
-        lblUserName.setText(this.accoun.getEmployee().getName());
+        lblUserName.setText(this.account.getEmployee().getName());
     }
 
     /**
@@ -53,6 +53,7 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
         btnRawMaterials = new javax.swing.JButton();
         btnManageResReq = new javax.swing.JButton();
         btnManageShipment = new javax.swing.JButton();
+        btnProfile = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jLabel1.setText("Manufacturer - Inventory Manager  ");
@@ -87,6 +88,13 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
+        btnProfile.setText("Profile");
+        btnProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProfileActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -94,11 +102,6 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(246, 246, 246)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnManageResReq, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnManageShipment, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -110,7 +113,15 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
                                 .addComponent(btnRawMaterials, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(183, Short.MAX_VALUE))))
+                        .addContainerGap(183, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnManageResReq, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnManageShipment, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,7 +140,9 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnManageShipment)
                     .addComponent(btnManageResReq))
-                .addContainerGap(255, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnProfile)
+                .addContainerGap(214, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -164,17 +177,26 @@ public class InventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
 
     private void btnManageShipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageShipmentActionPerformed
         // TODO add your handling code here:
-        ManageShipmentJPanel msjp = new ManageShipmentJPanel(userProcessContainer, accoun, inventoryOrganization, enterprise, system);
+        ManageShipmentJPanel msjp = new ManageShipmentJPanel(userProcessContainer, account, inventoryOrganization, enterprise, system);
         userProcessContainer.add ("CustomerWorkAreaJPanel", msjp);
         CardLayout layout = (CardLayout) userProcessContainer.getLayout ();
         layout.next (userProcessContainer);
     }//GEN-LAST:event_btnManageShipmentActionPerformed
+
+    private void btnProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProfileActionPerformed
+        // TODO add your handling code here:
+        InventoryManagerEditProfilePanel profilePanel = new InventoryManagerEditProfilePanel(userProcessContainer, account, inventoryOrganization, enterprise, system);
+        userProcessContainer.add ("ProductInventoryJPanel", profilePanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout ();
+        layout.next (userProcessContainer);                                          
+    }//GEN-LAST:event_btnProfileActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnManageResReq;
     private javax.swing.JButton btnManageShipment;
     private javax.swing.JButton btnProducts;
+    private javax.swing.JButton btnProfile;
     private javax.swing.JButton btnRawMaterials;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
