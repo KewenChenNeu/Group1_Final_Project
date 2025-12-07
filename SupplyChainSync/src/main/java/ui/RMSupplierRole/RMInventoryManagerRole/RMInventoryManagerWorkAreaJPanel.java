@@ -8,19 +8,55 @@ import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
 import Business.Organization.RawMaterialSupplier.RMInventoryOrganization;
 import Business.UserAccount.UserAccount;
+import Business.Material.Material;
 import javax.swing.JPanel;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author chris
  */
 public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
+    
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private RMInventoryOrganization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;
 
     /**
      * Creates new form RMInventoryManagerWorkAreaJPanel
      */
     public RMInventoryManagerWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, RMInventoryOrganization rmInventoryOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
+        
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.organization = rmInventoryOrganization;
+        this.enterprise = enterprise;
+        this.system = system;
+        
+        populateTable();
+    }
+    
+    private void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) tblInventory.getModel();
+        model.setRowCount(0);
+
+        if (organization == null || organization.getInventoryList() == null) {
+            return;
+        }
+
+        for (Material m : organization.getInventoryList()) {
+            Object[] row = new Object[4];
+            row[0] = m.getMaterialCode();
+            row[1] = m.getMaterialName();
+            row[2] = m.getQuantity();
+            row[3] = m.getUnit();
+            model.addRow(row);
+        }
     }
 
     /**
@@ -34,21 +70,103 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblInventory = new javax.swing.JTable();
+        lblMaterialName = new javax.swing.JLabel();
+        txtMaterialName = new javax.swing.JTextField();
+        lblQuantity = new javax.swing.JLabel();
+        txtQuantity = new javax.swing.JTextField();
+        lblUnit = new javax.swing.JLabel();
+        txtUnits = new javax.swing.JTextField();
+        btnAdd = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
 
         jLabel1.setText("Raw Material Inventory Manager Role");
 
         btnBack.setText("<<< Back");
+
+        jLabel2.setText("Current Inventory");
+
+        tblInventory.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Code", "Material", "Quantity", "Unit"
+            }
+        ));
+        jScrollPane1.setViewportView(tblInventory);
+
+        lblMaterialName.setText("Material Name:");
+
+        lblQuantity.setText("Quantity:");
+
+        lblUnit.setText("Unit:");
+
+        btnAdd.setText("Add");
+
+        btnSave.setText("Save");
+
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+
+        btnEdit.setText("Edit");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 369, Short.MAX_VALUE)
-                .addComponent(btnBack)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(313, 313, 313)
+                                .addComponent(jLabel2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(24, 24, 24)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblMaterialName)
+                                    .addComponent(lblQuantity))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(txtMaterialName, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(132, 132, 132)
+                                        .addComponent(lblUnit)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtUnits, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 69, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnBack))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnRefresh)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnEdit)))))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnAdd)
+                    .addComponent(btnSave))
+                .addGap(335, 335, 335))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -57,13 +175,54 @@ public class RMInventoryManagerWorkAreaJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBack))
-                .addContainerGap(411, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblMaterialName)
+                    .addComponent(txtMaterialName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblUnit)
+                    .addComponent(txtUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblQuantity)
+                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addComponent(btnSave)
+                .addGap(55, 55, 55)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdd)
+                    .addComponent(btnRefresh)
+                    .addComponent(btnEdit))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        populateTable();
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnSave;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblMaterialName;
+    private javax.swing.JLabel lblQuantity;
+    private javax.swing.JLabel lblUnit;
+    private javax.swing.JTable tblInventory;
+    private javax.swing.JTextField txtMaterialName;
+    private javax.swing.JTextField txtQuantity;
+    private javax.swing.JTextField txtUnits;
     // End of variables declaration//GEN-END:variables
+
+    
 }
