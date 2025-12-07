@@ -6,8 +6,10 @@ package ui.ManufacturerRole.ProductionManagerRole;
 
 import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
+import Business.Organization.Manufacturer.InventoryOrganization;
 import Business.Organization.Manufacturer.ProductionManagementOrganization;
 import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 /**
@@ -19,8 +21,21 @@ public class ProductionManagerWorkAreaJPanel extends javax.swing.JPanel {
     /**
      * Creates new form ProductionManagerWorkAreaJPanel
      */
+    
+    JPanel userProcessContainer;
+    UserAccount accoun;
+    ProductionManagementOrganization productionManagementOrganization;
+    Enterprise enterprise;
+    EcoSystem system;
     public ProductionManagerWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, ProductionManagementOrganization productionManagementOrganization, Enterprise enterprise, EcoSystem system) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.accoun = account;
+        this.productionManagementOrganization = productionManagementOrganization;
+        this.enterprise = enterprise;
+        this.system = system;
+        initComponents();
+        lblUserName.setText(this.accoun.getEmployee().getName());
     }
 
     /**
@@ -32,30 +47,88 @@ public class ProductionManagerWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        btnViewDistributorOrders = new javax.swing.JButton();
+        btnManageShipping = new javax.swing.JButton();
+        lblUserName = new javax.swing.JLabel();
 
-        jLabel1.setText("Production Manager Role");
+        jLabel2.setText("Welcome,");
+
+        jLabel3.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        jLabel3.setText("Manufacturer - Production Manager");
+
+        btnViewDistributorOrders.setText("View Distributor Orders");
+        btnViewDistributorOrders.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewDistributorOrdersActionPerformed(evt);
+            }
+        });
+
+        btnManageShipping.setText("Manage Shipping");
+        btnManageShipping.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageShippingActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(578, Short.MAX_VALUE))
+                .addGap(190, 190, 190)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnViewDistributorOrders, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnManageShipping, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(181, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(414, Short.MAX_VALUE))
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(72, 72, 72)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnManageShipping)
+                    .addComponent(btnViewDistributorOrders))
+                .addContainerGap(296, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnViewDistributorOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewDistributorOrdersActionPerformed
+        // TODO add your handling code here:
+        ViewDistributorOrdersPanel vdop =  new ViewDistributorOrdersPanel(userProcessContainer, productionManagementOrganization, enterprise, system);
+        userProcessContainer.add ("ViewDistributorOrdersPanel", vdop);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout ();
+        layout.next (userProcessContainer);
+    }//GEN-LAST:event_btnViewDistributorOrdersActionPerformed
+
+    private void btnManageShippingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageShippingActionPerformed
+        // TODO add your handling code here:
+        ManufacturerProductManageShippingPanel mpmsp = new ManufacturerProductManageShippingPanel(userProcessContainer, productionManagementOrganization, enterprise, system);
+        userProcessContainer.add ("ProductInventoryJPanel", mpmsp);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout ();
+        layout.next (userProcessContainer);
+    }//GEN-LAST:event_btnManageShippingActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnManageShipping;
+    private javax.swing.JButton btnViewDistributorOrders;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel lblUserName;
     // End of variables declaration//GEN-END:variables
 }

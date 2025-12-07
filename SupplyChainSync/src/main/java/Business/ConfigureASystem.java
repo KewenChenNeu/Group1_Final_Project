@@ -146,6 +146,10 @@ public class ConfigureASystem {
         Employee invStaff = inventoryOrg.getEmployeeDirectory().createEmployee(faker.name().fullName());
         inventoryOrg.getUserAccountDirectory().createUserAccount("mfg_inv2", "password", invStaff, new InventoryManagerRole());
         
+        
+        Employee productionStaff2 = productionOrg.getEmployeeDirectory().createEmployee(faker.name().fullName());
+        productionOrg.getUserAccountDirectory().createUserAccount("mp", "", productionStaff2, new ProductionManagerRole());
+        
         Employee invStaff2 = inventoryOrg.getEmployeeDirectory().createEmployee("Lisa Wilson");
         inventoryOrg.getUserAccountDirectory().createUserAccount("mi", "", invStaff2, new InventoryManagerRole());
     }
