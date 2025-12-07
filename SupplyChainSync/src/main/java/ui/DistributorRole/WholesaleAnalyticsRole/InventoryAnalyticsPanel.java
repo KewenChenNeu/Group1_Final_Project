@@ -142,7 +142,7 @@ public class InventoryAnalyticsPanel extends javax.swing.JPanel {
             if (available <= 0) {
                 status = "🔴 Out of Stock";
             } else if (available <= item.getMinStockLevel()) { // Correct method name
-                status = "⚠️ Low Stock";
+                status = "⚠Low Stock";
             } else {
                 status = "✅ OK";
             }
