@@ -66,7 +66,7 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
         panelButtons = new javax.swing.JPanel();
         btnRefresh = new javax.swing.JButton();
         btnSendToOperation = new javax.swing.JButton();
-        btnMarkDispatched = new javax.swing.JButton();
+        btnOpenAssignUI = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
@@ -174,11 +174,7 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(270, 270, 270)
-                        .addComponent(lblTitle)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 142, Short.MAX_VALUE)
