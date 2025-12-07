@@ -57,12 +57,14 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+        jSeparator1 = new javax.swing.JSeparator();
         lblTitle = new javax.swing.JLabel();
         jScrollPaneRequests = new javax.swing.JScrollPane();
         tblRequests = new javax.swing.JTable();
         panelButtons = new javax.swing.JPanel();
         btnRefresh = new javax.swing.JButton();
-        btnAssign = new javax.swing.JButton();
         btnSendToOperation = new javax.swing.JButton();
         btnMarkDispatched = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
@@ -78,10 +80,17 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(jList1);
+
         setBackground(new java.awt.Color(0, 153, 255));
 
         lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        lblTitle.setText("Shipping Manager");
+        lblTitle.setText("Manage Shipping Requests:");
 
         tblRequests.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -108,24 +117,17 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnAssign.setText("Assign to Me");
-        btnAssign.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAssignActionPerformed(evt);
-            }
-        });
-
-        btnSendToOperation.setText("Send to Operation");
+        btnSendToOperation.setText("Send to Operations");
         btnSendToOperation.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSendToOperationActionPerformed(evt);
             }
         });
 
-        btnMarkDispatched.setText("Mark Dispatched");
-        btnMarkDispatched.addActionListener(new java.awt.event.ActionListener() {
+        btnOpenAssignUI.setText("Assign Delivery Staff");
+        btnOpenAssignUI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMarkDispatchedActionPerformed(evt);
+                btnOpenAssignUIActionPerformed(evt);
             }
         });
 
@@ -136,12 +138,10 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
             .addGroup(panelButtonsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnRefresh)
+                .addGap(18, 18, 18)
+                .addComponent(btnOpenAssignUI)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAssign)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSendToOperation)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnMarkDispatched)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelButtonsLayout.setVerticalGroup(
@@ -150,10 +150,9 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(panelButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRefresh)
-                    .addComponent(btnAssign)
                     .addComponent(btnSendToOperation)
-                    .addComponent(btnMarkDispatched))
-                .addContainerGap(28, Short.MAX_VALUE))
+                    .addComponent(btnOpenAssignUI))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jButton1.setText("Open Assign Staff UI");
@@ -175,7 +174,11 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPaneRequests)))
+                        .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(270, 270, 270)
+                        .addComponent(lblTitle)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 142, Short.MAX_VALUE)
@@ -207,23 +210,6 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
         populateTable();
     }//GEN-LAST:event_btnRefreshActionPerformed
 
-    private void btnAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignActionPerformed
-        // TODO add your handling code here:
-        WorkRequest wr = getSelectedRequest();
-        if (wr == null) {
-            return;
-        }
-
-        wr.setReceiver(userAccount);
-        wr.setStatus(WorkRequest.STATUS_IN_PROGRESS);
-
-        if (!userAccount.getWorkQueue().getWorkRequestList().contains(wr)) {
-            userAccount.getWorkQueue().addWorkRequest(wr);
-        }
-
-        populateTable();
-    }//GEN-LAST:event_btnAssignActionPerformed
-
     private void btnSendToOperationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendToOperationActionPerformed
         // TODO add your handling code here:
         WorkRequest wr = getSelectedRequest();
@@ -254,23 +240,28 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
                 "Request sent to Shipping Operation for delivery staff.");
     }//GEN-LAST:event_btnSendToOperationActionPerformed
 
-    private void btnMarkDispatchedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMarkDispatchedActionPerformed
+    private void btnOpenAssignUIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenAssignUIActionPerformed
         // TODO add your handling code here:
-        WorkRequest wr = getSelectedRequest();
-        if (wr == null) {
+        ShippingOperationOrganization opOrg = null;
+        for (Organization org : shippingEnterprise.getOrganizationDirectory().getOrganizationList()) {
+            if (org instanceof ShippingOperationOrganization) {
+                opOrg = (ShippingOperationOrganization) org;
+                break;
+            }
+        }
+
+        if (opOrg == null) {
+            JOptionPane.showMessageDialog(this,
+                    "No Shipping Operation Organization found in this ShippingEnterprise.");
             return;
         }
 
-        wr.setStatus(WorkRequest.STATUS_SHIPPED);
-
-        if (wr instanceof WholesalesShippingRequest) {
-            ((WholesalesShippingRequest) wr).markInTransit();
-        }
-
-        JOptionPane.showMessageDialog(this,
-                "Request marked as shipped / in transit.");
-        populateTable();
-    }//GEN-LAST:event_btnMarkDispatchedActionPerformed
+        AssignDeliveryJPanel panel = new AssignDeliveryJPanel(
+                userProcessContainer, shippingEnterprise, opOrg, system);
+        userProcessContainer.add("AssignDeliveryStaffJPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnOpenAssignUIActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
@@ -297,13 +288,15 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAssign;
-    private javax.swing.JButton btnMarkDispatched;
+    private javax.swing.JButton btnOpenAssignUI;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSendToOperation;
     private javax.swing.JButton jButton1;
     private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneRequests;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JPanel panelButtons;
     private javax.swing.JTable tblRequests;
