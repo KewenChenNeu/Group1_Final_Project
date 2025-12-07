@@ -18,6 +18,7 @@ import Business.WorkQueue.WorkRequest;
 import Business.WorkQueue.ProductShippingRequest;
 import Business.WorkQueue.MaterialShippingRequest;
 import Business.WorkQueue.WholesalesShippingRequest;
+import java.awt.CardLayout;
 
 /**
  *
@@ -64,6 +65,7 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
         btnAssign = new javax.swing.JButton();
         btnSendToOperation = new javax.swing.JButton();
         btnMarkDispatched = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -154,6 +156,13 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
                 .addContainerGap(28, Short.MAX_VALUE))
         );
 
+        jButton1.setText("Open Assign Staff UI");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -163,15 +172,20 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(298, 298, 298)
                         .addComponent(lblTitle)
-                        .addGap(0, 308, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPaneRequests)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(panelButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(144, 144, 144))
+                .addGap(0, 142, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(panelButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(144, 144, 144))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(292, 292, 292))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -179,10 +193,12 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
                 .addGap(22, 22, 22)
                 .addComponent(lblTitle)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(panelButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(65, 65, 65))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addGap(24, 24, 24))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -256,12 +272,36 @@ public class ShippingManagerRoleWorkAreaJPanel extends javax.swing.JPanel {
         populateTable();
     }//GEN-LAST:event_btnMarkDispatchedActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        ShippingOperationOrganization opOrg = null;
+        for (Organization org : shippingEnterprise.getOrganizationDirectory().getOrganizationList()) {
+            if (org instanceof ShippingOperationOrganization) {
+                opOrg = (ShippingOperationOrganization) org;
+                break;
+            }
+        }
+
+        if (opOrg == null) {
+            JOptionPane.showMessageDialog(this,
+                    "No Shipping Operation Organization found in this ShippingEnterprise.");
+            return;
+        }
+
+        AssignDeliveryJPanel panel = new AssignDeliveryJPanel(
+                userProcessContainer, shippingEnterprise, opOrg, system);
+        userProcessContainer.add("AssignDeliveryStaffJPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAssign;
     private javax.swing.JButton btnMarkDispatched;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSendToOperation;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JScrollPane jScrollPaneRequests;
     private javax.swing.JLabel lblTitle;
