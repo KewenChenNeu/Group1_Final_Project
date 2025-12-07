@@ -13,6 +13,7 @@ import Business.Material.MaterialCatalog;
 import Business.Organization.Manufacturer.InventoryOrganization;
 import Business.Organization.Organization;
 import Business.WorkQueue.RawMaterialRestockRequest;
+import java.awt.CardLayout;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JOptionPane;
@@ -366,53 +367,31 @@ public class RawMaterialInventoryJPanel extends javax.swing.JPanel {
     private void btnRestorckRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestorckRequestActionPerformed
         int selectedRow = tbMaterial.getSelectedRow();
         if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(this, "Please select a material to request restock.", "No Selection", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a material");
             return;
         }
 
         String materialCode = (String) tbMaterial.getValueAt(selectedRow, 1);
         InventoryItem item = enterprise.getInventory().findByMaterialCode(materialCode);
-        if (item == null) {
-            JOptionPane.showMessageDialog(this, "Selected material not found in inventory.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
         Material material = item.getMaterial();
 
-
-        String quantityStr = JOptionPane.showInputDialog(this, "Enter quantity to restock:", "Restock Quantity", JOptionPane.PLAIN_MESSAGE);
-        if (quantityStr == null) return; 
-        int quantity;
-        try {
-            quantity = Integer.parseInt(quantityStr);
-            if (quantity <= 0) throw new NumberFormatException();
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Invalid quantity.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        String[] urgencies = {"Normal", "Urgent", "Critical"};
-        String urgency = (String) JOptionPane.showInputDialog(this, "Select urgency level:", 
-                                    "Urgency", JOptionPane.PLAIN_MESSAGE, null, urgencies, "Normal");
-        if (urgency == null) urgency = "Normal";
-
-
-        RawMaterialRestockRequest request = new RawMaterialRestockRequest(material, quantity);
-        request.setUrgencyLevel(urgency);
-
- 
         Organization rmProcurementOrg = null;
         for (Organization org : enterprise.getOrganizationDirectory().getOrganizationList()) {
             rmProcurementOrg = org;
             break;
         }
 
-        if (rmProcurementOrg != null) {
-            rmProcurementOrg.getWorkQueue().addWorkRequest(request);
-            JOptionPane.showMessageDialog(this, "Restock request submitted:\n" + request.toString(), "Success", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "No RM Procurement Organization found to handle this request.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        CreateRestockRequestJPanel panel = new CreateRestockRequestJPanel(
+            userProcessContainer,
+            material,
+            item,
+            rmProcurementOrg,
+            enterprise
+        );
+
+        userProcessContainer.add("CreateRestockRequestJPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_btnRestorckRequestActionPerformed
 
     private void btnViewMaterialDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewMaterialDetailActionPerformed
