@@ -280,6 +280,11 @@ public class ManageShippingPanel extends javax.swing.JPanel {
         jLabel1.setText("Carrier:");
 
         cmbCarrier.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbCarrier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbCarrierActionPerformed(evt);
+            }
+        });
 
         lblNotes.setText("Notes:");
 
@@ -497,6 +502,10 @@ public class ManageShippingPanel extends javax.swing.JPanel {
         CardLayout layout = (CardLayout) userProcessContainer.getLayout();
         layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void cmbCarrierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCarrierActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbCarrierActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
