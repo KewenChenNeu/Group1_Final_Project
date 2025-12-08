@@ -20,6 +20,15 @@ public class Material {
     private double unitPrice;
     private String unit;             // e.g., "kg", "meters", "liters", "sheets"
     private boolean active;          // Is material currently available
+    private int quantity;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     public Material() {
         this.materialId = counter++;
