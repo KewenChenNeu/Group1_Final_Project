@@ -51,15 +51,53 @@ public class OrderClerkWorkAreaJPanel extends javax.swing.JPanel {
         int approvedOrders = 0;
         int deliveredOrders = 0;
 
-        for (WorkRequest request : userAccount.getWorkQueue().getWorkRequestList()) {
+        // 1. First check local store's organization for orders pending Store Manager approval
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
             if (request instanceof RetailPurchaseOrderRequest) {
-                String status = request.getStatus();
-                if ("Pending".equalsIgnoreCase(status) || "Sent".equalsIgnoreCase(status)) {
-                    pendingOrders++;
-                } else if ("Approved".equalsIgnoreCase(status) || "Processing".equalsIgnoreCase(status) || "In Transit".equalsIgnoreCase(status)) {
-                    approvedOrders++;
-                } else if ("Delivered".equalsIgnoreCase(status) || "Completed".equalsIgnoreCase(status)) {
-                    deliveredOrders++;
+                RetailPurchaseOrderRequest po = (RetailPurchaseOrderRequest) request;
+
+                // Check if this order was sent by current user
+                if (po.getSender() != null &&
+                    po.getSender().getUsername().equals(userAccount.getUsername())) {
+
+                    String status = po.getStatus();
+                    if ("Pending".equalsIgnoreCase(status)) {
+                        pendingOrders++;  // Waiting for Store Manager approval
+                    } else if ("Rejected".equalsIgnoreCase(status)) {
+                        // Rejected orders stay in pending count or could be separate
+                    }
+                }
+            }
+        }
+
+        // 2. Then search through all distributors' work queues for sent/approved orders
+        for (Business.Network.Network network : system.getNetworkList()) {
+            for (Business.Enterprise.Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
+                if (ent instanceof Business.Enterprise.ProductDistributorEnterprise) {
+                    Business.Enterprise.ProductDistributorEnterprise distributor =
+                        (Business.Enterprise.ProductDistributorEnterprise) ent;
+
+                    for (Business.Organization.Organization org : distributor.getOrganizationDirectory().getOrganizationList()) {
+                        for (WorkRequest request : org.getWorkQueue().getWorkRequestList()) {
+                            if (request instanceof RetailPurchaseOrderRequest) {
+                                RetailPurchaseOrderRequest po = (RetailPurchaseOrderRequest) request;
+
+                                // Check if this order was sent by current user
+                                if (po.getSender() != null &&
+                                    po.getSender().getUsername().equals(userAccount.getUsername())) {
+
+                                    String status = po.getStatus();
+                                    if ("Sent".equalsIgnoreCase(status) || "Pending".equalsIgnoreCase(status)) {
+                                        pendingOrders++;  // Waiting for Distributor approval
+                                    } else if ("Approved".equalsIgnoreCase(status) || "Processing".equalsIgnoreCase(status) || "In Transit".equalsIgnoreCase(status)) {
+                                        approvedOrders++;
+                                    } else if ("Delivered".equalsIgnoreCase(status) || "Completed".equalsIgnoreCase(status)) {
+                                        deliveredOrders++;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
