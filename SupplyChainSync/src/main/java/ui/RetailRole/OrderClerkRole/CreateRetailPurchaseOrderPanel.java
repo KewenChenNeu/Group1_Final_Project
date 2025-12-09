@@ -244,6 +244,29 @@ public class CreateRetailPurchaseOrderPanel extends javax.swing.JPanel {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+        // 1. First check local store's organization for pending approval orders
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof RetailPurchaseOrderRequest) {
+                RetailPurchaseOrderRequest po = (RetailPurchaseOrderRequest) request;
+
+                if (po.getSender() != null &&
+                    po.getSender().getUsername().equals(userAccount.getUsername())) {
+
+                    Object[] row = new Object[6];
+                    row[0] = "RO-" + String.format("%04d", po.getRequestId());
+                    row[1] = po.getTargetDistributorName() != null ? po.getTargetDistributorName() : "N/A";
+                    row[2] = po.getProductName() != null ? po.getProductName() : "N/A";
+                    row[3] = po.getQuantity();
+                    row[4] = po.getRequestDate() != null ?
+                        dateFormat.format(po.getRequestDate()) : "N/A";
+                    row[5] = po.getStatus();
+
+                    model.addRow(row);
+                }
+            }
+        }
+
+        // 2. Also check distributors' work queues for approved/sent orders
         for (Network network : system.getNetworkList()) {
             for (Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
                 if (ent instanceof ProductDistributorEnterprise) {
@@ -625,37 +648,32 @@ public class CreateRetailPurchaseOrderPanel extends javax.swing.JPanel {
         purchaseOrder.setQuantity(quantity);
         purchaseOrder.setUrgencyLevel(priority);
         purchaseOrder.setSender(userAccount);
-        purchaseOrder.setStatus("Pending");
+        purchaseOrder.setStatus("Pending");  // Pending for Store Manager approval
         purchaseOrder.setMessage(message);
         purchaseOrder.setStoreName(enterprise.getName());
+        purchaseOrder.setTargetDistributorName(selectedDistributor.getName());  // Save target distributor
 
-        Organization receivingOrg = findDistributorReceivingOrg(selectedDistributor);
-        if (receivingOrg != null) {
-            receivingOrg.getWorkQueue().getWorkRequestList().add(purchaseOrder);
+        // Submit to local store's organization for Store Manager approval
+        organization.getWorkQueue().getWorkRequestList().add(purchaseOrder);
 
-            String priceInfo = "";
-            if (selectedProduct.getUnitPrice() > 0) {
-                priceInfo = String.format("\nEstimated Total: $%.2f", purchaseOrder.getTotalPrice());
-            }
-
-            JOptionPane.showMessageDialog(this,
-                "Purchase Order submitted successfully!\n" +
-                "Order ID: RO-" + String.format("%04d", purchaseOrder.getRequestId()) + "\n" +
-                "Product: " + selectedProduct.getProductName() + "\n" +
-                "Quantity: " + quantity + " " + (selectedProduct.getUnit() != null ? selectedProduct.getUnit() : "units") + "\n" +
-                "To: " + selectedDistributor.getName() + "\n" +
-                "Priority: " + priority + priceInfo,
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE);
-
-            resetFields();
-            populateMyOrdersTable();
-        } else {
-            JOptionPane.showMessageDialog(this,
-                "Error: Could not find receiving organization at distributor.",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+        String priceInfo = "";
+        if (selectedProduct.getUnitPrice() > 0) {
+            priceInfo = String.format("\nEstimated Total: $%.2f", purchaseOrder.getTotalPrice());
         }
+
+        JOptionPane.showMessageDialog(this,
+            "Purchase Order submitted for approval!\n" +
+            "Order ID: RO-" + String.format("%04d", purchaseOrder.getRequestId()) + "\n" +
+            "Product: " + selectedProduct.getProductName() + "\n" +
+            "Quantity: " + quantity + " " + (selectedProduct.getUnit() != null ? selectedProduct.getUnit() : "units") + "\n" +
+            "Target Distributor: " + selectedDistributor.getName() + "\n" +
+            "Priority: " + priority + priceInfo + "\n\n" +
+            "Waiting for Store Manager approval.",
+            "Submitted",
+            JOptionPane.INFORMATION_MESSAGE);
+
+        resetFields();
+        populateMyOrdersTable();
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed

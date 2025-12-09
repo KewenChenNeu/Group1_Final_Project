@@ -21,6 +21,5 @@ Thumbs.db
 *~
 *.swp
 
-# Claude Code
 .claude/
 RETAIL_PLAN.md

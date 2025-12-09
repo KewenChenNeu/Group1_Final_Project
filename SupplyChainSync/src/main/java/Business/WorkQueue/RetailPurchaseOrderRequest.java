@@ -29,6 +29,9 @@ public class RetailPurchaseOrderRequest extends WorkRequest {
     // Order details
     private String urgencyLevel;  // Normal, Urgent, Critical
     private String paymentMethod;
+
+    // Target distributor information (for approval workflow)
+    private String targetDistributorName;
     
     public RetailPurchaseOrderRequest() {
         super();
@@ -142,7 +145,17 @@ public class RetailPurchaseOrderRequest extends WorkRequest {
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
-    
+
+    // ==================== Target Distributor ====================
+
+    public String getTargetDistributorName() {
+        return targetDistributorName;
+    }
+
+    public void setTargetDistributorName(String targetDistributorName) {
+        this.targetDistributorName = targetDistributorName;
+    }
+
     // ==================== Calculated Fields ====================
     
     public double getTotalPrice() {

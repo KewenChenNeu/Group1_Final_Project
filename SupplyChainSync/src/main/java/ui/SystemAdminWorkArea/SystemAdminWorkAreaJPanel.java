@@ -1,78 +1,273 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * System Admin Work Area Panel
  */
 package ui.SystemAdminWorkArea;
 
 import Business.EcoSystem;
+import Business.Employee.Employee;
 import Business.Enterprise.Enterprise;
 import Business.Network.Network;
 import Business.Organization.Organization;
-import java.awt.CardLayout;
-import java.util.ArrayList;
-import javax.swing.JPanel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
+import Business.Role.*;
+import Business.Role.Distributor.*;
+import Business.Role.Manufacturer.*;
+import Business.Role.RawMaterialSupplier.*;
+import Business.Role.Retail.*;
+import Business.Role.Shipping.*;
+import Business.UserAccount.UserAccount;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author MyPC1
+ * @author SystemAdmin
  */
 public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
+
+    private JPanel userProcessContainer;
+    private EcoSystem ecosystem;
 
     /**
      * Creates new form SystemAdminWorkAreaJPanel
      */
-    JPanel userProcessContainer;
-    EcoSystem ecosystem;
-    public SystemAdminWorkAreaJPanel(JPanel userProcessContainer,EcoSystem ecosystem) {
+    public SystemAdminWorkAreaJPanel(JPanel userProcessContainer, EcoSystem ecosystem) {
+        this.userProcessContainer = userProcessContainer;
+        this.ecosystem = ecosystem;
         initComponents();
-        this.userProcessContainer=userProcessContainer;
-        this.ecosystem=ecosystem;
-        populateTree();
+        populateEnterprisesTable();
+        populateUsersTable();
     }
-    
-    public void populateTree(){
-        DefaultTreeModel model=(DefaultTreeModel)jTree.getModel();
-        ArrayList<Network> networkList=ecosystem.getNetworkList();
-        ArrayList<Enterprise> enterpriseList;
-        ArrayList<Organization> organizationList;
-        
-        Network network;
-        Enterprise enterprise;
-        Organization organization;
-        
-        DefaultMutableTreeNode networks=new DefaultMutableTreeNode("Networks");
-        DefaultMutableTreeNode root=(DefaultMutableTreeNode)model.getRoot();
-        root.removeAllChildren();
-        root.insert(networks, 0);
-        
-        DefaultMutableTreeNode networkNode;
-        DefaultMutableTreeNode enterpriseNode;
-        DefaultMutableTreeNode organizationNode;
-        
-        for(int i=0;i<networkList.size();i++){
-            network=networkList.get(i);
-            networkNode=new DefaultMutableTreeNode(network.getName());
-            networks.insert(networkNode, i);
-            
-            enterpriseList=network.getEnterpriseDirectory().getEnterpriseList();
-            for(int j=0; j<enterpriseList.size();j++){
-                enterprise=enterpriseList.get(j);
-                enterpriseNode=new DefaultMutableTreeNode(enterprise.getName());
-                networkNode.insert(enterpriseNode, j);
-                
-                organizationList=enterprise.getOrganizationDirectory().getOrganizationList();
-                for(int k=0;k<organizationList.size();k++){
-                    organization=organizationList.get(i);
-                    organizationNode=new DefaultMutableTreeNode(organization.getName());
-                    enterpriseNode.insert(organizationNode, k);
+
+    private void populateEnterprisesTable() {
+        DefaultTableModel model = (DefaultTableModel) tblEnterprises.getModel();
+        model.setRowCount(0);
+
+        for (Network network : ecosystem.getNetworkList()) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                String name = enterprise.getName();
+                String type = enterprise.getClass().getSimpleName().replace("Enterprise", "");
+                int orgCount = enterprise.getOrganizationDirectory().getOrganizationList().size();
+
+                // Count users across all organizations
+                int userCount = 0;
+                for (Organization org : enterprise.getOrganizationDirectory().getOrganizationList()) {
+                    userCount += org.getUserAccountDirectory().getUserAccountList().size();
+                }
+
+                model.addRow(new Object[]{name, type, orgCount, userCount});
+            }
+        }
+    }
+
+    private void populateUsersTable() {
+        DefaultTableModel model = (DefaultTableModel) tblUsers.getModel();
+        model.setRowCount(0);
+
+        for (Network network : ecosystem.getNetworkList()) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                for (Organization org : enterprise.getOrganizationDirectory().getOrganizationList()) {
+                    for (UserAccount user : org.getUserAccountDirectory().getUserAccountList()) {
+                        String username = user.getUsername();
+                        String name = user.getEmployee() != null ? user.getEmployee().getName() : "N/A";
+                        String enterpriseName = enterprise.getName();
+                        String orgName = org.getName();
+                        String role = user.getRole() != null ? user.getRole().toString() : "N/A";
+
+                        model.addRow(new Object[]{username, name, enterpriseName, orgName, role});
+                    }
                 }
             }
         }
-        model.reload();
     }
+
+    private UserAccount findUserAccount(String username, String enterpriseName, String orgName) {
+        for (Network network : ecosystem.getNetworkList()) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                if (enterprise.getName().equals(enterpriseName)) {
+                    for (Organization org : enterprise.getOrganizationDirectory().getOrganizationList()) {
+                        if (org.getName().equals(orgName)) {
+                            for (UserAccount user : org.getUserAccountDirectory().getUserAccountList()) {
+                                if (user.getUsername().equals(username)) {
+                                    return user;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private void showEditUserDialog(UserAccount user) {
+        JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Edit User", true);
+        dialog.setSize(400, 300);
+        dialog.setLocationRelativeTo(this);
+        dialog.setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // Username
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        dialog.add(new JLabel("Username:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        JTextField txtUsername = new JTextField(user.getUsername(), 20);
+        dialog.add(txtUsername, gbc);
+
+        // Password
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
+        dialog.add(new JLabel("Password:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        JPasswordField txtPassword = new JPasswordField(user.getPassword(), 20);
+        dialog.add(txtPassword, gbc);
+
+        // Name
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
+        dialog.add(new JLabel("Name:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        String currentName = user.getEmployee() != null ? user.getEmployee().getName() : "";
+        JTextField txtName = new JTextField(currentName, 20);
+        dialog.add(txtName, gbc);
+
+        // Role
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
+        dialog.add(new JLabel("Role:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        JComboBox<String> cmbRole = new JComboBox<>(new String[]{
+            "SystemAdminRole",
+            "StoreManagerRole",
+            "OrderClerkRole",
+            "RetailAnalyticsRole",
+            "WholesaleSalesRole",
+            "WholesaleInventoryRole",
+            "WholesaleAnalyticsRole",
+            "ProductionManagerRole",
+            "InventoryManagerRole",
+            "ShippingManagerRole",
+            "DeliveryStaffRole",
+            "RMProcurementRole",
+            "RMInventoryManagerRole"
+        });
+
+        // Set current role
+        String currentRole = user.getRole() != null ? user.getRole().getClass().getSimpleName() : "";
+        cmbRole.setSelectedItem(currentRole);
+        dialog.add(cmbRole, gbc);
+
+        // Buttons
+        JPanel buttonPanel = new JPanel();
+        JButton btnSave = new JButton("Save");
+        JButton btnCancel = new JButton("Cancel");
+
+        btnSave.addActionListener(e -> {
+            // Validate
+            if (txtUsername.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "Username cannot be empty.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (new String(txtPassword.getPassword()).trim().isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "Password cannot be empty.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (txtName.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "Name cannot be empty.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Update user
+            user.setUsername(txtUsername.getText().trim());
+            user.setPassword(new String(txtPassword.getPassword()).trim());
+
+            if (user.getEmployee() != null) {
+                user.getEmployee().setName(txtName.getText().trim());
+            }
+
+            // Update role
+            String selectedRole = (String) cmbRole.getSelectedItem();
+            Role newRole = createRoleFromString(selectedRole);
+            if (newRole != null) {
+                user.setRole(newRole);
+            }
+
+            JOptionPane.showMessageDialog(dialog, "User updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            dialog.dispose();
+            populateUsersTable();
+        });
+
+        btnCancel.addActionListener(e -> dialog.dispose());
+
+        buttonPanel.add(btnSave);
+        buttonPanel.add(btnCancel);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        dialog.add(buttonPanel, gbc);
+
+        dialog.setVisible(true);
+    }
+
+    private Role createRoleFromString(String roleName) {
+        switch (roleName) {
+            case "SystemAdminRole":
+                return new SystemAdminRole();
+            case "StoreManagerRole":
+                return new StoreManagerRole();
+            case "OrderClerkRole":
+                return new OrderClerkRole();
+            case "RetailAnalyticsRole":
+                return new RetailAnalyticsRole();
+            case "WholesaleSalesRole":
+                return new WholesaleSalesRole();
+            case "WholesaleInventoryRole":
+                return new WholesaleInventoryRole();
+            case "WholesaleAnalyticsRole":
+                return new WholesaleAnalyticsRole();
+            case "ProductionManagerRole":
+                return new ProductionManagerRole();
+            case "InventoryManagerRole":
+                return new InventoryManagerRole();
+            case "ShippingManagerRole":
+                return new ShippingManagerRole();
+            case "DeliveryStaffRole":
+                return new DeliveryStaffRole();
+            case "RMProcurementRole":
+                return new RMProcurementRole();
+            case "RMInventoryManagerRole":
+                return new RMInventoryManagerRole();
+            default:
+                return null;
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -82,128 +277,169 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
+        lblTitle = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        lblEnterpriseOverview = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTree = new javax.swing.JTree();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        lblSelectedNode = new javax.swing.JLabel();
-        btnManageNetwork = new javax.swing.JButton();
-        btnManageAdmin = new javax.swing.JButton();
+        tblEnterprises = new javax.swing.JTable();
+        jSeparator2 = new javax.swing.JSeparator();
+        lblUserManagement = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblUsers = new javax.swing.JTable();
+        btnEditUser = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
 
-        setLayout(new java.awt.BorderLayout());
+        setBackground(new java.awt.Color(255, 255, 255));
 
-        jTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
-            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
-                jTreeValueChanged(evt);
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        lblTitle.setText("System Admin Dashboard");
+
+        lblEnterpriseOverview.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        lblEnterpriseOverview.setText("Enterprise & Organization Overview");
+
+        tblEnterprises.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Enterprise", "Type", "Organizations", "Users"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTree);
+        jScrollPane1.setViewportView(tblEnterprises);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
-        );
+        lblUserManagement.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        lblUserManagement.setText("User Management");
 
-        jSplitPane.setLeftComponent(jPanel1);
+        tblUsers.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        jLabel1.setText("Selected Node:");
+            },
+            new String [] {
+                "Username", "Name", "Enterprise", "Organization", "Role"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
 
-        lblSelectedNode.setText("<View_selected_node>");
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tblUsers);
 
-        btnManageNetwork.setText("Manage Network");
-        btnManageNetwork.addActionListener(new java.awt.event.ActionListener() {
+        btnEditUser.setText("Edit User");
+        btnEditUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManageNetworkActionPerformed(evt);
+                btnEditUserActionPerformed(evt);
             }
         });
 
-        btnManageAdmin.setText("Manage Enterprise Admin");
-        btnManageAdmin.addActionListener(new java.awt.event.ActionListener() {
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManageAdminActionPerformed(evt);
+                btnRefreshActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblSelectedNode))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(91, 91, 91)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnManageAdmin)
-                            .addComponent(btnManageNetwork, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(265, Short.MAX_VALUE))
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1)
+                    .addComponent(jSeparator2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblEnterpriseOverview)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblUserManagement)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnEditUser, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
-
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnManageAdmin, btnManageNetwork});
-
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(lblSelectedNode))
-                .addGap(54, 54, 54)
-                .addComponent(btnManageNetwork)
-                .addGap(59, 59, 59)
-                .addComponent(btnManageAdmin)
-                .addContainerGap(196, Short.MAX_VALUE))
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblEnterpriseOverview)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblUserManagement)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEditUser)
+                    .addComponent(btnRefresh))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
-
-        jSplitPane.setRightComponent(jPanel2);
-
-        add(jSplitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnManageNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageNetworkActionPerformed
-        ManageNetworkJPanel manageNetworkJPanel=new ManageNetworkJPanel(userProcessContainer, ecosystem);
-        userProcessContainer.add("manageNetworkJPanel",manageNetworkJPanel);
-        CardLayout layout=(CardLayout)userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-    }//GEN-LAST:event_btnManageNetworkActionPerformed
-
-    private void btnManageAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageAdminActionPerformed
-        ManageEnterpriseAdminJPanel manageEnterpriseAdminJPanel=new ManageEnterpriseAdminJPanel(userProcessContainer, ecosystem);
-        userProcessContainer.add("manageEnterpriseAdminJPanel",manageEnterpriseAdminJPanel);
-        CardLayout layout=(CardLayout)userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-    }//GEN-LAST:event_btnManageAdminActionPerformed
-
-    private void jTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTreeValueChanged
-        
-        DefaultMutableTreeNode selectedNode= (DefaultMutableTreeNode)jTree.getLastSelectedPathComponent();
-        if(selectedNode!=null){
-            lblSelectedNode.setText(selectedNode.toString());
+    private void btnEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditUserActionPerformed
+        int selectedRow = tblUsers.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a user to edit.", "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-    }//GEN-LAST:event_jTreeValueChanged
+
+        String username = (String) tblUsers.getValueAt(selectedRow, 0);
+        String enterpriseName = (String) tblUsers.getValueAt(selectedRow, 2);
+        String orgName = (String) tblUsers.getValueAt(selectedRow, 3);
+
+        // Find the user account
+        UserAccount userToEdit = findUserAccount(username, enterpriseName, orgName);
+        if (userToEdit == null) {
+            JOptionPane.showMessageDialog(this, "User not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        showEditUserDialog(userToEdit);
+    }//GEN-LAST:event_btnEditUserActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        populateEnterprisesTable();
+        populateUsersTable();
+    }//GEN-LAST:event_btnRefreshActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnManageAdmin;
-    private javax.swing.JButton btnManageNetwork;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JButton btnEditUser;
+    private javax.swing.JButton btnRefresh;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSplitPane jSplitPane;
-    private javax.swing.JTree jTree;
-    private javax.swing.JLabel lblSelectedNode;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel lblEnterpriseOverview;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblUserManagement;
+    private javax.swing.JTable tblEnterprises;
+    private javax.swing.JTable tblUsers;
     // End of variables declaration//GEN-END:variables
 }

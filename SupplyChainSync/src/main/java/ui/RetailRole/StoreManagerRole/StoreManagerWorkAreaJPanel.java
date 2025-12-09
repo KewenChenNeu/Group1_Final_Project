@@ -6,9 +6,13 @@ package ui.RetailRole.StoreManagerRole;
 
 import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
+import Business.Enterprise.ProductDistributorEnterprise;
 import Business.Enterprise.RetailEnterprise;
 import Business.Inventory.Inventory;
 import Business.Inventory.InventoryItem;
+import Business.Network.Network;
+import Business.Organization.Distributor.WholesaleSalesOrganization;
+import Business.Organization.Organization;
 import Business.Organization.Retail.StoreManagementOrganization;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.RetailPurchaseOrderRequest;
@@ -97,22 +101,27 @@ public class StoreManagerWorkAreaJPanel extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) tblPendingOrders.getModel();
         model.setRowCount(0);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        // Update table columns to include Target Distributor
+        model.setColumnIdentifiers(new String[] {
+            "Order ID", "Product", "Quantity", "Total Price", "Target Distributor", "Status"
+        });
 
-        // Get pending orders from organization's work queue
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        // Get pending orders from local organization's work queue (waiting for Store Manager approval)
         for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
             if (request instanceof RetailPurchaseOrderRequest) {
                 RetailPurchaseOrderRequest order = (RetailPurchaseOrderRequest) request;
                 String status = order.getStatus();
 
-                // Show orders that need approval (Pending or Sent status)
-                if ("Pending".equalsIgnoreCase(status) || "Sent".equalsIgnoreCase(status)) {
+                // Show orders that need approval (Pending status)
+                if ("Pending".equalsIgnoreCase(status)) {
                     Object[] row = new Object[6];
                     row[0] = order.getRequestId();
                     row[1] = order.getProduct() != null ? order.getProduct().getProductName() : "N/A";
                     row[2] = order.getQuantity();
                     row[3] = order.getTotalPrice() > 0 ? String.format("$%.2f", order.getTotalPrice()) : "N/A";
-                    row[4] = order.getRequestDate() != null ? dateFormat.format(order.getRequestDate()) : "N/A";
+                    row[4] = order.getTargetDistributorName() != null ? order.getTargetDistributorName() : "N/A";
                     row[5] = status;
                     model.addRow(row);
                 }
@@ -126,13 +135,37 @@ public class StoreManagerWorkAreaJPanel extends javax.swing.JPanel {
             return null;
         }
 
-        String orderId = (String) tblPendingOrders.getValueAt(selectedRow, 0);
+        Object orderIdObj = tblPendingOrders.getValueAt(selectedRow, 0);
+        String orderId = String.valueOf(orderIdObj);
 
+        // Search in local organization's work queue
         for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
             if (request instanceof RetailPurchaseOrderRequest) {
                 RetailPurchaseOrderRequest order = (RetailPurchaseOrderRequest) request;
-                if (orderId.equals(order.getRequestId())) {
+                if (orderId.equals(String.valueOf(order.getRequestId()))) {
                     return order;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Organization findDistributorReceivingOrg(String distributorName) {
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
+                if (ent instanceof ProductDistributorEnterprise && ent.getName().equals(distributorName)) {
+                    ProductDistributorEnterprise distributor = (ProductDistributorEnterprise) ent;
+
+                    // Find WholesaleSalesOrganization
+                    for (Organization org : distributor.getOrganizationDirectory().getOrganizationList()) {
+                        if (org instanceof WholesaleSalesOrganization) {
+                            return org;
+                        }
+                    }
+                    // Fallback to first organization
+                    if (!distributor.getOrganizationDirectory().getOrganizationList().isEmpty()) {
+                        return distributor.getOrganizationDirectory().getOrganizationList().get(0);
+                    }
                 }
             }
         }
@@ -386,16 +419,32 @@ public class StoreManagerWorkAreaJPanel extends javax.swing.JPanel {
         }
 
         int confirm = JOptionPane.showConfirmDialog(this,
-                "Approve order " + order.getRequestId() + "?",
+                "Approve and send order " + order.getRequestId() + " to " +
+                order.getTargetDistributorName() + "?",
                 "Confirm Approval", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            order.setStatus("Approved");
-            order.setReceiver(userAccount);
-            populatePendingOrdersTable();
-            JOptionPane.showMessageDialog(this,
-                    "Order approved successfully!",
-                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            // Find the target distributor and send the order
+            Organization distributorOrg = findDistributorReceivingOrg(order.getTargetDistributorName());
+
+            if (distributorOrg != null) {
+                // Remove from local work queue
+                organization.getWorkQueue().getWorkRequestList().remove(order);
+
+                // Update status and send to distributor
+                order.setStatus("Sent");
+                order.setReceiver(userAccount);
+                distributorOrg.getWorkQueue().getWorkRequestList().add(order);
+
+                populatePendingOrdersTable();
+                JOptionPane.showMessageDialog(this,
+                        "Order approved and sent to " + order.getTargetDistributorName() + "!",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Error: Could not find distributor " + order.getTargetDistributorName(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnApproveActionPerformed
 

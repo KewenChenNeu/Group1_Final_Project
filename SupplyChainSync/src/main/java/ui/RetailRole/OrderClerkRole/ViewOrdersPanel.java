@@ -52,6 +52,34 @@ public class ViewOrdersPanel extends javax.swing.JPanel {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
+        // 1. First check local store's organization for orders pending Store Manager approval
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof RetailPurchaseOrderRequest) {
+                RetailPurchaseOrderRequest po = (RetailPurchaseOrderRequest) request;
+
+                if (po.getSender() != null &&
+                    po.getSender().getUsername().equals(userAccount.getUsername())) {
+
+                    String status = po.getStatus();
+                    if (!"Rejected".equalsIgnoreCase(status) && !"Cancelled".equalsIgnoreCase(status)) {
+                        Object[] row = new Object[8];
+                        row[0] = "RO-" + String.format("%04d", po.getRequestId());
+                        row[1] = po.getTargetDistributorName() != null ? po.getTargetDistributorName() : "N/A";
+                        row[2] = po.getProductName() != null ? po.getProductName() : "N/A";
+                        row[3] = po.getQuantity();
+                        row[4] = po.getUrgencyLevel() != null ? po.getUrgencyLevel() : "Normal";
+                        row[5] = po.getRequestDate() != null ?
+                            dateFormat.format(po.getRequestDate()) : "N/A";
+                        row[6] = status + " (Awaiting Manager)";
+                        row[7] = String.format("$%.2f", po.getTotalPrice());
+
+                        model.addRow(row);
+                    }
+                }
+            }
+        }
+
+        // 2. Then check distributors' work queues for sent/approved orders
         for (Network network : system.getNetworkList()) {
             for (Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
                 if (ent instanceof ProductDistributorEnterprise) {
@@ -66,8 +94,7 @@ public class ViewOrdersPanel extends javax.swing.JPanel {
                                     po.getSender().getUsername().equals(userAccount.getUsername())) {
 
                                     String status = po.getStatus();
-                                    if ("Pending".equalsIgnoreCase(status) ||
-                                        "Sent".equalsIgnoreCase(status) ||
+                                    if ("Sent".equalsIgnoreCase(status) ||
                                         "Approved".equalsIgnoreCase(status) ||
                                         "Processing".equalsIgnoreCase(status) ||
                                         "In Transit".equalsIgnoreCase(status)) {
@@ -101,6 +128,23 @@ public class ViewOrdersPanel extends javax.swing.JPanel {
         int approvedCount = 0;
         int inTransitCount = 0;
 
+        // 1. Count orders in local store's organization (awaiting Store Manager approval)
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof RetailPurchaseOrderRequest) {
+                RetailPurchaseOrderRequest po = (RetailPurchaseOrderRequest) request;
+
+                if (po.getSender() != null &&
+                    po.getSender().getUsername().equals(userAccount.getUsername())) {
+
+                    String status = po.getStatus();
+                    if ("Pending".equalsIgnoreCase(status)) {
+                        pendingCount++;
+                    }
+                }
+            }
+        }
+
+        // 2. Count orders in distributors' work queues
         for (Network network : system.getNetworkList()) {
             for (Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
                 if (ent instanceof ProductDistributorEnterprise) {
@@ -115,8 +159,8 @@ public class ViewOrdersPanel extends javax.swing.JPanel {
                                     po.getSender().getUsername().equals(userAccount.getUsername())) {
 
                                     String status = po.getStatus();
-                                    if ("Pending".equalsIgnoreCase(status) || "Sent".equalsIgnoreCase(status)) {
-                                        pendingCount++;
+                                    if ("Sent".equalsIgnoreCase(status)) {
+                                        pendingCount++;  // Waiting for distributor approval
                                     } else if ("Approved".equalsIgnoreCase(status) || "Processing".equalsIgnoreCase(status)) {
                                         approvedCount++;
                                     } else if ("In Transit".equalsIgnoreCase(status)) {
@@ -144,6 +188,17 @@ public class ViewOrdersPanel extends javax.swing.JPanel {
         String orderId = (String) tblPendingOrders.getValueAt(selectedRow, 0);
         int requestId = Integer.parseInt(orderId.replace("RO-", ""));
 
+        // 1. First search in local store's organization
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof RetailPurchaseOrderRequest) {
+                RetailPurchaseOrderRequest po = (RetailPurchaseOrderRequest) request;
+                if (po.getRequestId() == requestId) {
+                    return po;
+                }
+            }
+        }
+
+        // 2. Then search in distributors' work queues
         for (Network network : system.getNetworkList()) {
             for (Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
                 if (ent instanceof ProductDistributorEnterprise) {
