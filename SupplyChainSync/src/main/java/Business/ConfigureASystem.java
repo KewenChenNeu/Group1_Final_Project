@@ -39,7 +39,6 @@ import java.util.Random;
  */
 public class ConfigureASystem {
     
-    // Java Faker instance for generating realistic test data
     private static final Faker faker = new Faker();
     private static final Random random = new Random();
     
@@ -47,69 +46,56 @@ public class ConfigureASystem {
         
         EcoSystem system = EcoSystem.getInstance();
         
-        // ============================
         // 1. Create System Admin
-        // ============================
         Employee sysAdminEmployee = system.getEmployeeDirectory().createEmployee("System Admin");
         system.getUserAccountDirectory().createUserAccount("sysadmin", "sysadmin", sysAdminEmployee, new SystemAdminRole());
         
-        // ============================
         // 2. Create Network
-        // ============================
         Network supplyChainNetwork = system.createAndAddNetwork("Supply Chain Network");
         
-        // ============================
         // 3. Create Enterprises
-        // ============================
-        
-        // 3.1 Raw Material Supplier Enterprise
         RawMaterialSupplierEnterprise rmSupplier = new RawMaterialSupplierEnterprise("ABC Raw Materials Co.");
         supplyChainNetwork.getEnterpriseDirectory().addEnterprise(rmSupplier);
         configureRMSupplierEnterprise(rmSupplier);
         
-        // 3.2 Manufacturer Enterprise
         ManufacturerEnterprise manufacturer = new ManufacturerEnterprise("XYZ Manufacturing Inc.");
         supplyChainNetwork.getEnterpriseDirectory().addEnterprise(manufacturer);
         configureManufacturerEnterprise(manufacturer);
         
-        // 3.3 Product Distributor Enterprise
         ProductDistributorEnterprise distributor = new ProductDistributorEnterprise("Global Distribution LLC");
         supplyChainNetwork.getEnterpriseDirectory().addEnterprise(distributor);
         configureDistributorEnterprise(distributor);
         
-        // 3.4 Shipping Enterprise
         ShippingEnterprise shipping = new ShippingEnterprise("FastShip Logistics");
         supplyChainNetwork.getEnterpriseDirectory().addEnterprise(shipping);
         configureShippingEnterprise(shipping);
         
-        // 3.5 Retail Enterprise
         RetailEnterprise retail = new RetailEnterprise("MegaMart Retail");
         supplyChainNetwork.getEnterpriseDirectory().addEnterprise(retail);
         configureRetailEnterprise(retail);
         
-        // ============================
-        // 4. Setup Products, Materials, and Inventory
-        // ============================
+        // SECOND Distributor Enterprise
+        ProductDistributorEnterprise distributor2 = new ProductDistributorEnterprise("Pacific Wholesale Partners");
+        supplyChainNetwork.getEnterpriseDirectory().addEnterprise(distributor2);
+        configureSecondDistributorEnterprise(distributor2);
+        
+        // 4. Setup Catalogs and Inventory
         setupCatalogsAndInventory(rmSupplier, manufacturer, distributor, retail);
         
-        // ============================
-        // 5. Create Sample WorkRequests (Original)
-        // ============================
+        // 5. Create Sample WorkRequests
         createSampleWorkRequests(rmSupplier, manufacturer, distributor, shipping, retail);
         
-        // ============================
-        // 6. Create Enhanced Distributor Test Data with Faker
-        // ============================
+        // 6. Create Enhanced Test Data
         createDistributorTestDataWithFaker(distributor, manufacturer, shipping, retail);
-        
         createManufacturerTestDataWithFaker(manufacturer, rmSupplier, shipping, retail);
+        
+        // 7. Setup Second Distributor
+        setupSecondDistributorCatalogAndInventory(distributor2);
+        createSecondDistributorTestData(distributor2, manufacturer, shipping);
         
         return system;
     }
     
-    /**
-     * Configure Raw Material Supplier Enterprise
-     */
     private static void configureRMSupplierEnterprise(RawMaterialSupplierEnterprise enterprise) {
         Organization rmProcurementOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(0);
         Organization rmInventoryOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(1);
@@ -127,9 +113,6 @@ public class ConfigureASystem {
         rmInventoryOrg.getUserAccountDirectory().createUserAccount("rm_inv2", "password", inventoryStaff, new RMInventoryManagerRole());
     }
     
-    /**
-     * Configure Manufacturer Enterprise
-     */
     private static void configureManufacturerEnterprise(ManufacturerEnterprise enterprise) {
         Organization productionOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(0);
         Organization inventoryOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(1);
@@ -146,7 +129,6 @@ public class ConfigureASystem {
         Employee invStaff = inventoryOrg.getEmployeeDirectory().createEmployee(faker.name().fullName());
         inventoryOrg.getUserAccountDirectory().createUserAccount("mfg_inv2", "password", invStaff, new InventoryManagerRole());
         
-        
         Employee productionStaff2 = productionOrg.getEmployeeDirectory().createEmployee(faker.name().fullName());
         productionOrg.getUserAccountDirectory().createUserAccount("mp", "", productionStaff2, new ProductionManagerRole());
         
@@ -154,14 +136,10 @@ public class ConfigureASystem {
         inventoryOrg.getUserAccountDirectory().createUserAccount("mi", "", invStaff2, new InventoryManagerRole());
     }
     
-    /**
-     * Configure Product Distributor Enterprise
-     */
     private static void configureDistributorEnterprise(ProductDistributorEnterprise enterprise) {
         Organization salesOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(0);
         Organization inventoryOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(1);
         
-        // Wholesale Sales Organization - multiple employees
         Employee salesMgr = salesOrg.getEmployeeDirectory().createEmployee("James Taylor");
         salesOrg.getUserAccountDirectory().createUserAccount("dist_sales1", "password", salesMgr, new WholesaleSalesRole());
         
@@ -174,7 +152,6 @@ public class ConfigureASystem {
         Employee salesAnalyst2 = salesOrg.getEmployeeDirectory().createEmployee(faker.name().fullName());
         salesOrg.getUserAccountDirectory().createUserAccount("dist_analyst2", "password", salesAnalyst2, new WholesaleAnalyticsRole());
         
-        // Wholesale Inventory Organization - multiple employees
         Employee whInvMgr = inventoryOrg.getEmployeeDirectory().createEmployee("Michael Thomas");
         inventoryOrg.getUserAccountDirectory().createUserAccount("dist_inv1", "password", whInvMgr, new WholesaleInventoryRole());
         
@@ -185,9 +162,44 @@ public class ConfigureASystem {
         inventoryOrg.getUserAccountDirectory().createUserAccount("dist_inv3", "password", whInvStaff2, new WholesaleInventoryRole());
     }
     
-    /**
-     * Configure Shipping Enterprise
-     */
+    private static void configureSecondDistributorEnterprise(ProductDistributorEnterprise enterprise) {
+        Organization salesOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(0);
+        Organization inventoryOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(1);
+        
+        Employee salesMgr = salesOrg.getEmployeeDirectory().createEmployee("Robert Chen");
+        salesOrg.getUserAccountDirectory().createUserAccount("pac_sales1", "password", salesMgr, new WholesaleSalesRole());
+        
+        Employee salesRep1 = salesOrg.getEmployeeDirectory().createEmployee("Michelle Wong");
+        salesOrg.getUserAccountDirectory().createUserAccount("pac_sales2", "password", salesRep1, new WholesaleSalesRole());
+        
+        Employee salesRep2 = salesOrg.getEmployeeDirectory().createEmployee(faker.name().fullName());
+        salesOrg.getUserAccountDirectory().createUserAccount("pac_sales3", "password", salesRep2, new WholesaleSalesRole());
+        
+        Employee salesAnalyst = salesOrg.getEmployeeDirectory().createEmployee("David Kim");
+        salesOrg.getUserAccountDirectory().createUserAccount("pac_analyst1", "password", salesAnalyst, new WholesaleAnalyticsRole());
+        
+        Employee salesAnalyst2 = salesOrg.getEmployeeDirectory().createEmployee(faker.name().fullName());
+        salesOrg.getUserAccountDirectory().createUserAccount("pac_analyst2", "password", salesAnalyst2, new WholesaleAnalyticsRole());
+        
+        Employee whInvMgr = inventoryOrg.getEmployeeDirectory().createEmployee("Sarah Park");
+        inventoryOrg.getUserAccountDirectory().createUserAccount("pac_inv1", "password", whInvMgr, new WholesaleInventoryRole());
+        
+        Employee whInvStaff = inventoryOrg.getEmployeeDirectory().createEmployee("Kevin Nguyen");
+        inventoryOrg.getUserAccountDirectory().createUserAccount("pac_inv2", "password", whInvStaff, new WholesaleInventoryRole());
+        
+        Employee whInvStaff2 = inventoryOrg.getEmployeeDirectory().createEmployee(faker.name().fullName());
+        inventoryOrg.getUserAccountDirectory().createUserAccount("pac_inv3", "password", whInvStaff2, new WholesaleInventoryRole());
+        
+        Employee quickSales = salesOrg.getEmployeeDirectory().createEmployee("Quick Sales User");
+        salesOrg.getUserAccountDirectory().createUserAccount("ps", "", quickSales, new WholesaleSalesRole());
+        
+        Employee quickAnalyst = salesOrg.getEmployeeDirectory().createEmployee("Quick Analyst User");
+        salesOrg.getUserAccountDirectory().createUserAccount("pa", "", quickAnalyst, new WholesaleAnalyticsRole());
+        
+        Employee quickInv = inventoryOrg.getEmployeeDirectory().createEmployee("Quick Inventory User");
+        inventoryOrg.getUserAccountDirectory().createUserAccount("pi", "", quickInv, new WholesaleInventoryRole());
+    }
+    
     private static void configureShippingEnterprise(ShippingEnterprise enterprise) {
         Organization shipMgmtOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(0);
         Organization shipOpOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(1);
@@ -202,9 +214,6 @@ public class ConfigureASystem {
         shipOpOrg.getUserAccountDirectory().createUserAccount("ship_del2", "password", deliveryStaff2, new DeliveryStaffRole());
     }
     
-    /**
-     * Configure Retail Enterprise
-     */
     private static void configureRetailEnterprise(RetailEnterprise enterprise) {
         Organization storeOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(0);
         Organization retailInvOrg = enterprise.getOrganizationDirectory().getOrganizationList().get(1);
@@ -219,18 +228,13 @@ public class ConfigureASystem {
         retailInvOrg.getUserAccountDirectory().createUserAccount("retail_analyst1", "password", retailAnalyst, new RetailAnalyticsRole());
     }
     
-    /**
-     * Setup product catalogs and inventory for all enterprises
-     */
     private static void setupCatalogsAndInventory(
             RawMaterialSupplierEnterprise rmSupplier,
             ManufacturerEnterprise manufacturer,
             ProductDistributorEnterprise distributor,
             RetailEnterprise retail) {
         
-        // ============================
-        // Raw Material Supplier - Material Catalog & Inventory
-        // ============================
+        // Raw Material Supplier
         MaterialCatalog rmMaterialCatalog = rmSupplier.getMaterialCatalog();
         Inventory rmInventory = rmSupplier.getInventory();
         
@@ -255,9 +259,7 @@ public class ConfigureASystem {
         rmInventory.addMaterial(plasticPellets, 8000, 800, 15000, "Warehouse A");
         rmInventory.addMaterial(aluminumBars, 6000, 600, 12000, "Warehouse C");
         
-        // ============================
-        // Manufacturer - Products Catalog & Inventory
-        // ============================
+        // Manufacturer
         ProductCatalog mfgProductCatalog = manufacturer.getProductCatalog();
         Inventory mfgInventory = manufacturer.getInventory();
         
@@ -310,14 +312,10 @@ public class ConfigureASystem {
         mfgInventory.addMaterial(mfgPlasticPellets, 8000, 800, 15000, "Warehouse A");
         mfgInventory.addMaterial(mfgAluminumBars, 6000, 600, 12000, "Warehouse C");
         
-        // ============================
-        // Distributor - Products Catalog & Inventory (Enhanced)
-        // ============================
+        // Distributor
         setupDistributorCatalogAndInventory(distributor);
         
-        // ============================
-        // Retail - Products Catalog & Inventory
-        // ============================
+        // Retail
         ProductCatalog retailProductCatalog = retail.getProductCatalog();
         Inventory retailInventory = retail.getInventory();
         
@@ -343,14 +341,10 @@ public class ConfigureASystem {
         retailInventory.addProduct(retailTool, 15, 3, 30, "Store Shelf D1");
     }
     
-    /**
-     * Setup enhanced Distributor catalog and inventory
-     */
     private static void setupDistributorCatalogAndInventory(ProductDistributorEnterprise distributor) {
         ProductCatalog catalog = distributor.getProductCatalog();
         Inventory inventory = distributor.getInventory();
         
-        // Products IN inventory (available for sale)
         Product p1 = catalog.createProduct("EC-001", "Electronic Components Set A", 18.00, "sets");
         p1.setCategory("Electronics");
         p1.setDescription("Complete set of electronic components");
@@ -376,26 +370,22 @@ public class ConfigureASystem {
         p5.setDescription("Professional industrial tool set");
         inventory.addProduct(p5, 200, 30, 500, "Distribution Center D");
         
-        // Products with LOW STOCK (for alerts testing)
         Product p6 = catalog.createProduct("EC-002", "Electronic Components Set B", 22.00, "sets");
         p6.setCategory("Electronics");
         p6.setDescription("Advanced electronic components set");
-        inventory.addProduct(p6, 45, 50, 500, "Distribution Center A"); // Below minStock=50
+        inventory.addProduct(p6, 45, 50, 500, "Distribution Center A");
         
-        // Products with OUT OF STOCK (for alerts testing)
         Product p7 = catalog.createProduct("EC-003", "Electronic Starter Kit", 12.00, "sets");
         p7.setCategory("Electronics");
         p7.setDescription("Basic electronic starter kit");
         InventoryItem outOfStockItem = inventory.addProduct(p7, 30, 20, 300, "Distribution Center A");
-        outOfStockItem.setReservedQuantity(30); // All reserved = 0 available
+        outOfStockItem.setReservedQuantity(30);
         
-        // Products with HIGH STOCK (healthy)
         Product p8 = catalog.createProduct("HA-003", "Home Appliance Kit C - Deluxe", 120.00, "units");
         p8.setCategory("Appliances");
         p8.setDescription("Deluxe home appliance kit with warranty");
         inventory.addProduct(p8, 600, 50, 800, "Distribution Center B");
         
-        // Additional products in catalog (NOT in inventory - for adding)
         Product p9 = catalog.createProduct("OS-002", "Office Supplies Pack - Premium", 18.00, "packs");
         p9.setCategory("Office");
         p9.setDescription("Premium office supplies pack");
@@ -417,9 +407,108 @@ public class ConfigureASystem {
         p13.setDescription("Industrial cleaning supplies set");
     }
     
-    /**
-     * Create sample WorkRequests (Original basic setup)
-     */
+    private static void setupSecondDistributorCatalogAndInventory(ProductDistributorEnterprise distributor2) {
+        ProductCatalog catalog = distributor2.getProductCatalog();
+        Inventory inventory = distributor2.getInventory();
+        
+        // Tech & Gadgets
+        Product tech1 = catalog.createProduct("TG-001", "Smart Home Hub", 89.00, "units");
+        tech1.setCategory("Tech & Gadgets");
+        tech1.setDescription("Central smart home control hub with voice assistant");
+        inventory.addProduct(tech1, 500, 50, 1000, "Pacific Warehouse A");
+        
+        Product tech2 = catalog.createProduct("TG-002", "Wireless Security Camera Set", 149.00, "sets");
+        tech2.setCategory("Tech & Gadgets");
+        tech2.setDescription("4-camera wireless security system with night vision");
+        inventory.addProduct(tech2, 300, 30, 600, "Pacific Warehouse A");
+        
+        Product tech3 = catalog.createProduct("TG-003", "Smart Thermostat Pro", 75.00, "units");
+        tech3.setCategory("Tech & Gadgets");
+        tech3.setDescription("Wi-Fi enabled programmable thermostat");
+        inventory.addProduct(tech3, 400, 40, 800, "Pacific Warehouse A");
+        
+        Product tech4 = catalog.createProduct("TG-004", "Robot Vacuum Cleaner", 299.00, "units");
+        tech4.setCategory("Tech & Gadgets");
+        tech4.setDescription("AI-powered robot vacuum with mapping");
+        inventory.addProduct(tech4, 25, 30, 200, "Pacific Warehouse A");
+        
+        // Outdoor & Garden
+        Product outdoor1 = catalog.createProduct("OG-001", "Solar Garden Light Set", 45.00, "sets");
+        outdoor1.setCategory("Outdoor & Garden");
+        outdoor1.setDescription("10-piece solar powered garden lights");
+        inventory.addProduct(outdoor1, 800, 100, 1500, "Pacific Warehouse B");
+        
+        Product outdoor2 = catalog.createProduct("OG-002", "Patio Furniture Set - Premium", 599.00, "sets");
+        outdoor2.setCategory("Outdoor & Garden");
+        outdoor2.setDescription("5-piece weather resistant patio set");
+        inventory.addProduct(outdoor2, 150, 20, 300, "Pacific Warehouse B");
+        
+        Product outdoor3 = catalog.createProduct("OG-003", "Electric Lawn Mower", 349.00, "units");
+        outdoor3.setCategory("Outdoor & Garden");
+        outdoor3.setDescription("Cordless electric lawn mower with battery");
+        inventory.addProduct(outdoor3, 200, 25, 400, "Pacific Warehouse B");
+        
+        Product outdoor4 = catalog.createProduct("OG-004", "BBQ Grill - Professional", 899.00, "units");
+        outdoor4.setCategory("Outdoor & Garden");
+        outdoor4.setDescription("Stainless steel professional BBQ grill");
+        InventoryItem outOfStock = inventory.addProduct(outdoor4, 50, 10, 100, "Pacific Warehouse B");
+        outOfStock.setReservedQuantity(50);
+        
+        // Fitness & Wellness
+        Product fitness1 = catalog.createProduct("FW-001", "Home Gym Set - Basic", 299.00, "sets");
+        fitness1.setCategory("Fitness & Wellness");
+        fitness1.setDescription("Dumbbells, resistance bands, yoga mat combo");
+        inventory.addProduct(fitness1, 350, 40, 700, "Pacific Warehouse C");
+        
+        Product fitness2 = catalog.createProduct("FW-002", "Treadmill - Smart", 799.00, "units");
+        fitness2.setCategory("Fitness & Wellness");
+        fitness2.setDescription("Foldable smart treadmill with display");
+        inventory.addProduct(fitness2, 100, 15, 200, "Pacific Warehouse C");
+        
+        Product fitness3 = catalog.createProduct("FW-003", "Exercise Bike - Pro", 549.00, "units");
+        fitness3.setCategory("Fitness & Wellness");
+        fitness3.setDescription("Indoor cycling bike with resistance control");
+        inventory.addProduct(fitness3, 180, 20, 350, "Pacific Warehouse C");
+        
+        // Kitchen & Dining
+        Product kitchen1 = catalog.createProduct("KD-001", "Air Fryer - XL", 129.00, "units");
+        kitchen1.setCategory("Kitchen & Dining");
+        kitchen1.setDescription("5.8 quart digital air fryer");
+        inventory.addProduct(kitchen1, 600, 75, 1200, "Pacific Warehouse D");
+        
+        Product kitchen2 = catalog.createProduct("KD-002", "Coffee Machine - Espresso", 249.00, "units");
+        kitchen2.setCategory("Kitchen & Dining");
+        kitchen2.setDescription("Semi-automatic espresso machine with grinder");
+        inventory.addProduct(kitchen2, 250, 30, 500, "Pacific Warehouse D");
+        
+        Product kitchen3 = catalog.createProduct("KD-003", "Cookware Set - 15 Piece", 189.00, "sets");
+        kitchen3.setCategory("Kitchen & Dining");
+        kitchen3.setDescription("Non-stick ceramic cookware set");
+        inventory.addProduct(kitchen3, 400, 50, 800, "Pacific Warehouse D");
+        
+        Product kitchen4 = catalog.createProduct("KD-004", "Stand Mixer - Professional", 399.00, "units");
+        kitchen4.setCategory("Kitchen & Dining");
+        kitchen4.setDescription("5-speed stand mixer with attachments");
+        inventory.addProduct(kitchen4, 35, 40, 200, "Pacific Warehouse D");
+        
+        // Catalog Only
+        Product catOnly1 = catalog.createProduct("TG-005", "Smart Doorbell Pro", 179.00, "units");
+        catOnly1.setCategory("Tech & Gadgets");
+        catOnly1.setDescription("Video doorbell with 2-way audio");
+        
+        Product catOnly2 = catalog.createProduct("OG-005", "Outdoor Heater - Patio", 229.00, "units");
+        catOnly2.setCategory("Outdoor & Garden");
+        catOnly2.setDescription("Propane patio heater");
+        
+        Product catOnly3 = catalog.createProduct("FW-004", "Massage Gun - Deep Tissue", 149.00, "units");
+        catOnly3.setCategory("Fitness & Wellness");
+        catOnly3.setDescription("Percussion massage gun with 6 heads");
+        
+        Product catOnly4 = catalog.createProduct("KD-005", "Blender - High Power", 199.00, "units");
+        catOnly4.setCategory("Kitchen & Dining");
+        catOnly4.setDescription("1200W professional blender");
+    }
+    
     private static void createSampleWorkRequests(
             RawMaterialSupplierEnterprise rmSupplier,
             ManufacturerEnterprise manufacturer,
@@ -429,10 +518,7 @@ public class ConfigureASystem {
         
         Organization rmProcurementOrg = rmSupplier.getOrganizationDirectory().getOrganizationList().get(0);
         Organization mfgProductionOrg = manufacturer.getOrganizationDirectory().getOrganizationList().get(0);
-        Organization distSalesOrg = distributor.getOrganizationDirectory().getOrganizationList().get(0);
-        Organization shipMgmtOrg = shipping.getOrganizationDirectory().getOrganizationList().get(0);
         
-        // Sample RM Restock Request
         RawMaterialRestockRequest rmRequest1 = new RawMaterialRestockRequest();
         rmRequest1.setMaterialName("Steel Sheets");
         rmRequest1.setQuantity(500);
@@ -443,7 +529,6 @@ public class ConfigureASystem {
         rmRequest1.setStatus("Pending");
         rmProcurementOrg.getWorkQueue().addWorkRequest(rmRequest1);
         
-        // Sample Wholesale Purchase Request
         WholesalePurchaseRequest whRequest1 = new WholesalePurchaseRequest();
         whRequest1.setProductName("Electronic Components Set A");
         whRequest1.setProductCode("EC-001");
@@ -457,12 +542,6 @@ public class ConfigureASystem {
         mfgProductionOrg.getWorkQueue().addWorkRequest(whRequest1);
     }
     
-    /**
-     * ============================================================
-     * ENHANCED TEST DATA GENERATION WITH JAVA FAKER
-     * For comprehensive Distributor Enterprise testing
-     * ============================================================
-     */
     private static void createDistributorTestDataWithFaker(
             ProductDistributorEnterprise distributor,
             ManufacturerEnterprise manufacturer,
@@ -471,43 +550,36 @@ public class ConfigureASystem {
         
         Organization distSalesOrg = distributor.getOrganizationDirectory().getOrganizationList().get(0);
         Organization distInventoryOrg = distributor.getOrganizationDirectory().getOrganizationList().get(1);
-        
-        UserAccount distSalesUser = distSalesOrg.getUserAccountDirectory().getUserAccountList().get(0);
         UserAccount distInvUser = distInventoryOrg.getUserAccountDirectory().getUserAccountList().get(0);
         
-        // ============================================================
-        // 1. RETAIL PURCHASE ORDERS (for Wholesale Sales Role)
-        // ============================================================
         createRetailPurchaseOrders(distSalesOrg, retail);
-        
-        // ============================================================
-        // 2. PRODUCT SHIPPING REQUESTS (for Wholesale Inventory Role)
-        // ============================================================
         createProductShippingRequests(distInventoryOrg, distInvUser);
-        
-        // ============================================================
-        // 3. DELIVERY CONFIRMATIONS (for Wholesale Sales Role)
-        // ============================================================
         createDeliveryConfirmations(distSalesOrg);
-        
-        // ============================================================
-        // 4. WHOLESALE PURCHASE REQUESTS (for Analytics)
-        // ============================================================
         createWholesalePurchaseRequests(distSalesOrg, manufacturer);
     }
     
-    /**
-     * Create varied Retail Purchase Orders for testing Sales functionality
-     */
+    private static void createSecondDistributorTestData(
+            ProductDistributorEnterprise distributor2,
+            ManufacturerEnterprise manufacturer,
+            ShippingEnterprise shipping) {
+        
+        Organization salesOrg = distributor2.getOrganizationDirectory().getOrganizationList().get(0);
+        Organization inventoryOrg = distributor2.getOrganizationDirectory().getOrganizationList().get(1);
+        UserAccount invUser = inventoryOrg.getUserAccountDirectory().getUserAccountList().get(0);
+        
+        createPacificRetailOrders(salesOrg);
+        createPacificShippingRequests(inventoryOrg, invUser);
+        createPacificDeliveryConfirmations(salesOrg);
+        createPacificWholesaleRequests(salesOrg);
+    }
+    
     private static void createRetailPurchaseOrders(Organization distSalesOrg, RetailEnterprise retail) {
         Organization retailStoreOrg = retail.getOrganizationDirectory().getOrganizationList().get(0);
         UserAccount retailUser = retailStoreOrg.getUserAccountDirectory().getUserAccountList().get(0);
         
-        String[] storeNames = {
-            "MegaMart Downtown", "MegaMart Suburbs", "MegaMart Harbor", 
+        String[] storeNames = {"MegaMart Downtown", "MegaMart Suburbs", "MegaMart Harbor", 
             "MegaMart Plaza", "MegaMart Central", "ValueMart Express",
-            "SuperStore North", "SuperStore South", "QuickMart East"
-        };
+            "SuperStore North", "SuperStore South", "QuickMart East"};
         
         String[][] products = {
             {"EC-001", "Electronic Components Set A", "18.00", "sets"},
@@ -521,11 +593,9 @@ public class ConfigureASystem {
         
         String[] statuses = {"Pending", "Pending", "Pending", "Approved", "Approved", 
                             "Processing", "Shipped", "Shipped", "Delivered", "Completed"};
-        
         String[] urgencies = {"Normal", "Normal", "Normal", "Urgent", "Critical"};
         String[] paymentMethods = {"Credit", "Invoice", "Cash", "Wire Transfer"};
         
-        // Generate 15 varied orders
         for (int i = 0; i < 15; i++) {
             String[] product = products[random.nextInt(products.length)];
             String storeName = storeNames[random.nextInt(storeNames.length)];
@@ -536,7 +606,7 @@ public class ConfigureASystem {
             order.setProductName(product[1]);
             order.setUnitPrice(Double.parseDouble(product[2]));
             order.setUnit(product[3]);
-            order.setQuantity(10 + random.nextInt(200)); // 10-210 units
+            order.setQuantity(10 + random.nextInt(200));
             order.setStoreName(storeName);
             order.setStoreAddress(faker.address().fullAddress());
             order.setSender(retailUser);
@@ -545,14 +615,13 @@ public class ConfigureASystem {
             order.setMessage(faker.commerce().promotionCode() + " - " + faker.company().buzzword());
             order.setStatus(status);
             
-            // Set dates based on status
             Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_MONTH, -random.nextInt(30)); // Up to 30 days ago
+            cal.add(Calendar.DAY_OF_MONTH, -random.nextInt(30));
             order.setRequestDate(cal.getTime());
             
             if (status.equals("Completed") || status.equals("Delivered")) {
                 Calendar resolveCal = Calendar.getInstance();
-                resolveCal.add(Calendar.DAY_OF_MONTH, -random.nextInt(7)); // Within 7 days
+                resolveCal.add(Calendar.DAY_OF_MONTH, -random.nextInt(7));
                 order.setResolveDate(resolveCal.getTime());
             }
             
@@ -560,9 +629,6 @@ public class ConfigureASystem {
         }
     }
     
-    /**
-     * Create varied Product Shipping Requests for Inventory Role testing
-     */
     private static void createProductShippingRequests(Organization distInventoryOrg, UserAccount distInvUser) {
         String[][] products = {
             {"EC-001", "Electronic Components Set A", "sets"},
@@ -576,7 +642,6 @@ public class ConfigureASystem {
         
         String[] carriers = {"FastShip Logistics", "QuickDeliver Express", "SafeTransport Co.", "PrimeFreight"};
         
-        // Various statuses for testing different views
         String[][] statusConfigs = {
             {ProductShippingRequest.SHIP_STATUS_PENDING, "Pending"},
             {ProductShippingRequest.SHIP_STATUS_PENDING, "Pending"},
@@ -599,24 +664,21 @@ public class ConfigureASystem {
             shipment.setProductCode(product[0]);
             shipment.setProductName(product[1]);
             shipment.setUnit(product[2]);
-            shipment.setQuantity(50 + random.nextInt(250)); // 50-300 units
+            shipment.setQuantity(50 + random.nextInt(250));
             shipment.setOriginAddress("XYZ Manufacturing Inc., " + faker.address().streetAddress() + ", Worcester, MA");
             shipment.setDestinationAddress("Global Distribution LLC, 789 Warehouse Blvd, Worcester, MA");
             shipment.setDestinationStoreName("Global Distribution LLC");
             shipment.setCarrierName(carrier);
             shipment.setTrackingNumber("MFG-DIST-" + String.format("%03d", i + 10));
-            shipment.setPackageWeight(50.0 + random.nextDouble() * 450); // 50-500 lbs
+            shipment.setPackageWeight(50.0 + random.nextDouble() * 450);
             shipment.setShippingStatus(statusConfig[0]);
             shipment.setStatus(statusConfig[1]);
             shipment.setMessage(faker.lorem().sentence());
             
-            // Set dates
             Calendar cal = Calendar.getInstance();
-            int daysAgo = random.nextInt(14);
-            cal.add(Calendar.DAY_OF_MONTH, -daysAgo);
+            cal.add(Calendar.DAY_OF_MONTH, -random.nextInt(14));
             shipment.setRequestDate(cal.getTime());
             
-            // If received, set receiver and resolve date
             if (statusConfig[1].equals("Received")) {
                 shipment.setReceiver(distInvUser);
                 Calendar resolveCal = Calendar.getInstance();
@@ -624,7 +686,6 @@ public class ConfigureASystem {
                 shipment.setResolveDate(resolveCal.getTime());
             }
             
-            // Set estimated delivery for in-transit
             if (statusConfig[0].equals(ProductShippingRequest.SHIP_STATUS_IN_TRANSIT)) {
                 Calendar estCal = Calendar.getInstance();
                 estCal.add(Calendar.DAY_OF_MONTH, 1 + random.nextInt(5));
@@ -635,9 +696,6 @@ public class ConfigureASystem {
         }
     }
     
-    /**
-     * Create varied Delivery Confirmations for Sales Role testing
-     */
     private static void createDeliveryConfirmations(Organization distSalesOrg) {
         String[] storeNames = {"MegaMart Downtown", "MegaMart Suburbs", "MegaMart Harbor", 
                               "ValueMart Express", "SuperStore North"};
@@ -657,7 +715,6 @@ public class ConfigureASystem {
             {"IT-001", "Industrial Tool Set", "sets"}
         };
         
-        // Create 8 delivery confirmations with varied statuses
         for (int i = 0; i < 8; i++) {
             String[] product = products[random.nextInt(products.length)];
             String storeName = storeNames[random.nextInt(storeNames.length)];
@@ -665,7 +722,6 @@ public class ConfigureASystem {
             String condition = conditions[random.nextInt(conditions.length)];
             int quantity = 20 + random.nextInt(100);
             
-            // Create underlying shipment
             ProductShippingRequest shipment = new ProductShippingRequest();
             shipment.setProductCode(product[0]);
             shipment.setProductName(product[1]);
@@ -682,23 +738,20 @@ public class ConfigureASystem {
             confirmation.setDeliveredBy(deliverer);
             confirmation.setConditionOnArrival(condition);
             
-            // Set delivery notes based on condition
             if (condition.equals(DeliveryConfirmationRequest.CONDITION_GOOD)) {
                 confirmation.setDeliveryNotes("All items received in good condition. " + faker.lorem().sentence());
             } else if (condition.equals(DeliveryConfirmationRequest.CONDITION_PARTIAL)) {
                 int delivered = quantity - random.nextInt(10) - 5;
                 confirmation.setQuantityDelivered(delivered);
-                confirmation.setDeliveryNotes("Partial delivery: " + delivered + " of " + quantity + " units. Remaining backordered.");
+                confirmation.setDeliveryNotes("Partial delivery: " + delivered + " of " + quantity + " units.");
             } else {
                 confirmation.setDeliveryNotes("Some items damaged during transit. " + faker.lorem().sentence());
             }
             
-            // Set delivery date
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DAY_OF_MONTH, -random.nextInt(10));
             confirmation.setDeliveryDate(cal.getTime());
             
-            // Half confirmed, half awaiting
             if (i < 4) {
                 confirmation.setConfirmed(false);
                 confirmation.setStatus("Awaiting Confirmation");
@@ -713,9 +766,6 @@ public class ConfigureASystem {
         }
     }
     
-    /**
-     * Create Wholesale Purchase Requests for Analytics testing
-     */
     private static void createWholesalePurchaseRequests(Organization distSalesOrg, ManufacturerEnterprise manufacturer) {
         String[][] products = {
             {"EC-001", "Electronic Components Set A", "15.00", "sets"},
@@ -728,7 +778,6 @@ public class ConfigureASystem {
         String[] statuses = {"Pending", "Approved", "Processing", "Shipped", "Completed"};
         String[] paymentTerms = {"Net 15", "Net 30", "Net 45", "COD"};
         
-        // Generate historical purchase orders for analytics
         for (int i = 0; i < 10; i++) {
             String[] product = products[random.nextInt(products.length)];
             String status = statuses[random.nextInt(statuses.length)];
@@ -738,15 +787,14 @@ public class ConfigureASystem {
             request.setProductName(product[1]);
             request.setUnitPrice(Double.parseDouble(product[2]));
             request.setUnit(product[3]);
-            request.setQuantity(100 + random.nextInt(900)); // 100-1000 units
-            request.setDiscount(random.nextDouble() * 10); // 0-10% discount
+            request.setQuantity(100 + random.nextInt(900));
+            request.setDiscount(random.nextDouble() * 10);
             request.setPaymentTerms(paymentTerms[random.nextInt(paymentTerms.length)]);
             request.setMessage("Wholesale order: " + faker.commerce().promotionCode());
             request.setStatus(status);
             
-            // Set dates
             Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_MONTH, -random.nextInt(60)); // Up to 60 days ago
+            cal.add(Calendar.DAY_OF_MONTH, -random.nextInt(60));
             request.setRequestDate(cal.getTime());
             
             if (status.equals("Completed") || status.equals("Shipped")) {
@@ -758,18 +806,249 @@ public class ConfigureASystem {
             distSalesOrg.getWorkQueue().addWorkRequest(request);
         }
     }
+    
+    private static void createPacificRetailOrders(Organization salesOrg) {
+        String[] storeNames = {"TechZone Central", "HomeStyle Plus", "Fitness First Store",
+            "Kitchen Essentials", "Garden World", "SmartLife Shop",
+            "Outdoor Living Co.", "Wellness Hub", "Modern Home Depot"};
+        
+        String[][] products = {
+            {"TG-001", "Smart Home Hub", "89.00", "units"},
+            {"TG-002", "Wireless Security Camera Set", "149.00", "sets"},
+            {"TG-003", "Smart Thermostat Pro", "75.00", "units"},
+            {"OG-001", "Solar Garden Light Set", "45.00", "sets"},
+            {"OG-002", "Patio Furniture Set - Premium", "599.00", "sets"},
+            {"FW-001", "Home Gym Set - Basic", "299.00", "sets"},
+            {"FW-002", "Treadmill - Smart", "799.00", "units"},
+            {"KD-001", "Air Fryer - XL", "129.00", "units"},
+            {"KD-002", "Coffee Machine - Espresso", "249.00", "units"}
+        };
+        
+        String[] statuses = {"Pending", "Pending", "Pending", "Approved", "Approved", 
+                            "Processing", "Shipped", "Delivered", "Completed", "Completed"};
+        String[] urgencies = {"Normal", "Normal", "Urgent", "Critical"};
+        String[] paymentMethods = {"Credit", "Invoice", "Wire Transfer", "Net 30"};
+        
+        for (int i = 0; i < 20; i++) {
+            String[] product = products[random.nextInt(products.length)];
+            String storeName = storeNames[random.nextInt(storeNames.length)];
+            String status = statuses[random.nextInt(statuses.length)];
+            
+            RetailPurchaseOrderRequest order = new RetailPurchaseOrderRequest();
+            order.setProductCode(product[0]);
+            order.setProductName(product[1]);
+            order.setUnitPrice(Double.parseDouble(product[2]));
+            order.setUnit(product[3]);
+            order.setQuantity(5 + random.nextInt(50));
+            order.setStoreName(storeName);
+            order.setStoreAddress(faker.address().fullAddress());
+            order.setPaymentMethod(paymentMethods[random.nextInt(paymentMethods.length)]);
+            order.setUrgencyLevel(urgencies[random.nextInt(urgencies.length)]);
+            order.setMessage("Order #PAC-" + String.format("%04d", i + 1) + " - " + faker.company().buzzword());
+            order.setStatus(status);
+            
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, -random.nextInt(45));
+            order.setRequestDate(cal.getTime());
+            
+            if (status.equals("Completed") || status.equals("Delivered")) {
+                Calendar resolveCal = Calendar.getInstance();
+                resolveCal.add(Calendar.DAY_OF_MONTH, -random.nextInt(10));
+                order.setResolveDate(resolveCal.getTime());
+            }
+            
+            salesOrg.getWorkQueue().addWorkRequest(order);
+        }
+    }
+    
+    private static void createPacificShippingRequests(Organization inventoryOrg, UserAccount invUser) {
+        String[][] products = {
+            {"TG-001", "Smart Home Hub", "units"},
+            {"TG-002", "Wireless Security Camera Set", "sets"},
+            {"OG-001", "Solar Garden Light Set", "sets"},
+            {"OG-003", "Electric Lawn Mower", "units"},
+            {"FW-001", "Home Gym Set - Basic", "sets"},
+            {"FW-003", "Exercise Bike - Pro", "units"},
+            {"KD-001", "Air Fryer - XL", "units"},
+            {"KD-003", "Cookware Set - 15 Piece", "sets"}
+        };
+        
+        String[] carriers = {"Pacific Express", "WestCoast Freight", "Swift Logistics", "Prime Delivery Co."};
+        
+        String[][] statusConfigs = {
+            {ProductShippingRequest.SHIP_STATUS_PENDING, "Pending"},
+            {ProductShippingRequest.SHIP_STATUS_PENDING, "Pending"},
+            {ProductShippingRequest.SHIP_STATUS_IN_TRANSIT, "In Transit"},
+            {ProductShippingRequest.SHIP_STATUS_IN_TRANSIT, "In Transit"},
+            {ProductShippingRequest.SHIP_STATUS_OUT_FOR_DELIVERY, "Out for Delivery"},
+            {ProductShippingRequest.SHIP_STATUS_OUT_FOR_DELIVERY, "Out for Delivery"},
+            {ProductShippingRequest.SHIP_STATUS_DELIVERED, "Delivered"},
+            {ProductShippingRequest.SHIP_STATUS_DELIVERED, "Delivered"},
+            {ProductShippingRequest.SHIP_STATUS_DELIVERED, "Received"},
+            {ProductShippingRequest.SHIP_STATUS_DELIVERED, "Received"},
+            {ProductShippingRequest.SHIP_STATUS_DELIVERED, "Received"}
+        };
+        
+        for (int i = 0; i < 15; i++) {
+            String[] product = products[random.nextInt(products.length)];
+            String[] statusConfig = statusConfigs[i % statusConfigs.length];
+            String carrier = carriers[random.nextInt(carriers.length)];
+            
+            ProductShippingRequest shipment = new ProductShippingRequest();
+            shipment.setProductCode(product[0]);
+            shipment.setProductName(product[1]);
+            shipment.setUnit(product[2]);
+            shipment.setQuantity(20 + random.nextInt(100));
+            shipment.setOriginAddress("XYZ Manufacturing Inc., " + faker.address().streetAddress());
+            shipment.setDestinationAddress("Pacific Wholesale Partners, 500 Harbor Blvd, San Francisco, CA");
+            shipment.setDestinationStoreName("Pacific Wholesale Partners");
+            shipment.setCarrierName(carrier);
+            shipment.setTrackingNumber("PAC-SHIP-" + String.format("%04d", i + 1));
+            shipment.setPackageWeight(20.0 + random.nextDouble() * 200);
+            shipment.setShippingStatus(statusConfig[0]);
+            shipment.setStatus(statusConfig[1]);
+            shipment.setMessage("Shipment for Pacific Warehouse - " + faker.lorem().sentence());
+            
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, -random.nextInt(20));
+            shipment.setRequestDate(cal.getTime());
+            
+            if (statusConfig[1].equals("Received")) {
+                shipment.setReceiver(invUser);
+                Calendar resolveCal = Calendar.getInstance();
+                resolveCal.add(Calendar.DAY_OF_MONTH, -random.nextInt(5));
+                shipment.setResolveDate(resolveCal.getTime());
+            }
+            
+            if (statusConfig[0].equals(ProductShippingRequest.SHIP_STATUS_IN_TRANSIT)) {
+                Calendar estCal = Calendar.getInstance();
+                estCal.add(Calendar.DAY_OF_MONTH, 1 + random.nextInt(4));
+                shipment.setEstimatedDeliveryDate(estCal.getTime());
+            }
+            
+            inventoryOrg.getWorkQueue().addWorkRequest(shipment);
+        }
+    }
+    
+    private static void createPacificDeliveryConfirmations(Organization salesOrg) {
+        String[] storeNames = {"TechZone Central", "HomeStyle Plus", "Fitness First Store",
+                              "Kitchen Essentials", "Garden World"};
+        String[] deliverers = {"Alex Chen", "Maria Rodriguez", "James Kim", "Linda Park"};
+        String[] conditions = {
+            DeliveryConfirmationRequest.CONDITION_GOOD,
+            DeliveryConfirmationRequest.CONDITION_GOOD,
+            DeliveryConfirmationRequest.CONDITION_GOOD,
+            DeliveryConfirmationRequest.CONDITION_PARTIAL,
+            DeliveryConfirmationRequest.CONDITION_DAMAGED
+        };
+        
+        String[][] products = {
+            {"TG-001", "Smart Home Hub", "units"},
+            {"OG-001", "Solar Garden Light Set", "sets"},
+            {"FW-001", "Home Gym Set - Basic", "sets"},
+            {"KD-001", "Air Fryer - XL", "units"}
+        };
+        
+        for (int i = 0; i < 10; i++) {
+            String[] product = products[random.nextInt(products.length)];
+            String storeName = storeNames[random.nextInt(storeNames.length)];
+            String deliverer = deliverers[random.nextInt(deliverers.length)];
+            String condition = conditions[random.nextInt(conditions.length)];
+            int quantity = 10 + random.nextInt(40);
+            
+            ProductShippingRequest shipment = new ProductShippingRequest();
+            shipment.setProductCode(product[0]);
+            shipment.setProductName(product[1]);
+            shipment.setQuantity(quantity);
+            shipment.setUnit(product[2]);
+            shipment.setDestinationStoreName(storeName);
+            shipment.setDestinationAddress(faker.address().fullAddress());
+            shipment.setCarrierName("Pacific Express");
+            shipment.setTrackingNumber("PAC-DEL-" + faker.number().digits(8));
+            shipment.setShippingStatus(ProductShippingRequest.SHIP_STATUS_DELIVERED);
+            shipment.setStatus("Delivered");
+            
+            DeliveryConfirmationRequest confirmation = new DeliveryConfirmationRequest(shipment);
+            confirmation.setDeliveredBy(deliverer);
+            confirmation.setConditionOnArrival(condition);
+            
+            if (condition.equals(DeliveryConfirmationRequest.CONDITION_GOOD)) {
+                confirmation.setDeliveryNotes("All items in perfect condition. " + faker.lorem().sentence());
+            } else if (condition.equals(DeliveryConfirmationRequest.CONDITION_PARTIAL)) {
+                int delivered = quantity - random.nextInt(8) - 2;
+                confirmation.setQuantityDelivered(delivered);
+                confirmation.setDeliveryNotes("Partial: " + delivered + "/" + quantity + " delivered.");
+            } else {
+                confirmation.setDeliveryNotes("Minor damage to packaging. Contents OK.");
+            }
+            
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, -random.nextInt(14));
+            confirmation.setDeliveryDate(cal.getTime());
+            
+            if (i < 5) {
+                confirmation.setConfirmed(false);
+                confirmation.setStatus("Awaiting Confirmation");
+                confirmation.setMessage("Please confirm receipt of " + product[1]);
+            } else {
+                confirmation.confirmDelivery("Robert Chen");
+                confirmation.setStatus("Completed");
+                confirmation.setMessage("Delivery confirmed by Pacific team");
+            }
+            
+            salesOrg.getWorkQueue().addWorkRequest(confirmation);
+        }
+    }
+    
+    private static void createPacificWholesaleRequests(Organization salesOrg) {
+        String[][] products = {
+            {"TG-001", "Smart Home Hub", "75.00", "units"},
+            {"TG-002", "Wireless Security Camera Set", "125.00", "sets"},
+            {"OG-002", "Patio Furniture Set - Premium", "499.00", "sets"},
+            {"FW-002", "Treadmill - Smart", "650.00", "units"},
+            {"KD-002", "Coffee Machine - Espresso", "199.00", "units"}
+        };
+        
+        String[] statuses = {"Pending", "Approved", "Processing", "Shipped", "Completed"};
+        String[] paymentTerms = {"Net 15", "Net 30", "Net 45", "COD"};
+        
+        for (int i = 0; i < 12; i++) {
+            String[] product = products[random.nextInt(products.length)];
+            String status = statuses[random.nextInt(statuses.length)];
+            
+            WholesalePurchaseRequest request = new WholesalePurchaseRequest();
+            request.setProductCode(product[0]);
+            request.setProductName(product[1]);
+            request.setUnitPrice(Double.parseDouble(product[2]));
+            request.setUnit(product[3]);
+            request.setQuantity(50 + random.nextInt(200));
+            request.setDiscount(2.0 + random.nextDouble() * 8);
+            request.setPaymentTerms(paymentTerms[random.nextInt(paymentTerms.length)]);
+            request.setMessage("Pacific WO-" + String.format("%04d", i + 1) + ": " + faker.commerce().promotionCode());
+            request.setStatus(status);
+            
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, -random.nextInt(90));
+            request.setRequestDate(cal.getTime());
+            
+            if (status.equals("Completed") || status.equals("Shipped")) {
+                Calendar resolveCal = Calendar.getInstance();
+                resolveCal.add(Calendar.DAY_OF_MONTH, -random.nextInt(45));
+                request.setResolveDate(resolveCal.getTime());
+            }
+            
+            salesOrg.getWorkQueue().addWorkRequest(request);
+        }
+    }
 
-    private static void createManufacturerTestDataWithFaker(ManufacturerEnterprise manufacturer, RawMaterialSupplierEnterprise rmSupplier, ShippingEnterprise shipping, RetailEnterprise retail) {
-        Organization productionOrg = manufacturer.getOrganizationDirectory().getOrganizationList().get(0);
+    private static void createManufacturerTestDataWithFaker(ManufacturerEnterprise manufacturer, 
+            RawMaterialSupplierEnterprise rmSupplier, ShippingEnterprise shipping, RetailEnterprise retail) {
         Organization inventoryOrg = manufacturer.getOrganizationDirectory().getOrganizationList().get(1);
-        UserAccount distInvUser = inventoryOrg.getUserAccountDirectory().getUserAccountList().get(0);
         UserAccount distInvUser1 = inventoryOrg.getUserAccountDirectory().getUserAccountList().get(1);
         createMaterialShippingRequests(inventoryOrg, distInvUser1);
     }
     
     private static void createMaterialShippingRequests(Organization manufactureInventoryOrg, UserAccount receiverUser) {
-
-        // Sample materials (code, name, unit)
         String[][] materials = {
             {"RM-001", "Steel Rods", "kg"},
             {"RM-002", "Aluminum Sheets", "sheets"},
@@ -780,12 +1059,8 @@ public class ConfigureASystem {
             {"RM-007", "Paint Chemicals", "drums"}
         };
 
-        // Carriers
-        String[] carriers = {
-            "Global Freight Co.", "SkyLine Logistics", "RapidTransport", "EcoFreight Shipping"
-        };
+        String[] carriers = {"Global Freight Co.", "SkyLine Logistics", "RapidTransport", "EcoFreight Shipping"};
 
-        // Shipping statuses for testing
         String[][] statusConfigs = {
             {MaterialShippingRequest.SHIP_STATUS_PENDING, WorkRequest.STATUS_PENDING},
             {MaterialShippingRequest.SHIP_STATUS_PENDING, WorkRequest.STATUS_PENDING},
@@ -803,39 +1078,29 @@ public class ConfigureASystem {
             String carrier = carriers[random.nextInt(carriers.length)];
 
             MaterialShippingRequest request = new MaterialShippingRequest();
-//            request.setRequestId(1000 + i);
-
-            // Material info
             request.setMaterialCode(material[0]);
             request.setMaterialName(material[1]);
             request.setUnit(material[2]);
-            request.setQuantity(100 + random.nextInt(900));  // 100 - 1000 units
-
-            // Addresses
+            request.setQuantity(100 + random.nextInt(900));
             request.setOriginAddress("Supplier Warehouse, " + faker.address().streetAddress());
             request.setDestinationAddress("Manufacturing Plant, " + faker.address().streetAddress());
-
-            // Shipping details
             request.setCarrierName(carrier);
             request.setTrackingNumber("SHIP-" + String.format("%04d", i + 1));
-            request.setShippingCost(500 + random.nextDouble() * 4500); // $500 - $5000
+            request.setShippingCost(500 + random.nextDouble() * 4500);
             request.setShippingStatus(statusConfig[0]);
             request.setStatus(statusConfig[1]);
             request.setMessage(faker.lorem().sentence());
 
-            // Request date in past 10 days
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DAY_OF_MONTH, -random.nextInt(10));
             request.setRequestDate(cal.getTime());
 
-            // If in-transit: estimated arrival
             if (statusConfig[0].equals(MaterialShippingRequest.SHIP_STATUS_IN_TRANSIT)) {
                 Calendar est = Calendar.getInstance();
                 est.add(Calendar.DAY_OF_MONTH, 1 + random.nextInt(5));
                 request.setEstimatedDeliveryDate(est.getTime());
             }
 
-            // If delivered, set receiver + actual delivery date
             if (statusConfig[0].equals(MaterialShippingRequest.SHIP_STATUS_DELIVERED)) {
                 request.setReceiver(receiverUser);
                 Calendar delivered = Calendar.getInstance();
@@ -847,3 +1112,11 @@ public class ConfigureASystem {
         }
     }
 }
+
+
+
+
+
+
+
+

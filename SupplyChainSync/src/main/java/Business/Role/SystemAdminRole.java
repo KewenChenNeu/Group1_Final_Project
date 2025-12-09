@@ -18,10 +18,9 @@ import javax.swing.JPanel;
 public class SystemAdminRole extends Role{
 
     @Override
-    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, 
+    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account,
             Organization organization, Enterprise enterprise, EcoSystem system) {
-        // TODO: Return SystemAdminWorkAreaJPanel once UI is created
-        return new JPanel(); // Placeholder
+        return new SystemAdminWorkAreaJPanel(userProcessContainer, system);
     }
     
     @Override

@@ -6,9 +6,12 @@ package ui.RetailRole.RetailAnalyticsRole;
 
 import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
+import Business.Enterprise.ProductDistributorEnterprise;
 import Business.Enterprise.RetailEnterprise;
 import Business.Inventory.Inventory;
 import Business.Inventory.InventoryItem;
+import Business.Network.Network;
+import Business.Organization.Organization;
 import Business.Organization.Retail.RetailInventoryOrganization;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.RetailPurchaseOrderRequest;
@@ -80,10 +83,33 @@ public class RetailAnalyticsWorkAreaJPanel extends javax.swing.JPanel {
             }
         }
 
-        // Count orders from work queue
+        // 1. Count orders from local organization's work queue (pending approval)
         for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
             if (request instanceof RetailPurchaseOrderRequest) {
-                totalOrders++;
+                RetailPurchaseOrderRequest po = (RetailPurchaseOrderRequest) request;
+                if (po.getStoreName() != null && po.getStoreName().equals(enterprise.getName())) {
+                    totalOrders++;
+                }
+            }
+        }
+
+        // 2. Count orders from distributors' work queues (sent/approved/etc.)
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
+                if (ent instanceof ProductDistributorEnterprise) {
+                    ProductDistributorEnterprise distributor = (ProductDistributorEnterprise) ent;
+
+                    for (Organization org : distributor.getOrganizationDirectory().getOrganizationList()) {
+                        for (WorkRequest request : org.getWorkQueue().getWorkRequestList()) {
+                            if (request instanceof RetailPurchaseOrderRequest) {
+                                RetailPurchaseOrderRequest po = (RetailPurchaseOrderRequest) request;
+                                if (po.getStoreName() != null && po.getStoreName().equals(enterprise.getName())) {
+                                    totalOrders++;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
